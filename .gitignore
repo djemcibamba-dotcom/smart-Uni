@@ -1,0 +1,18 @@
+node_modules/
+
+# Backend secrets & runtime data
+backend/.env
+backend/data/
+backend/uploads/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db

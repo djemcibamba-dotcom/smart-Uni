@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Smart Academy of Congo — Plateforme académique fiable pour universités, étudiants et professeurs." />
+  <title>Smart Academy of Congo</title>
+  <link rel="icon" href="logos.png" type="image/png" />
+  <link rel="apple-touch-icon" href="logos.png" />
+  <link rel="stylesheet" href="css/logo.css" />
+  <link rel="stylesheet" href="css/home-news.css" />
+  <link rel="stylesheet" href="css/platform.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0c3d6e;
+      --primary-light: #145a9e;
+      --accent: #c9a227;
+      --accent-hover: #e0b83a;
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --text: #1a2b3c;
+      --text-muted: #5a6d7e;
+      --border: #e2e8f0;
+      --success: #0d7a4a;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(12, 61, 110, 0.08);
+      --shadow-lg: 0 12px 48px rgba(12, 61, 110, 0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3 { font-family: "Playfair Display", Georgia, serif; line-height: 1.25; }
+
+    a { color: inherit; text-decoration: none; }
+
+    img { max-width: 100%; display: block; }
+
+    /* ——— Header ——— */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow 0.3s;
+    }
+
+    .header.scrolled { box-shadow: var(--shadow); }
+
+    .header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.9rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--primary);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav__links {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+    }
+
+    .nav__links a {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .nav__links a:hover { color: var(--primary); }
+
+    .nav__actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.25rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+
+    .btn:active { transform: scale(0.98); }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--primary);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn--ghost:hover {
+      border-color: var(--primary);
+      background: rgba(12, 61, 110, 0.04);
+    }
+
+    .btn--primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(12, 61, 110, 0.25);
+    }
+
+    .btn--primary:hover {
+      background: var(--primary-light);
+      box-shadow: 0 6px 20px rgba(12, 61, 110, 0.3);
+    }
+
+    .btn--accent {
+      background: var(--accent);
+      color: var(--primary);
+    }
+
+    .btn--accent:hover { background: var(--accent-hover); }
+
+    .btn--lg {
+      padding: 0.85rem 1.75rem;
+      font-size: 1rem;
+    }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .menu-toggle span {
+      width: 24px;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    /* ——— Hero ——— */
+    .hero {
+      padding: 8rem 1.5rem 5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      min-height: 90vh;
+    }
+
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(201, 162, 39, 0.15);
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.35rem 0.85rem;
+      border-radius: 100px;
+      margin-bottom: 1.25rem;
+      border: 1px solid rgba(201, 162, 39, 0.35);
+    }
+
+    .hero__badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 4.5vw, 3.25rem);
+      color: var(--primary);
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero__text {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      max-width: 32rem;
+    }
+
+    .hero__cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero__stats {
+      display: flex;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.75rem;
+      font-family: "Playfair Display", serif;
+      color: var(--primary);
+    }
+
+    .stat span {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .hero__visual {
+      position: relative;
+    }
+
+    .hero__card {
+      background: var(--surface);
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .hero__card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero__avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .hero__card-header h3 { font-size: 1rem; font-family: "DM Sans", sans-serif; font-weight: 600; }
+    .hero__card-header p { font-size: 0.8rem; color: var(--text-muted); }
+
+    .dashboard-preview { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .preview-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: var(--bg);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+    }
+
+    .preview-row .label { color: var(--text-muted); }
+    .preview-row .value { font-weight: 600; color: var(--primary); }
+    .preview-row .value--success { color: var(--success); }
+    .preview-row .value--pending { color: #b45309; }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .progress-bar__fill {
+      height: 100%;
+      width: 72%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 100px;
+    }
+
+    .floating-badge {
+      position: absolute;
+      background: var(--surface);
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .floating-badge--1 { top: -12px; right: -8px; color: var(--success); }
+    .floating-badge--2 { bottom: 40px; left: -20px; color: var(--primary); animation-delay: 1s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ——— Sections ——— */
+    section { padding: 5rem 1.5rem; }
+
+    .section__inner { max-width: 1200px; margin: 0 auto; }
+
+    .section__label {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .section__title {
+      font-size: clamp(1.75rem, 3vw, 2.35rem);
+      color: var(--primary);
+      margin-bottom: 1rem;
+      max-width: 28rem;
+    }
+
+    .section__desc {
+      color: var(--text-muted);
+      max-width: 36rem;
+      margin-bottom: 3rem;
+      font-size: 1.05rem;
+    }
+
+    /* ——— Roles ——— */
+    .roles { background: var(--surface); }
+
+    .roles__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+
+    .role-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    }
+
+    .role-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(12, 61, 110, 0.15);
+    }
+
+    .role-card__icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .role-card--student .role-card__icon { background: rgba(12, 61, 110, 0.1); }
+    .role-card--prof .role-card__icon { background: rgba(201, 162, 39, 0.2); }
+    .role-card--assistant .role-card__icon { background: rgba(107, 76, 154, 0.15); }
+    .role-card--uni .role-card__icon { background: rgba(13, 122, 74, 0.12); }
+
+    .role-card h3 {
+      font-size: 1.25rem;
+      font-family: "DM Sans", sans-serif;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .role-card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem; }
+
+    .role-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .role-card li {
+      font-size: 0.9rem;
+      color: var(--text);
+      padding-left: 1.35rem;
+      position: relative;
+    }
+
+    .role-card li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    /* ——— Features ——— */
+    .features__grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 1.25rem;
+      padding: 1.5rem;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      transition: box-shadow 0.2s;
+    }
+
+    .feature-item:hover { box-shadow: var(--shadow); }
+
+    .feature-item__num {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .feature-item h4 {
+      font-family: "DM Sans", sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.35rem;
+    }
+
+    .feature-item p { font-size: 0.9rem; color: var(--text-muted); }
+
+    /* ——— CTA ——— */
+    .cta {
+      padding: 4rem 1.5rem 6rem;
+    }
+
+    .cta__box {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      border-radius: 24px;
+      padding: 3.5rem 2.5rem;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta__box::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: rgba(201, 162, 39, 0.15);
+      border-radius: 50%;
+    }
+
+    .cta__box h2 {
+      font-size: clamp(1.75rem, 3vw, 2.25rem);
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .cta__box p {
+      opacity: 0.9;
+      max-width: 32rem;
+      margin: 0 auto 2rem;
+      font-size: 1.05rem;
+      position: relative;
+    }
+
+    .cta__box .btn--accent { position: relative; }
+
+    /* ——— Footer ——— */
+    .footer {
+      background: var(--primary);
+      color: rgba(255, 255, 255, 0.85);
+      padding: 3rem 1.5rem 1.5rem;
+    }
+
+    .footer__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1.2fr;
+      gap: 2.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .footer .logo { color: #fff; }
+    .footer__brand p {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      max-width: 22rem;
+    }
+
+    .footer h4 {
+      font-family: "DM Sans", sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+
+    .footer ul { list-style: none; }
+    .footer li { margin-bottom: 0.5rem; }
+    .footer a {
+      font-size: 0.9rem;
+      opacity: 0.85;
+      transition: opacity 0.2s;
+    }
+
+    .footer a:hover { opacity: 1; color: #fff; }
+
+    .footer__bottom {
+      max-width: 1200px;
+      margin: 1.5rem auto 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    /* ——— Mobile nav ——— */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      top: 65px;
+      background: var(--surface);
+      z-index: 99;
+      padding: 2rem 1.5rem;
+      flex-direction: column;
+      gap: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    .mobile-nav a {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text);
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-nav .nav__actions {
+      flex-direction: column;
+      margin-top: 1rem;
+    }
+
+    .mobile-nav .btn { width: 100%; }
+
+    /* ——— Responsive ——— */
+    @media (max-width: 992px) {
+      .hero { grid-template-columns: 1fr; text-align: center; padding-top: 7rem; }
+      .hero__text { margin-left: auto; margin-right: auto; }
+      .hero__cta, .hero__stats { justify-content: center; }
+      .hero__visual { max-width: 420px; margin: 0 auto; }
+      .roles__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .roles__grid { grid-template-columns: 1fr; }
+      .footer__inner { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav__links, .nav__actions { display: none; }
+      .menu-toggle { display: flex; }
+      .features__grid { grid-template-columns: 1fr; }
+      .footer__inner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="index.html" class="logo">
+        <img src="logos.png" alt="Smart Academy of Congo" class="logo__img" width="48" height="48" />
+        <span class="logo__text">Smart Academy</span>
+      </a>
+      <nav class="nav">
+        <ul class="nav__links">
+          <li><a href="#accueil">Accueil</a></li>
+          <li><a href="#actualites">Actualités</a></li>
+          <li><a href="#roles">Qui utilise ?</a></li>
+          <li><a href="plateforme.html">Écosystème SAC</a></li>
+          <li><a href="verifier-diplome.html">Vérifier diplôme</a></li>
+          <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="nav__actions">
+          <a href="connexion.html" class="btn btn--ghost">Connexion</a>
+          <a href="inscription.html" class="btn btn--primary">S'inscrire</a>
+        </div>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+    <a href="#accueil">Accueil</a>
+    <a href="#actualites">Actualités</a>
+    <a href="#roles">Qui utilise ?</a>
+    <a href="#fonctionnalites">Fonctionnalités</a>
+    <a href="#contact">Contact</a>
+    <div class="nav__actions">
+      <a href="connexion.html" class="btn btn--ghost">Connexion</a>
+      <a href="inscription.html" class="btn btn--primary">S'inscrire</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero" id="accueil">
+      <div class="hero__content">
+        <div class="hero__logo-wrap">
+          <img src="logos.png" alt="Smart Academy of Congo" class="hero__logo" width="110" height="110" />
+        </div>
+        <span class="hero__badge">Écosystème national unifié — République Démocratique du Congo</span>
+        <h1>Un seul système pour toutes les <span>universités</span> congolaises</h1>
+        <p class="hero__text">
+          Inscription en ligne, résultats, paiement des frais, bibliothèque numérique, orientation IA, stages & emplois, réseau étudiant, cours en ligne et vérification officielle des diplômes — avec sécurité par campus et par rôle.
+        </p>
+        <div class="hero__cta">
+          <a href="inscription.html" class="btn btn--primary btn--lg">Créer un compte</a>
+          <a href="plateforme.html" class="btn btn--ghost btn--lg">Écosystème SAC</a>
+          <a href="connexion.html" class="btn btn--ghost btn--lg">Se connecter</a>
+        </div>
+        <div class="hero__stats">
+          <div class="stat">
+            <strong>50+</strong>
+            <span>Universités partenaires</span>
+          </div>
+          <div class="stat">
+            <strong>100k+</strong>
+            <span>Étudiants inscrits</span>
+          </div>
+          <div class="stat">
+            <strong>24/7</strong>
+            <span>Accès à vos données</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__visual">
+        <span class="floating-badge floating-badge--1">✓ Frais à jour</span>
+        <span class="floating-badge floating-badge--2">Notes publiées</span>
+        <div class="hero__card">
+          <div class="hero__card-header">
+            <div class="hero__avatar">MK</div>
+            <div>
+              <h3>Marie Kabongo</h3>
+              <p>Étudiante — Université de Kinshasa</p>
+            </div>
+          </div>
+          <div class="dashboard-preview">
+            <div class="preview-row">
+              <span class="label">Moyenne générale</span>
+              <span class="value">14,5 / 20</span>
+            </div>
+            <div class="preview-row">
+              <span class="label">Frais payés</span>
+              <span class="value value--success">200 $ / 350 $</span>
+            </div>
+            <div class="progress-bar"><div class="progress-bar__fill"></div></div>
+            <div class="preview-row">
+              <span class="label">Facture en attente</span>
+              <span class="value value--pending">150 $ — Trim. 2</span>
+            </div>
+            <div class="preview-row">
+              <span class="label">Statut administratif</span>
+              <span class="value value--success">Inscription validée</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-news" id="actualites">
+      <div class="home-news__inner">
+        <span class="section__label" style="display:block;text-align:center;margin-bottom:0.5rem;color:var(--primary);font-weight:600;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;">Informations officielles</span>
+        <h2 class="section__title" style="text-align:center;margin-bottom:0.5rem;">Actualités, concours, bourses & opportunités</h2>
+        <p class="section__desc" style="text-align:center;max-width:640px;margin:0 auto 2rem;color:var(--text-muted);">
+          <strong>Espace national</strong> : toutes les universités. Choisissez un établissement pour voir aussi ses annonces campus. Les annonces « mon université » sont réservées au profil des étudiants de l'établissement.
+        </p>
+        <div class="home-news__toolbar">
+          <div class="home-news__filters" id="homeNewsFilters" aria-label="Filtrer par catégorie"></div>
+          <select class="home-news__uni-select" id="homeNewsUni" aria-label="Filtrer par université">
+            <option value="all">🇨🇩 Espace national uniquement</option>
+          </select>
+        </div>
+        <div class="home-news__grid" id="homeNewsFeed"></div>
+        <p class="home-news__empty" id="homeNewsEmpty" style="display:none;">
+          Aucune publication pour le moment. Les universités inscrites peuvent publier depuis leur portail administration.
+        </p>
+        <p style="text-align:center;margin-top:1.5rem;font-size:0.88rem;color:var(--text-muted);">
+          Vous êtes une université ? <a href="connexion.html?role=universite" style="color:var(--primary);font-weight:600;">Connectez-vous</a> pour publier sur cette page.
+        </p>
+      </div>
+    </section>
+
+    <section class="roles" id="roles">
+      <div class="section__inner">
+        <span class="section__label">Pour qui ?</span>
+        <h2 class="section__title">Une plateforme pour toute la communauté universitaire</h2>
+        <p class="section__desc">
+          Chaque acteur accède à un espace dédié avec des informations vérifiées par l'université, pour plus de transparence et moins de paperasse.
+        </p>
+        <div class="roles__grid">
+          <article class="role-card role-card--student">
+            <div class="role-card__icon">🎓</div>
+            <h3>Étudiants</h3>
+            <p>Consultez votre parcours académique et administratif depuis votre compte personnel.</p>
+            <ul>
+              <li>Notes et relevés de cotes</li>
+              <li>Frais payés et factures en attente</li>
+              <li>Emploi du temps et examens</li>
+              <li>Documents officiels (attestations, certificats)</li>
+            </ul>
+          </article>
+          <article class="role-card role-card--prof">
+            <div class="role-card__icon">📚</div>
+            <h3>Professeurs</h3>
+            <p>Gérez vos cours et communiquez avec vos étudiants et l'administration.</p>
+            <ul>
+              <li>Saisie et publication des notes</li>
+              <li>Liste des étudiants par cours</li>
+              <li>Calendrier des évaluations</li>
+              <li>Messages de la faculté</li>
+            </ul>
+          </article>
+          <article class="role-card role-card--assistant">
+            <div class="role-card__icon">📋</div>
+            <h3>Assistants</h3>
+            <p>Appuyez l'administration universitaire et facilitez le parcours des étudiants au quotidien.</p>
+            <ul>
+              <li>Traitement des dossiers et inscriptions</li>
+              <li>Suivi des frais et paiements étudiants</li>
+              <li>Édition d'attestations et documents</li>
+              <li>Accueil et orientation sur le campus</li>
+            </ul>
+          </article>
+          <article class="role-card role-card--uni">
+            <div class="role-card__icon">🏛️</div>
+            <h3>Universités</h3>
+            <p>Pilotez votre campus et diffusez des informations fiables à toute la communauté.</p>
+            <ul>
+              <li>Gestion des inscriptions et frais</li>
+              <li>Tableau de bord administratif</li>
+              <li>Annonces et actualités du campus</li>
+              <li>Statistiques et rapports</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="fonctionnalites">
+      <div class="section__inner">
+        <span class="section__label">Écosystème complet</span>
+        <h2 class="section__title">10 piliers pour vous différencier des autres plateformes</h2>
+        <p class="section__desc">
+          Un réseau national unifié avec contrôle d'accès JWT, journal d'audit, filtrage par université et vérification cryptographique des diplômes.
+        </p>
+        <div class="features__grid--10">
+          <article class="feature-pillar"><div class="feature-pillar__icon">🌐</div><h4>Système unifié multi-universités</h4><p>Un portail national : chaque campus garde son autonomie tout en partageant standards, tarifs et annonces nationales.</p><span class="feature-pillar__tag">Réseau SAC</span></article>
+          <article class="feature-pillar"><div class="feature-pillar__icon">📝</div><h4>Inscription en ligne</h4><p>Dossier numérique, choix d'établissement, sections et paiement initial avec validation assistant / université.</p><span class="feature-pillar__tag">Sécurisé</span></article>
+          <article class="feature-pillar"><div class="feature-pillar__icon">📊</div><h4>Résultats académiques</h4><p>Cotes par semestre saisies par les professeurs, moyennes calculées et statuts Validé / Rattrapage.</p><span class="feature-pillar__tag">API + local</span></article>
+          <article class="feature-pillar"><div class="feature-pillar__icon">💳</div><h4>Paiement des frais</h4><p>Mobile Money, banques, suivi des trimestres et validation officielle avant accès complet.</p><span class="feature-pillar__tag">Multi-devises</span></article>
+          <article class="feature-pillar"><div class="feature-pillar__icon">📚</div><h4>Bibliothèque numérique</h4><p>Ouvrages et mémoires du campus, accès par rôle et par établissement.</p><span class="feature-pillar__tag">Par campus</span></article>
+          <article class="feature-pillar"><div class="feature-pillar__icon">🤖</div><h4>IA orientation académique</h4><p>Conseils de parcours, compétences et stages selon filière et niveau (complément au service orientation).</p><span class="feature-pillar__tag">Indicatif</span></article>
+          <article class="feature-pillar"><div class="feature-pillar__icon">💼</div><h4>Stages & emplois</h4><p>Offres campus et nationales publiées par universités et partenaires.</p><span class="feature-pillar__tag">National + local</span></article>
+          <article class="feature-pillar"><div class="feature-pillar__icon">👥</div><h4>Réseau social étudiant</h4><p>Fil campus modéré, likes et audience par filière — sans quitter l'écosystème officiel.</p><span class="feature-pillar__tag">Campus only</span></article>
+          <article class="feature-pillar"><div class="feature-pillar__icon">🎓</div><h4>Cours en ligne</h4><p>MOOC par professeur, modules et inscription étudiant avec progression.</p><span class="feature-pillar__tag">LMS intégré</span></article>
+          <article class="feature-pillar"><div class="feature-pillar__icon">🛡️</div><h4>Vérification officielle des diplômes</h4><p>Numéro unique, code de vérification et signature HMAC — page publique pour employeurs.</p><a href="verifier-diplome.html" style="font-size:0.82rem;font-weight:600;margin-top:0.35rem;display:inline-block">Vérifier un diplôme →</a></article>
+        </div>
+        <p style="text-align:center;margin-top:2rem">
+          <a href="plateforme.html" class="btn btn--primary" style="display:inline-block;padding:0.75rem 1.5rem;border-radius:10px;background:var(--primary);color:#fff;font-weight:600">Découvrir l'écosystème connecté</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="cta" id="contact">
+      <div class="cta__box">
+        <h2>Rejoignez Smart Academy of Congo</h2>
+        <p>Inscrivez votre université ou créez votre compte étudiant, professeur ou assistant pour accéder à toutes vos informations en ligne.</p>
+        <a href="inscription.html" class="btn btn--accent btn--lg">S'inscrire</a>
+        <p style="margin-top:1rem;font-size:0.9rem;opacity:0.85;position:relative;">Étudiant <strong>1 USD</strong> · Assistant <strong>5 USD</strong> · Professeur <strong>10 USD</strong> · Université <strong>20 USD</strong><br /><strong>UBA</strong> · <strong>First Bank</strong> · <strong>Orange Money</strong> · <strong>M-Pesa</strong></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <a href="index.html" class="logo logo--lg">
+          <img src="logos.png" alt="Smart Academy of Congo" class="logo__img" width="56" height="56" />
+          <span class="logo__text">Smart Academy of Congo</span>
+        </a>
+        <p>Plateforme nationale de gestion académique et administrative pour les universités congolaises.</p>
+      </div>
+      <div>
+        <h4>Plateforme</h4>
+        <ul>
+          <li><a href="#actualites">Actualités officielles</a></li>
+          <li><a href="plateforme.html">Écosystème SAC</a></li>
+          <li><a href="verifier-diplome.html">Vérifier diplôme</a></li>
+          <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+          <li><a href="#roles">Étudiants</a></li>
+          <li><a href="#roles">Professeurs</a></li>
+          <li><a href="#roles">Assistants</a></li>
+          <li><a href="#roles">Universités</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Compte</h4>
+        <ul>
+          <li><a href="connexion.html">Connexion</a></li>
+          <li><a href="inscription.html">Inscription</a></li>
+          <li><a href="#">Mot de passe oublié</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Paiements</h4>
+        <ul style="font-size:0.88rem;line-height:1.7;">
+          <li><strong style="color:var(--accent);">USD</strong> — UBA<br />4035 2512 8823 8967</li>
+          <li style="margin-top:0.35rem;"><strong style="color:var(--accent);">CDF</strong> — First Bank<br />5644 1309 0100 9439 797</li>
+          <li style="margin-top:0.35rem;"><strong style="color:#ea580c;">Orange Money</strong><br />+243 85 184 8859</li>
+          <li style="margin-top:0.35rem;"><strong style="color:#059669;">M-Pesa</strong><br />+243 83 247 9012</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:contact@smartacademy.cd">contact@smartacademy.cd</a></li>
+          <li><a href="tel:+243000000000">+243 XXX XXX XXX</a></li>
+          <li><a href="#">Kinshasa, RDC</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 Smart Academy of Congo. Tous droits réservés.</span>
+      <span>Confidentialité · Conditions d'utilisation</span>
+    </div>
+  </footer>
+
+  <script src="js/sac-universities.js"></script>
+  <script src="js/sac-home-news.js"></script>
+  <script>
+    SAC_HOME_NEWS.renderHomepage({
+      feedId: "homeNewsFeed",
+      filtersId: "homeNewsFilters",
+      emptyId: "homeNewsEmpty",
+      uniSelectId: "homeNewsUni",
+    });
+  </script>
+  <script>
+    const header = document.getElementById("header");
+    const menuToggle = document.getElementById("menuToggle");
+    const mobileNav = document.getElementById("mobileNav");
+
+    window.addEventListener("scroll", () => {
+      header.classList.toggle("scrolled", window.scrollY > 20);
+    });
+
+    menuToggle.addEventListener("click", () => {
+      const open = mobileNav.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", open);
+      mobileNav.setAttribute("aria-hidden", !open);
+    });
+
+    mobileNav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        mobileNav.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        mobileNav.setAttribute("aria-hidden", "true");
+      });
+    });
+  </script>
+</body>
+</html>

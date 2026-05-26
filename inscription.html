@@ -1,0 +1,2811 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Inscription — Smart Academy of Congo. Étudiant, professeur ou université." />
+  <title>Inscription — Smart Academy of Congo</title>
+  <link rel="icon" href="logos.png" type="image/png" />
+  <link rel="apple-touch-icon" href="logos.png" />
+  <link rel="stylesheet" href="css/logo.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0c3d6e;
+      --primary-light: #145a9e;
+      --accent: #c9a227;
+      --accent-hover: #e0b83a;
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --text: #1a2b3c;
+      --text-muted: #5a6d7e;
+      --border: #e2e8f0;
+      --success: #0d7a4a;
+      --error: #b91c1c;
+      --radius: 12px;
+      --shadow-lg: 0 12px 48px rgba(12, 61, 110, 0.12);
+      --student: #0c3d6e;
+      --prof: #7c5c12;
+      --uni: #0d7a4a;
+      --assistant: #6b4c9a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    h1, h2 { font-family: "Playfair Display", Georgia, serif; line-height: 1.25; }
+    a { color: inherit; text-decoration: none; }
+
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 1.5rem;
+    }
+
+    .header__inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--primary);
+    }
+
+    .header__link {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .header__link:hover { color: var(--primary); }
+
+    .page {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      display: grid;
+      grid-template-columns: 0.9fr 1.2fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    .intro h1 {
+      font-size: clamp(1.6rem, 3vw, 2.1rem);
+      color: var(--primary);
+      margin-bottom: 0.85rem;
+    }
+
+    .intro > p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .benefits {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .benefits li {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      padding: 0.85rem 1rem;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .benefits li::before {
+      content: "✓";
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      background: rgba(13, 122, 74, 0.12);
+      color: var(--success);
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    .register-card {
+      background: var(--surface);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      padding: 2rem;
+    }
+
+    .register-card__title {
+      font-size: 1.35rem;
+      color: var(--primary);
+      margin-bottom: 0.3rem;
+    }
+
+    .register-card__subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .role-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .role-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 700px) {
+      .role-tabs { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .role-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.9rem 0.4rem;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.15s;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .role-tab__icon { font-size: 1.5rem; }
+
+    .role-tab:hover { border-color: rgba(12, 61, 110, 0.25); background: var(--surface); }
+
+    .role-tab.active {
+      border-color: var(--role-color, var(--primary));
+      background: var(--surface);
+      color: var(--role-color, var(--primary));
+      box-shadow: 0 4px 16px rgba(12, 61, 110, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .role-tab[data-role="etudiant"].active { --role-color: var(--student); }
+    .role-tab[data-role="professeur"].active { --role-color: var(--prof); }
+    .role-tab[data-role="assistant"].active { --role-color: var(--assistant); }
+    .role-tab[data-role="universite"].active { --role-color: var(--uni); }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      background: rgba(12, 61, 110, 0.08);
+      color: var(--primary);
+      border: 1px solid rgba(12, 61, 110, 0.12);
+    }
+
+    .role-badge[data-role="professeur"] {
+      background: rgba(201, 162, 39, 0.15);
+      color: var(--prof);
+      border-color: rgba(201, 162, 39, 0.3);
+    }
+
+    .role-badge[data-role="assistant"] {
+      background: rgba(107, 76, 154, 0.12);
+      color: var(--assistant);
+      border-color: rgba(107, 76, 154, 0.25);
+    }
+
+    .role-badge[data-role="universite"] {
+      background: rgba(13, 122, 74, 0.1);
+      color: var(--uni);
+      border-color: rgba(13, 122, 74, 0.2);
+    }
+
+    .role-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.25rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 1rem;
+    }
+
+    .form-grid .form-group.full { grid-column: 1 / -1; }
+
+    .form-group { margin-bottom: 1rem; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .form-group label .hint {
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.7rem 0.95rem;
+      font-size: 0.92rem;
+      font-family: inherit;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(12, 61, 110, 0.1);
+      background: var(--surface);
+    }
+
+    .form-input.error { border-color: var(--error); }
+
+    .field-error {
+      font-size: 0.78rem;
+      color: var(--error);
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .field-error.visible { display: block; }
+
+    .field-section { display: none; }
+    .field-section.visible { display: contents; }
+
+    .cours-classe-panel {
+      grid-column: 1 / -1;
+      margin-top: 0.5rem;
+      padding: 1rem 1.1rem;
+      background: rgba(12, 61, 110, 0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .cours-classe-panel h3 {
+      font-size: 1rem;
+      font-family: "DM Sans", sans-serif;
+      margin-bottom: 0.35rem;
+      color: var(--primary);
+    }
+    .cours-classe-panel .cours-hint {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.85rem;
+    }
+    .cours-row {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 1fr 0.9fr 1fr auto;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .cours-row { grid-template-columns: 1fr 1fr; }
+      .cours-row .btn-remove-cours { grid-column: span 2; }
+    }
+    .cours-row input, .cours-row select { font-size: 0.88rem; padding: 0.55rem 0.65rem; }
+    .section-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      align-items: start;
+    }
+    @media (max-width: 700px) {
+      .section-row { grid-template-columns: 1fr 1fr; }
+      .section-row .btn-remove-cours { grid-column: span 2; }
+    }
+    .section-row input { font-size: 0.88rem; padding: 0.55rem 0.65rem; }
+    .btn-add-cours {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.88rem;
+      border: 1px dashed var(--primary);
+      background: transparent;
+      color: var(--primary);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn-add-cours:hover { background: rgba(12, 61, 110, 0.06); }
+    .btn-remove-cours {
+      padding: 0.45rem 0.6rem;
+      border: none;
+      background: #fee2e2;
+      color: #b91c1c;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+    }
+    .field-error[data-for="coursClassesProf"],
+    .field-error[data-for="coursClassesAssist"] { grid-column: 1 / -1; }
+
+    .checkbox-terms {
+      display: flex;
+      gap: 0.65rem;
+      align-items: flex-start;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin: 1.25rem 0;
+      cursor: pointer;
+    }
+
+    .checkbox-terms input {
+      margin-top: 0.2rem;
+      width: 17px;
+      height: 17px;
+      accent-color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .checkbox-terms a {
+      color: var(--primary-light);
+      font-weight: 500;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 0.9rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: #fff;
+      background: var(--primary);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 4px 14px rgba(12, 61, 110, 0.25);
+    }
+
+    .btn-submit:hover { background: var(--primary-light); }
+    .btn-submit:active { transform: scale(0.99); }
+
+    .btn-submit[data-role="professeur"] { background: #9a7b1a; }
+    .btn-submit[data-role="professeur"]:hover { background: #b8921f; }
+
+    .btn-submit[data-role="assistant"] { background: var(--assistant); }
+    .btn-submit[data-role="assistant"]:hover { background: #8260b5; }
+
+    .btn-submit[data-role="universite"] { background: var(--uni); }
+    .btn-submit[data-role="universite"]:hover { background: #0f9660; }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 1.35rem;
+      padding-top: 1.35rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .form-footer a {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .success-banner {
+      display: none;
+      padding: 1rem 1.25rem;
+      background: rgba(13, 122, 74, 0.1);
+      border: 1px solid rgba(13, 122, 74, 0.25);
+      border-radius: var(--radius);
+      color: var(--success);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .success-banner.visible { display: block; }
+
+    .pricing-box {
+      background: linear-gradient(135deg, rgba(12, 61, 110, 0.06), rgba(201, 162, 39, 0.12));
+      border: 1px solid rgba(201, 162, 39, 0.4);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .pricing-box__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .pricing-box__label {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .pricing-box__amount {
+      font-family: "Playfair Display", serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .pricing-box__amount span {
+      font-size: 0.95rem;
+      font-family: "DM Sans", sans-serif;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .pricing-box__note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    .pricing-tiers {
+      list-style: none;
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .pricing-tiers li {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      padding: 0.35rem 0;
+    }
+
+    .pricing-tiers li.active-tier {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .pricing-tiers li.active-tier span:last-child {
+      color: var(--accent);
+    }
+
+    .payment-paid {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1rem;
+      background: rgba(13, 122, 74, 0.1);
+      border: 1px solid rgba(13, 122, 74, 0.25);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--success);
+      margin-bottom: 1rem;
+    }
+
+    .payment-paid.visible { display: flex; }
+
+    /* Modal paiement */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 43, 60, 0.55);
+      z-index: 200;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 1.25rem 1rem;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 20px;
+      max-width: 580px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+      overflow: visible;
+      animation: modalIn 0.25s ease;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      max-height: none;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal__header {
+      padding: 1.35rem 1.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #fff;
+    }
+
+    .modal__header h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .modal__header p { font-size: 0.88rem; opacity: 0.9; }
+
+    .modal__amount {
+      font-family: "Playfair Display", serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-top: 0.75rem;
+    }
+
+    .modal__body {
+      padding: 1.35rem 1.5rem 1.5rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: calc(100vh - 12rem);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .pay-methods {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1.15rem;
+    }
+
+    @media (min-width: 480px) {
+      .pay-methods { grid-template-columns: repeat(4, 1fr); }
+      .pay-method { font-size: 0.75rem; padding: 0.55rem 0.35rem; }
+    }
+
+    .pay-method {
+      padding: 0.65rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .pay-method.active {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--surface);
+    }
+
+    .pay-panel { display: none; }
+    .pay-panel.active { display: block; }
+
+    .bank-notice {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      background: rgba(12, 61, 110, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .bank-box {
+      background: var(--bg);
+      border: 2px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .bank-box--cdf { border-color: var(--success); }
+    .bank-box--orange { border-color: #ea580c; }
+    .bank-box--orange .bank-box__name { color: #ea580c; }
+    .bank-box--orange .bank-box__amount-due { color: #ea580c; }
+    .bank-box--mpesa { border-color: #059669; }
+    .bank-box--mpesa .bank-box__name { color: #059669; }
+    .bank-box--mpesa .bank-box__amount-due { color: #059669; }
+
+    .bank-box__phone {
+      font-family: ui-monospace, monospace;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .bank-box__name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .bank-box--cdf .bank-box__name { color: var(--success); }
+
+    .bank-box__currency {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .bank-box__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+      font-size: 0.88rem;
+    }
+
+    .bank-box__row span:first-child { color: var(--text-muted); }
+
+    .bank-box__account {
+      font-family: ui-monospace, monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--text);
+      word-break: break-all;
+    }
+
+    .bank-box__amount-due {
+      margin-top: 0.85rem;
+      padding-top: 0.85rem;
+      border-top: 1px dashed var(--border);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .bank-box--cdf .bank-box__amount-due { color: var(--success); }
+
+    /* Bordereau de virement — défilement pour lecture intégrale */
+    .bordereau-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .bordereau-hint button {
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    .bordereau-viewport {
+      position: relative;
+      height: min(300px, 42vh);
+      min-height: 220px;
+      overflow: hidden;
+      margin-bottom: 0.85rem;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid var(--border);
+    }
+
+    .bordereau-viewport::before,
+    .bordereau-viewport::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2.25rem;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .bordereau-viewport::before {
+      top: 0;
+      background: linear-gradient(to bottom, #fff 30%, transparent);
+    }
+
+    .bordereau-viewport::after {
+      bottom: 0;
+      background: linear-gradient(to top, #fff 30%, transparent);
+    }
+
+    .bordereau-viewport--static {
+      height: auto;
+      min-height: 0;
+      overflow: visible;
+    }
+
+    .bordereau-viewport--static::before,
+    .bordereau-viewport--static::after {
+      display: none;
+    }
+
+    .bordereau-viewport--static .bordereau-track {
+      animation: none !important;
+      transform: none !important;
+    }
+
+    .bordereau-track {
+      padding: 1rem 1.1rem 1.25rem;
+      will-change: transform;
+    }
+
+    .bordereau-track.is-scrolling {
+      animation: bordereauScroll var(--bordereau-duration, 22s) ease-in-out infinite;
+    }
+
+    .bordereau-viewport:hover .bordereau-track.is-scrolling,
+    .bordereau-viewport.is-paused .bordereau-track.is-scrolling {
+      animation-play-state: paused;
+    }
+
+    @keyframes bordereauScroll {
+      0%, 12% { transform: translateY(0); }
+      45%, 55% { transform: translateY(var(--bordereau-shift, -120px)); }
+      88%, 100% { transform: translateY(0); }
+    }
+
+    .bordereau-slip__head {
+      text-align: center;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 0.65rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .bordereau-slip__head h4 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .bordereau-slip__head strong {
+      font-size: 0.95rem;
+      color: var(--primary);
+      display: block;
+    }
+
+    .bordereau-line {
+      display: grid;
+      grid-template-columns: minmax(7.5rem, 38%) 1fr;
+      gap: 0.5rem 0.75rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px dotted var(--border);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .bordereau-line:last-child { border-bottom: none; }
+
+    .bordereau-line__k {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .bordereau-line__v {
+      font-weight: 600;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .bordereau-line__v--mono {
+      font-family: ui-monospace, "Cascadia Mono", monospace;
+      font-size: 0.92rem;
+      letter-spacing: 0.04em;
+    }
+
+    .bordereau-line__v--amount {
+      font-size: 1.05rem;
+      color: var(--primary);
+    }
+
+    .bank-box--cdf .bordereau-line__v--amount { color: var(--success); }
+    .bank-box--orange .bordereau-line__v--amount { color: #ea580c; }
+    .bank-box--mpesa .bordereau-line__v--amount { color: #059669; }
+
+    .bordereau-slip__foot {
+      margin-top: 0.75rem;
+      padding-top: 0.65rem;
+      border-top: 1px dashed var(--border);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .btn-copy {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: inherit;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--primary);
+    }
+
+    .btn-copy:hover { background: var(--primary); color: #fff; }
+
+    #mobilePayerSection {
+      display: none;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: rgba(107, 76, 154, 0.06);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+    }
+
+    #mobilePayerSection.visible { display: block; }
+
+    #payerPhoneError.field-error { display: none; }
+    #payerPhoneError.field-error.visible { display: block; }
+
+    #bankPayFlow.hidden { display: none; }
+
+    .btn-mobile-start {
+      width: 100%;
+      margin-top: 0.5rem;
+      padding: 0.85rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: #fff;
+      background: linear-gradient(135deg, #ea580c, #f97316);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-mobile-start.mpesa-style {
+      background: linear-gradient(135deg, #059669, #10b981);
+    }
+
+    .btn-mobile-start:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    #mobileProcessing,
+    #mobileAlertStep {
+      display: none;
+    }
+
+    #mobileProcessing.active,
+    #mobileAlertStep.active {
+      display: block;
+    }
+
+    .mobile-progress {
+      text-align: center;
+      padding: 1.5rem 1rem;
+    }
+
+    .mobile-progress__spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .mobile-progress__timer {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    .phone-alert-mock {
+      background: #1a2b3c;
+      color: #fff;
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .phone-alert-mock__bar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      opacity: 0.7;
+      margin-bottom: 1rem;
+    }
+
+    .phone-alert-mock__icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .phone-alert-mock__title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .phone-alert-mock__body {
+      font-size: 0.88rem;
+      opacity: 0.92;
+      line-height: 1.5;
+    }
+
+    .phone-alert-mock__amount {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0.75rem 0;
+    }
+
+    .pin-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .pin-row .form-input {
+      flex: 1;
+      text-align: center;
+      letter-spacing: 0.35em;
+      font-size: 1.1rem;
+    }
+
+    .mobile-confirm-form {
+      margin-top: 0.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .mobile-confirm-hint {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.85rem;
+      text-align: center;
+    }
+
+    .btn-submit-mobile {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: inherit;
+      color: #fff;
+      background: var(--success);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s, transform 0.15s;
+      box-shadow: 0 4px 16px rgba(13, 122, 74, 0.35);
+    }
+
+    .btn-submit-mobile:hover:not(:disabled) {
+      background: #0f9660;
+      transform: translateY(-1px);
+    }
+
+    .btn-submit-mobile:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+      background: #94a3b8;
+    }
+
+    .pay-panels-wrap.hidden { display: none; }
+
+    .modal__actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-top: 1.15rem;
+    }
+
+    .btn-pay {
+      width: 100%;
+      padding: 0.9rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: #fff;
+      background: var(--success);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-pay:hover { background: #0f9660; }
+    .btn-pay:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-cancel {
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
+    .btn-cancel:hover { color: var(--primary); }
+
+    .secure-note {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.85rem;
+      justify-content: center;
+    }
+
+    @media (max-width: 960px) {
+      .page { grid-template-columns: 1fr; }
+      .intro { text-align: center; }
+      .benefits { max-width: 480px; margin: 0 auto; }
+    }
+
+    @media (max-width: 560px) {
+      .role-tabs { grid-template-columns: 1fr; }
+      .role-tab { flex-direction: row; justify-content: center; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header__inner">
+      <a href="index.html" class="logo">
+        <img src="logos.png" alt="Smart Academy of Congo" class="logo__img" width="48" height="48" />
+        <span class="logo__text">Smart Academy</span>
+      </a>
+      <a href="connexion.html" class="header__link">Déjà inscrit ? Se connecter</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <aside class="intro">
+      <div class="logo-brand">
+        <img src="logos.png" alt="Smart Academy of Congo" class="logo__img" width="100" height="100" />
+        <p class="logo__caption">Smart Academy of Congo</p>
+      </div>
+      <h1>Rejoignez Smart Academy of Congo</h1>
+      <p>Créez votre compte selon votre profil pour accéder aux informations officielles de votre campus.</p>
+      <div class="pricing-box" style="margin-bottom: 1.5rem;">
+        <div class="pricing-box__row">
+          <span class="pricing-box__label">Votre tarif</span>
+          <div class="pricing-box__amount" id="pricingSidebarAmount">1,00 <span>USD</span></div>
+        </div>
+        <p class="pricing-box__note" id="pricingSidebarNote">Équivalent indicatif : ~2 800 CDF</p>
+        <p class="pricing-box__note" style="margin-top:0.5rem;">
+          <strong>USD</strong> → UBA · <strong>CDF</strong> → First Bank · Orange Money · M-Pesa
+        </p>
+        <ul class="pricing-tiers" id="pricingTiers">
+          <li data-tier="etudiant"><span>🎓 Étudiant</span><span>1 USD</span></li>
+          <li data-tier="assistant"><span>📋 Assistant</span><span>5 USD</span></li>
+          <li data-tier="professeur"><span>📚 Professeur</span><span>10 USD</span></li>
+          <li data-tier="universite"><span>🏛️ Université</span><span>20 USD</span></li>
+        </ul>
+      </div>
+      <ul class="benefits" id="benefitsList">
+        <li>Consultez vos notes et relevés de cotes en ligne</li>
+        <li>Suivez vos frais payés et les factures en attente</li>
+        <li>Accédez à votre dossier administratif universitaire</li>
+        <li>Recevez les annonces de votre établissement</li>
+      </ul>
+    </aside>
+
+    <section class="register-card">
+      <div class="success-banner" id="successBanner"></div>
+
+      <h2 class="register-card__title">Inscription</h2>
+      <p class="register-card__subtitle">Choisissez votre profil et complétez le formulaire</p>
+
+      <span class="role-label">Je m'inscris en tant que</span>
+      <div class="role-tabs" role="tablist">
+        <button type="button" class="role-tab active" data-role="etudiant" aria-selected="true">
+          <span class="role-tab__icon">🎓</span> Étudiant
+        </button>
+        <button type="button" class="role-tab" data-role="professeur" aria-selected="false">
+          <span class="role-tab__icon">📚</span> Professeur
+        </button>
+        <button type="button" class="role-tab" data-role="assistant" aria-selected="false">
+          <span class="role-tab__icon">📋</span> Assistant
+        </button>
+        <button type="button" class="role-tab" data-role="universite" aria-selected="false">
+          <span class="role-tab__icon">🏛️</span> Université
+        </button>
+      </div>
+
+      <div class="role-badge" id="roleBadge" data-role="etudiant">
+        <span id="roleBadgeIcon">🎓</span>
+        <span id="roleBadgeText">Inscription étudiant</span>
+      </div>
+
+      <p class="role-note" id="roleNote">
+        Votre compte sera lié à votre université. Vous pourrez consulter vos cotes et frais dès validation de votre inscription par l'administration.
+      </p>
+
+      <form id="registerForm" novalidate>
+        <div class="form-grid">
+
+          <!-- Commun : nom -->
+          <div class="form-group" id="grpPrenom">
+            <label for="prenom">Prénom <span class="hint">*</span></label>
+            <input type="text" class="form-input" id="prenom" name="prenom" required autocomplete="given-name" />
+            <span class="field-error" data-for="prenom">Prénom requis</span>
+          </div>
+          <div class="form-group" id="grpNom">
+            <label for="nom" id="labelNom">Nom <span class="hint">*</span></label>
+            <input type="text" class="form-input" id="nom" name="nom" required autocomplete="family-name" />
+            <span class="field-error" data-for="nom">Nom requis</span>
+          </div>
+
+          <!-- Étudiant -->
+          <div class="field-section visible" data-role="etudiant" id="sectionEtudiant">
+            <div class="form-group">
+              <label for="dateNaissance">Date de naissance</label>
+              <input type="date" class="form-input" id="dateNaissance" name="dateNaissance" />
+            </div>
+            <div class="form-group">
+              <label for="universiteEtu">Université <span class="hint">*</span></label>
+              <select class="form-input" id="universiteEtu" name="universite" data-sac-universities data-include-autre="true"></select>
+              <span class="field-error" data-for="universiteEtu">Sélectionnez une université</span>
+            </div>
+            <div class="form-group full">
+              <label for="filiere">Faculté / Filière <span class="hint">*</span></label>
+              <input type="text" class="form-input" id="filiere" name="filiere" placeholder="Ex. Sciences économiques — Gestion" />
+              <span class="field-error" data-for="filiere">Indiquez votre filière</span>
+            </div>
+            <div class="form-group">
+              <label for="niveau">Niveau d'études</label>
+              <select class="form-input" id="niveau" name="niveau">
+                <option value="l1">Licence 1 (L1)</option>
+                <option value="l2">Licence 2 (L2)</option>
+                <option value="l3">Licence 3 (L3)</option>
+                <option value="master1">Master 1</option>
+                <option value="master2">Master 2</option>
+                <option value="doctorat">Doctorat</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="matricule">N° matricule <span class="hint">(si déjà attribué)</span></label>
+              <input type="text" class="form-input" id="matricule" name="matricule" placeholder="Ex. ETU-2025-00001" />
+              <span class="field-error" data-for="matricule">Matricule déjà utilisé ou invalide</span>
+            </div>
+            <p class="form-group full" style="font-size:0.88rem;color:var(--text-muted);grid-column:1/-1;">
+              Vous verrez uniquement les contenus publiés par vos professeurs et assistants pour votre <strong>niveau</strong> et votre <strong>filière</strong> à la même université.
+            </p>
+          </div>
+
+          <!-- Professeur -->
+          <div class="field-section" data-role="professeur" id="sectionProfesseur">
+            <div class="form-group full">
+              <label for="universiteProf">Université d'affectation <span class="hint">*</span></label>
+              <select class="form-input" id="universiteProf" name="universiteProf" data-sac-universities data-include-autre="true"></select>
+              <span class="field-error" data-for="universiteProf">Sélectionnez une université</span>
+            </div>
+            <div class="form-group">
+              <label for="departement">Département / Faculté <span class="hint">*</span></label>
+              <input type="text" class="form-input" id="departement" name="departement" placeholder="Ex. Faculté des Sciences" />
+              <span class="field-error" data-for="departement">Département requis</span>
+            </div>
+            <div class="form-group">
+              <label for="grade">Grade</label>
+              <select class="form-input" id="grade" name="grade">
+                <option value="assistant">Assistant</option>
+                <option value="chef">Chef de travaux</option>
+                <option value="maitre">Maître de conférences</option>
+                <option value="professeur">Professeur ordinaire</option>
+                <option value="vacataire">Vacataire</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="numEmploye">N° employé <span class="hint">(optionnel)</span></label>
+              <input type="text" class="form-input" id="numEmploye" name="numEmploye" placeholder="Ex. PROF-2024-112" />
+            </div>
+            <div class="cours-classe-panel">
+              <h3>Cours et classes que vous enseignez</h3>
+              <p class="cours-hint">Chaque ligne = un cours et le groupe d'étudiants. Vos publications (documents, images, audio) ne seront visibles que par les étudiants inscrits au même niveau et filière.</p>
+              <div id="coursClasseListProf"></div>
+              <button type="button" class="btn-add-cours" id="btnAddCoursProf">+ Ajouter un cours / classe</button>
+              <span class="field-error" data-for="coursClassesProf">Ajoutez au moins un cours avec code, filière, niveau et nom de classe</span>
+            </div>
+          </div>
+
+          <!-- Assistant -->
+          <div class="field-section" data-role="assistant" id="sectionAssistant">
+            <div class="form-group full">
+              <label for="universiteAssist">Université d'affectation <span class="hint">*</span></label>
+              <select class="form-input" id="universiteAssist" name="universiteAssist" data-sac-universities data-include-autre="true"></select>
+              <span class="field-error" data-for="universiteAssist">Sélectionnez une université</span>
+            </div>
+            <div class="form-group">
+              <label for="service">Service / Bureau <span class="hint">*</span></label>
+              <select class="form-input" id="service" name="service">
+                <option value="">— Choisir —</option>
+                <option value="scolarite">Scolarité & inscriptions</option>
+                <option value="finances">Finances & frais universitaires</option>
+                <option value="secretariat">Secrétariat général</option>
+                <option value="faculte">Faculté / Décanat</option>
+                <option value="accueil">Accueil & orientation</option>
+              </select>
+              <span class="field-error" data-for="service">Sélectionnez un service</span>
+            </div>
+            <div class="form-group">
+              <label for="fonction">Fonction <span class="hint">*</span></label>
+              <select class="form-input" id="fonction" name="fonction">
+                <option value="admin">Assistant administratif</option>
+                <option value="scolarite">Assistant scolarité</option>
+                <option value="finances">Assistant finances</option>
+                <option value="accueil">Agent d'accueil</option>
+                <option value="direction">Assistant de direction</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="numAssist">N° matricule / employé <span class="hint">(optionnel)</span></label>
+              <input type="text" class="form-input" id="numAssist" name="numAssist" placeholder="Ex. AST-2025-042" />
+            </div>
+            <div class="cours-classe-panel">
+              <h3>Cours et classes accompagnés</h3>
+              <p class="cours-hint">Indiquez les classes que vous suivez (scolarité, TD, laboratoire). Les informations publiées ne seront visibles que par les étudiants concernés.</p>
+              <div id="coursClasseListAssist"></div>
+              <button type="button" class="btn-add-cours" id="btnAddCoursAssist">+ Ajouter un cours / classe</button>
+              <span class="field-error" data-for="coursClassesAssist">Ajoutez au moins un cours / classe</span>
+            </div>
+          </div>
+
+          <!-- Université -->
+          <div class="field-section" data-role="universite" id="sectionUniversite">
+            <div class="form-group full">
+              <label for="nomUniversite">Nom de l'université <span class="hint">*</span></label>
+              <input type="text" class="form-input" id="nomUniversite" name="nomUniversite" placeholder="Ex. Université de Kinshasa" />
+              <span class="field-error" data-for="nomUniversite">Nom requis</span>
+            </div>
+            <div class="form-group">
+              <label for="sigle">Sigle / Acronyme <span class="hint">*</span></label>
+              <input type="text" class="form-input" id="sigle" name="sigle" placeholder="Ex. UNIKIN" />
+              <span class="field-error" data-for="sigle">Sigle requis</span>
+            </div>
+            <div class="form-group">
+              <label for="ville">Ville du campus principal <span class="hint">*</span></label>
+              <input type="text" class="form-input" id="ville" name="ville" placeholder="Ex. Kinshasa" />
+              <span class="field-error" data-for="ville">Ville requise</span>
+            </div>
+            <div class="form-group full">
+              <label for="adresse">Adresse du campus</label>
+              <input type="text" class="form-input" id="adresse" name="adresse" placeholder="Avenue, commune, province" />
+            </div>
+            <div class="form-group">
+              <label for="nbEtudiants">Nombre d'étudiants <span class="hint">(approx.)</span></label>
+              <select class="form-input" id="nbEtudiants" name="nbEtudiants">
+                <option value="500">Moins de 500</option>
+                <option value="5000">500 — 5 000</option>
+                <option value="20000">5 000 — 20 000</option>
+                <option value="50000">20 000 — 50 000</option>
+                <option value="50000+">Plus de 50 000</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="siteWeb">Site web <span class="hint">(optionnel)</span></label>
+              <input type="url" class="form-input" id="siteWeb" name="siteWeb" placeholder="https://www.universite.cd" />
+            </div>
+            <div class="form-group full" id="grpResponsable">
+              <label for="responsable" id="labelResponsable">Nom du responsable (Recteur / Admin IT) <span class="hint">*</span></label>
+              <input type="text" class="form-input" id="responsable" name="responsable" placeholder="Ex. Dr. Jean Mukendi" />
+              <span class="field-error" data-for="responsable">Nom du responsable requis</span>
+            </div>
+            <div class="form-group full">
+              <label>Sections / facultés de votre établissement <span class="hint">*</span></label>
+              <p style="font-size:0.85rem;color:var(--text-muted);margin:0 0 0.75rem;">
+                Enregistrez toutes les sections organisées au sein de votre université (une ligne par faculté ou service).
+                Vous pourrez ensuite publier des informations par section : seuls les étudiants concernés les verront.
+              </p>
+              <div id="facultySectionsList"></div>
+              <button type="button" class="btn-add-cours" id="btnAddFacultySection" style="border-color:rgba(13,122,74,0.4);color:#0d7a4a;">
+                + Ajouter une section / faculté
+              </button>
+              <span class="field-error" data-for="facultySections">Au moins une section est requise (nom + filière)</span>
+            </div>
+          </div>
+
+          <!-- Contact commun -->
+          <div class="form-group" id="grpEmail">
+            <label for="email" id="labelEmail">E-mail <span class="hint">*</span></label>
+            <input type="email" class="form-input" id="email" name="email" required autocomplete="email" />
+            <span class="field-error" data-for="email">Adresse e-mail réelle requise (pas d'e-mail jetable ou fictif)</span>
+          </div>
+          <div class="form-group" id="grpTel">
+            <label for="telephone">Téléphone <span class="hint">*</span></label>
+            <input type="tel" class="form-input" id="telephone" name="telephone" placeholder="+243 XXX XXX XXX" required />
+            <span class="field-error" data-for="telephone">Numéro mobile congolais valide requis (ex. 085 184 8859)</span>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Mot de passe <span class="hint">(min. 8 caractères)</span></label>
+            <input type="password" class="form-input" id="password" name="password" minlength="8" required autocomplete="new-password" />
+            <span class="field-error" data-for="password">8 caractères minimum, avec lettres et chiffres</span>
+          </div>
+          <div class="form-group">
+            <label for="passwordConfirm">Confirmer le mot de passe</label>
+            <input type="password" class="form-input" id="passwordConfirm" name="passwordConfirm" required autocomplete="new-password" />
+            <span class="field-error" data-for="passwordConfirm">Les mots de passe ne correspondent pas</span>
+          </div>
+        </div>
+
+        <p class="bank-notice" style="margin-bottom:1rem;">
+          <strong>Sécurité :</strong> une seule inscription par personne — même e-mail, même téléphone et cumul de rôles interdits.
+          <strong>Conservez votre mot de passe et votre université :</strong> ils seront exigés à chaque connexion (aucun autre établissement ni mot de passe différent).
+        </p>
+
+        <label class="checkbox-terms">
+          <input type="checkbox" id="terms" name="terms" required />
+          <span>
+            J'accepte les <a href="#">conditions d'utilisation</a> et la
+            <a href="#">politique de confidentialité</a> de Smart Academy of Congo.
+          </span>
+        </label>
+
+        <div class="pricing-box">
+          <div class="pricing-box__row">
+            <span class="pricing-box__label">Total à payer pour l'inscription</span>
+            <div class="pricing-box__amount" id="pricingFormAmount">1,00 <span>USD</span></div>
+          </div>
+          <p class="pricing-box__note" id="pricingFormNote">Accès à vie après paiement unique de 1 $.</p>
+        </div>
+
+        <div class="payment-paid" id="paymentPaid">
+          ✓ <span id="paymentPaidText">Paiement confirmé</span> — <span id="paymentRef"></span>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btnSubmit" data-role="etudiant">
+          Continuer — Payer 1 USD
+        </button>
+      </form>
+
+      <p class="form-footer">
+        Vous avez déjà un compte ?
+        <a href="connexion.html" id="connexionLink">Se connecter</a>
+      </p>
+    </section>
+  </main>
+
+  <!-- Modal paiement -->
+  <div class="modal-overlay" id="paymentModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-labelledby="modalTitle">
+      <div class="modal__header">
+        <img src="logos.png" alt="" width="56" height="56" style="display:block;margin:0 auto 0.75rem;object-fit:contain;" aria-hidden="true" />
+        <h3 id="modalTitle">Finaliser l'inscription</h3>
+        <p id="modalSubtitle">Frais d'ouverture de compte Smart Academy</p>
+        <div class="modal__amount" id="modalAmount">1,00 USD</div>
+      </div>
+      <div class="modal__body">
+        <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:0.75rem;" id="paySummaryEmail"></p>
+
+        <p class="bank-notice">
+          <strong>Tous les paiements</strong> sont versés sur les comptes officiels ci-dessous :
+          <strong>UBA</strong> (USD), <strong>First Bank</strong> (CDF), <strong>Orange Money</strong> ou <strong>M-Pesa</strong>.
+        </p>
+
+        <div class="pay-methods" id="payMethodsBar">
+          <button type="button" class="pay-method active" data-method="usd">💵 UBA (USD)</button>
+          <button type="button" class="pay-method" data-method="cdf">🏦 First Bank (CDF)</button>
+          <button type="button" class="pay-method" data-method="orange">🟠 Orange Money</button>
+          <button type="button" class="pay-method" data-method="mpesa">📱 M-Pesa</button>
+        </div>
+
+        <div id="mobilePayerSection">
+          <div class="form-group" style="margin-bottom:0.75rem;">
+            <label for="payerPhone" id="payerPhoneLabel">Votre numéro de paiement <span class="hint">*</span></label>
+            <input type="tel" class="form-input" id="payerPhone" placeholder="Ex. 085 184 8859 (Orange) ou 083 247 9012 (M-Pesa)" />
+            <span class="field-error" id="payerPhoneError" data-for="payerPhone">Entrez le numéro depuis lequel vous payez</span>
+          </div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.65rem;" id="mobilePayHint">
+            Une alerte sera envoyée sur ce numéro. Confirmez avec votre code secret pour valider le paiement.
+          </p>
+          <button type="button" class="btn-mobile-start" id="btnStartMobilePay">Recevoir l'alerte sur mon téléphone</button>
+        </div>
+
+        <div id="mobileProcessing">
+          <div class="mobile-progress">
+            <div class="mobile-progress__spinner"></div>
+            <p><strong>Traitement en cours…</strong></p>
+            <p style="font-size:0.88rem;color:var(--text-muted);margin-top:0.35rem;">
+              Envoi de la demande de paiement à votre opérateur
+            </p>
+            <p class="mobile-progress__timer" id="mobileTimer">Moins d'une minute</p>
+          </div>
+        </div>
+
+        <div id="mobileAlertStep">
+          <div class="phone-alert-mock" id="phoneAlertMock">
+            <div class="phone-alert-mock__bar">
+              <span id="alertPhoneDisplay">+243 XXX XXX XXX</span>
+              <span>Maintenant</span>
+            </div>
+            <div class="phone-alert-mock__icon" id="alertProviderIcon">🟠</div>
+            <div class="phone-alert-mock__title" id="alertProviderName">Orange Money</div>
+            <p class="phone-alert-mock__body">
+              <strong>Smart Academy of Congo</strong> demande un paiement :
+            </p>
+            <div class="phone-alert-mock__amount" id="alertAmount">2 800 CDF</div>
+            <p class="phone-alert-mock__body" style="font-size:0.8rem;">
+              Vers : <span id="alertMerchantPhone">+243 85 184 8859</span><br />
+              Entrez votre code secret, puis appuyez sur <strong>Soumettre</strong> pour confirmer l'envoi.
+            </p>
+          </div>
+
+          <form id="mobileConfirmForm" class="mobile-confirm-form" novalidate>
+            <p class="mobile-confirm-hint">Étape finale : saisissez votre code secret et cliquez sur Soumettre</p>
+            <div class="form-group">
+              <label for="mobilePin">Code secret (mot de passe mobile) <span class="hint">*</span></label>
+              <div class="pin-row">
+                <input type="password" class="form-input" id="mobilePin" inputmode="numeric" maxlength="6" placeholder="••••" autocomplete="off" required />
+              </div>
+            </div>
+            <button type="submit" class="btn-submit-mobile" id="btnConfirmPin" disabled>
+              Soumettre — Confirmer le paiement
+            </button>
+          </form>
+          <button type="button" class="btn-cancel" id="btnCancelMobile" style="margin-top:0.75rem;">Annuler</button>
+        </div>
+
+        <div class="pay-panels-wrap" id="payPanelsWrap">
+        <p class="bordereau-hint" id="bordereauHint">
+          <span>↕ Bordereau défilant — lisez toute l'opération avant de valider au guichet</span>
+          <button type="button" id="btnPauseBordereau" aria-pressed="false">Pause</button>
+        </p>
+        <div class="pay-panel active" id="panelUsd">
+          <div class="bank-box" data-bordereau="usd">
+            <div class="bank-box__row" style="margin-bottom:0.5rem;">
+              <span class="bank-box__name">UBA BANK — USD</span>
+              <button type="button" class="btn-copy" data-copy="4035251288238967">Copier le compte</button>
+            </div>
+            <div class="bordereau-viewport" data-bordereau-viewport>
+              <div class="bordereau-track" data-bordereau-track></div>
+            </div>
+            <div class="bank-box__amount-due" id="amountDueUsd">Montant : 1,00 USD</div>
+          </div>
+        </div>
+
+        <div class="pay-panel" id="panelCdf">
+          <div class="bank-box bank-box--cdf" data-bordereau="cdf">
+            <div class="bank-box__row" style="margin-bottom:0.5rem;">
+              <span class="bank-box__name">FIRST BANK — CDF</span>
+              <button type="button" class="btn-copy" data-copy="5644130901009439797">Copier le compte</button>
+            </div>
+            <div class="bordereau-viewport" data-bordereau-viewport>
+              <div class="bordereau-track" data-bordereau-track></div>
+            </div>
+            <div class="bank-box__amount-due" id="amountDueCdf">Montant : 2 800 CDF</div>
+          </div>
+        </div>
+
+        <div class="pay-panel" id="panelOrange">
+          <div class="bank-box bank-box--orange" data-bordereau="orange">
+            <div class="bank-box__row" style="margin-bottom:0.5rem;">
+              <span class="bank-box__name">ORANGE MONEY</span>
+              <button type="button" class="btn-copy" data-copy="+243851848859">Copier le numéro</button>
+            </div>
+            <div class="bordereau-viewport" data-bordereau-viewport>
+              <div class="bordereau-track" data-bordereau-track></div>
+            </div>
+            <div class="bank-box__amount-due" id="amountDueOrange">Montant : 2 800 CDF</div>
+          </div>
+        </div>
+
+        <div class="pay-panel" id="panelMpesa">
+          <div class="bank-box bank-box--mpesa" data-bordereau="mpesa">
+            <div class="bank-box__row" style="margin-bottom:0.5rem;">
+              <span class="bank-box__name">M-PESA</span>
+              <button type="button" class="btn-copy" data-copy="+243832479012">Copier le numéro</button>
+            </div>
+            <div class="bordereau-viewport" data-bordereau-viewport>
+              <div class="bordereau-track" data-bordereau-track></div>
+            </div>
+            <div class="bank-box__amount-due" id="amountDueMpesa">Montant : 2 800 CDF</div>
+          </div>
+        </div>
+        </div>
+
+        <div id="bankPayFlow">
+        <div class="form-group">
+          <label for="bankRef">Référence / n° de transaction <span class="hint">*</span></label>
+          <input type="text" class="form-input" id="bankRef" placeholder="Ex. référence virement UBA ou First Bank" />
+        </div>
+
+        <label class="checkbox-terms" style="margin:0.75rem 0 1rem;">
+          <input type="checkbox" id="bankConfirm" />
+          <span id="confirmPayText">Je confirme avoir effectué le paiement vers le compte indiqué.</span>
+        </label>
+
+        <div class="modal__actions">
+          <button type="button" class="btn-pay" id="btnConfirmPay">Confirmer mon paiement</button>
+          <button type="button" class="btn-cancel" id="btnCancelPay">Annuler</button>
+        </div>
+        <p class="secure-note" id="secureNoteBank">🏦 Inscription activée après vérification du virement</p>
+        </div>
+        <p class="secure-note" id="secureNoteMobile" style="display:none;">📱 Paiement traité automatiquement en moins d'une minute</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sac-universities.js"></script>
+  <script src="js/sac-identity.js"></script>
+  <script src="js/sac-session.js"></script>
+  <script src="js/sac-api.js"></script>
+  <script src="js/sac-tariffs.js"></script>
+  <script src="js/sac-sections.js"></script>
+  <script>
+    /* Comptes officiels — tous les paiements de la plateforme */
+    const BANK_ACCOUNTS = {
+      usd: {
+        bank: "UBA BANK",
+        currency: "USD",
+        accountDisplay: "4035 2512 8823 8967",
+        accountRaw: "4035251288238967",
+        note: "Dollars (USD) uniquement",
+      },
+      cdf: {
+        bank: "FIRST BANK",
+        currency: "CDF",
+        accountDisplay: "5644 1309 0100 9439 797",
+        accountRaw: "5644130901009439797",
+        note: "Francs congolais (CDF) uniquement",
+      },
+      beneficiary: "Smart Academy of Congo",
+    };
+
+    const MOBILE_MONEY = {
+      orange: {
+        name: "Orange Money",
+        phone: "+243 85 184 8859",
+        phoneRaw: "+243851848859",
+        currency: "CDF",
+      },
+      mpesa: {
+        name: "M-Pesa",
+        phone: "+243 83 247 9012",
+        phoneRaw: "+243832479012",
+        currency: "CDF",
+      },
+    };
+
+    const FEES = SAC_TARIFFS.DEFAULT_FEES;
+    let activeFee = null;
+
+    /* Liens Stripe Payment Link par profil */
+    const STRIPE_PAYMENT_LINKS = {
+      etudiant: "",
+      assistant: "",
+      professeur: "",
+      universite: "",
+    };
+
+    function formatUsd(amount) {
+      return amount.toFixed(2).replace(".", ",") + " USD";
+    }
+
+    function getUniversiteForRole(role) {
+      if (role === "etudiant") return document.getElementById("universiteEtu")?.value || "";
+      if (role === "professeur") return document.getElementById("universiteProf")?.value || "";
+      if (role === "assistant") return document.getElementById("universiteAssist")?.value || "";
+      return "";
+    }
+
+    function getFee(role) {
+      if (activeFee && (role === currentRole || role === pendingProfile?.role)) return activeFee;
+      return FEES[role] || FEES.etudiant;
+    }
+
+    async function refreshPricing(role) {
+      role = role || currentRole;
+      const uni = getUniversiteForRole(role);
+      if (role === "universite" || !uni) {
+        activeFee = SAC_TARIFFS.defaultFor(role);
+      } else {
+        activeFee = await SAC_TARIFFS.resolve(role, uni);
+      }
+      updatePricingUI(role);
+    }
+
+    const ROLES = {
+      etudiant: {
+        badge: "Inscription étudiant",
+        icon: "🎓",
+        note: "Votre compte sera lié à votre université. Vous pourrez consulter vos cotes et frais dès validation de votre inscription par l'administration.",
+        benefits: [
+          "Consultez vos notes et relevés de cotes en ligne",
+          "Documents, images et audio de vos professeurs (votre classe uniquement)",
+          "Suivez vos frais payés et les factures en attente",
+          "Réagissez aux publications de vos enseignants",
+        ],
+        labelNom: "Nom de famille",
+        hidePrenomNomSplit: false,
+        connexionParam: "etudiant",
+      },
+      professeur: {
+        badge: "Inscription professeur",
+        icon: "📚",
+        note: "Votre demande sera validée par l'administration de votre université avant l'activation complète de votre compte (saisie des notes, listes d'étudiants).",
+        benefits: [
+          "Déclarez vos cours et classes à l'inscription",
+          "Publiez infos, PDF, images et audio pour votre classe",
+          "Gérez vos listes d'étudiants par matière",
+          "Recevez les réactions des étudiants",
+        ],
+        labelNom: "Nom de famille",
+        hidePrenomNomSplit: false,
+        connexionParam: "professeur",
+      },
+      assistant: {
+        badge: "Inscription assistant",
+        icon: "📋",
+        note: "Votre compte sera activé par l'administration de votre université. Vous pourrez gérer les dossiers étudiants, les frais et les documents administratifs de votre service.",
+        benefits: [
+          "Déclarez les classes que vous accompagnez",
+          "Publiez informations et documents pour une classe précise",
+          "Traitez inscriptions et dossiers étudiants",
+          "Suivez les paiements des frais",
+        ],
+        labelNom: "Nom de famille",
+        hidePrenomNomSplit: false,
+        connexionParam: "assistant",
+      },
+      universite: {
+        badge: "Inscription établissement",
+        icon: "🏛️",
+        note: "Un conseiller Smart Academy vous contactera sous 48 h pour valider le partenariat et activer le portail de votre campus.",
+        benefits: [
+          "Enregistrez toutes les sections / facultés de votre campus à l'inscription",
+          "Publiez par section : seuls les étudiants concernés voient le message",
+          "Gérez réclamations, frais et dossiers étudiants",
+          "Tableau de bord administratif centralisé",
+        ],
+        labelNom: "Nom de l'institution",
+        hidePrenomNomSplit: true,
+        connexionParam: "universite",
+      },
+    };
+
+    let currentRole = "etudiant";
+    let paymentCompleted = false;
+    let pendingProfile = null;
+    let pendingTxId = null;
+    let bordereauPaused = false;
+
+    const tabs = document.querySelectorAll(".role-tab");
+    const roleBadge = document.getElementById("roleBadge");
+    const roleBadgeIcon = document.getElementById("roleBadgeIcon");
+    const roleBadgeText = document.getElementById("roleBadgeText");
+    const roleNote = document.getElementById("roleNote");
+    const benefitsList = document.getElementById("benefitsList");
+    const btnSubmit = document.getElementById("btnSubmit");
+    const connexionLink = document.getElementById("connexionLink");
+    const registerForm = document.getElementById("registerForm");
+    const sections = document.querySelectorAll(".field-section");
+    const grpPrenom = document.getElementById("grpPrenom");
+    const grpNom = document.getElementById("grpNom");
+    const labelNom = document.getElementById("labelNom");
+    const labelResponsable = document.getElementById("labelResponsable");
+    const paymentModal = document.getElementById("paymentModal");
+    const paymentPaid = document.getElementById("paymentPaid");
+    const paymentRef = document.getElementById("paymentRef");
+    const paymentPaidText = document.getElementById("paymentPaidText");
+    const btnConfirmPay = document.getElementById("btnConfirmPay");
+
+    function bordereauLine(key, value, extraClass) {
+      const cls = extraClass ? ' class="bordereau-line__v ' + extraClass + '"' : ' class="bordereau-line__v"';
+      return (
+        '<div class="bordereau-line"><span class="bordereau-line__k">' +
+        key +
+        '</span><span' +
+        cls +
+        ">" +
+        value +
+        "</span></div>"
+      );
+    }
+
+    function buildBordereauHtml(kind, fee, email, ref, roleLabel) {
+      const dateStr = new Date().toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+      const motif = "Inscription Smart Academy — " + roleLabel;
+      const cdfLabel = fee.cdf.toLocaleString("fr-FR") + " CDF";
+
+      const head =
+        '<div class="bordereau-slip__head"><h4>Bordereau de paiement</h4><strong>Smart Academy of Congo</strong></div>';
+
+      const foot =
+        '<div class="bordereau-slip__foot">Conservez la référence de transaction après l\'opération. L\'inscription est activée après vérification par l\'administration.<br />Support : contact@smartacademy.cd</div>';
+
+      if (kind === "usd") {
+        return (
+          head +
+          bordereauLine("Type d'opération", "Virement bancaire international / local") +
+          bordereauLine("Banque bénéficiaire", "UBA BANK") +
+          bordereauLine("Pays", "République Démocratique du Congo") +
+          bordereauLine("Bénéficiaire", "Smart Academy of Congo") +
+          bordereauLine("N° de compte", "4035 2512 8823 8967", "bordereau-line__v--mono") +
+          bordereauLine("Devise du compte", "USD — Dollars américains uniquement") +
+          bordereauLine("Montant exact à virer", formatUsd(fee.amount), "bordereau-line__v--amount") +
+          bordereauLine("Motif / libellé", motif) +
+          bordereauLine("E-mail inscrit", email) +
+          bordereauLine("Référence SAC", ref, "bordereau-line__v--mono") +
+          bordereauLine("Date du bordereau", dateStr) +
+          bordereauLine("Instructions", "Saisissez chaque champ dans l'application UBA ou au guichet. Ne modifiez pas le numéro de compte.") +
+          foot
+        );
+      }
+      if (kind === "cdf") {
+        return (
+          head +
+          bordereauLine("Type d'opération", "Virement bancaire") +
+          bordereauLine("Banque bénéficiaire", "FIRST BANK") +
+          bordereauLine("Pays", "République Démocratique du Congo") +
+          bordereauLine("Bénéficiaire", "Smart Academy of Congo") +
+          bordereauLine("N° de compte", "5644 1309 0100 9439 797", "bordereau-line__v--mono") +
+          bordereauLine("Devise du compte", "CDF — Francs congolais uniquement") +
+          bordereauLine("Montant exact à virer", cdfLabel, "bordereau-line__v--amount") +
+          bordereauLine("Motif / libellé", motif) +
+          bordereauLine("E-mail inscrit", email) +
+          bordereauLine("Référence SAC", ref, "bordereau-line__v--mono") +
+          bordereauLine("Date du bordereau", dateStr) +
+          bordereauLine("Instructions", "Vérifiez le montant en CDF avant validation. Indiquez la référence SAC en commentaire si possible.") +
+          foot
+        );
+      }
+      if (kind === "orange") {
+        return (
+          head +
+          bordereauLine("Type d'opération", "Transfert Orange Money") +
+          bordereauLine("Opérateur", "Orange RDC") +
+          bordereauLine("Bénéficiaire", "Smart Academy of Congo") +
+          bordereauLine("Numéro marchand", "+243 85 184 8859", "bordereau-line__v--mono") +
+          bordereauLine("Devise", "CDF — Francs congolais") +
+          bordereauLine("Montant exact", cdfLabel, "bordereau-line__v--amount") +
+          bordereauLine("Motif", motif) +
+          bordereauLine("E-mail inscrit", email) +
+          bordereauLine("Référence SAC", ref, "bordereau-line__v--mono") +
+          bordereauLine("Date", dateStr) +
+          bordereauLine("Étapes", "1) Composer *144# ou l'app Orange Money · 2) Transfert · 3) Saisir le numéro · 4) Montant · 5) Valider avec code secret") +
+          foot
+        );
+      }
+      return (
+        head +
+        bordereauLine("Type d'opération", "Transfert M-Pesa") +
+        bordereauLine("Opérateur", "Vodacom M-Pesa") +
+        bordereauLine("Bénéficiaire", "Smart Academy of Congo") +
+        bordereauLine("Numéro marchand", "+243 83 247 9012", "bordereau-line__v--mono") +
+        bordereauLine("Devise", "CDF — Francs congolais") +
+        bordereauLine("Montant exact", cdfLabel, "bordereau-line__v--amount") +
+        bordereauLine("Motif", motif) +
+        bordereauLine("E-mail inscrit", email) +
+        bordereauLine("Référence SAC", ref, "bordereau-line__v--mono") +
+        bordereauLine("Date", dateStr) +
+        bordereauLine("Étapes", "1) Ouvrir M-Pesa · 2) Envoyer de l'argent · 3) Numéro bénéficiaire · 4) Montant · 5) Confirmer avec code PIN") +
+        foot
+      );
+    }
+
+    function setupBordereauScroll(viewport) {
+      const track = viewport.querySelector("[data-bordereau-track]");
+      if (!track) return;
+      track.classList.remove("is-scrolling");
+      viewport.classList.remove("bordereau-viewport--static", "is-paused");
+      track.style.removeProperty("--bordereau-shift");
+      track.style.removeProperty("--bordereau-duration");
+
+      const contentH = track.scrollHeight;
+      const viewH = viewport.clientHeight;
+      if (contentH <= viewH + 8) {
+        viewport.classList.add("bordereau-viewport--static");
+        return;
+      }
+      const shift = contentH - viewH;
+      track.style.setProperty("--bordereau-shift", "-" + shift + "px");
+      const duration = Math.max(14, Math.min(36, 10 + shift / 12));
+      track.style.setProperty("--bordereau-duration", duration + "s");
+      track.classList.add("is-scrolling");
+      if (bordereauPaused) viewport.classList.add("is-paused");
+    }
+
+    function renderAllBorderaux() {
+      const role = pendingProfile?.role || currentRole;
+      const fee = getFee(role);
+      const email =
+        pendingProfile?.email ||
+        document.getElementById("email")?.value?.trim() ||
+        "(votre e-mail d'inscription)";
+      const ref = pendingTxId || generateTransactionId();
+      const roleLabel = ROLES[role]?.badge || role;
+
+      document.querySelectorAll("[data-bordereau]").forEach((box) => {
+        const kind = box.dataset.bordereau;
+        const track = box.querySelector("[data-bordereau-track]");
+        if (!track) return;
+        track.innerHTML = buildBordereauHtml(kind, fee, email, ref, roleLabel);
+        const viewport = box.querySelector("[data-bordereau-viewport]");
+        if (viewport) requestAnimationFrame(() => setupBordereauScroll(viewport));
+      });
+    }
+
+    function refreshActiveBordereauScroll() {
+      const activePanel = document.querySelector(".pay-panel.active [data-bordereau-viewport]");
+      if (activePanel) requestAnimationFrame(() => setupBordereauScroll(activePanel));
+    }
+
+    function updatePricingUI(role) {
+      const fee = getFee(role);
+      const amountHtml = fee.amount.toFixed(2).replace(".", ",") + ' <span>USD</span>';
+
+      document.getElementById("pricingSidebarAmount").innerHTML = amountHtml;
+      document.getElementById("pricingFormAmount").innerHTML = amountHtml;
+      document.getElementById("modalAmount").textContent = formatUsd(fee.amount);
+      document.getElementById("pricingSidebarNote").textContent =
+        "Équivalent indicatif : ~" + fee.cdf.toLocaleString("fr-FR") + " CDF";
+      const uni = getUniversiteForRole(role);
+      const campusNote =
+        uni && role !== "universite"
+          ? " Tarif défini par votre université (" +
+            (typeof SAC_UNIVERSITIES !== "undefined"
+              ? SAC_UNIVERSITIES.getLabel(uni)
+              : uni) +
+            ")."
+          : "";
+      document.getElementById("pricingFormNote").textContent =
+        "USD → UBA · CDF → First Bank, Orange Money ou M-Pesa." + campusNote;
+
+      btnSubmit.textContent = "Continuer — Payer " + fee.amount + " USD";
+      btnConfirmPay.textContent = "Confirmer mon paiement";
+
+      const cdfLabel = fee.cdf.toLocaleString("fr-FR") + " CDF";
+      const amountUsdEl = document.getElementById("amountDueUsd");
+      const amountCdfEl = document.getElementById("amountDueCdf");
+      const amountOrangeEl = document.getElementById("amountDueOrange");
+      const amountMpesaEl = document.getElementById("amountDueMpesa");
+      if (amountUsdEl) amountUsdEl.textContent = "Montant à virer : " + formatUsd(fee.amount);
+      if (amountCdfEl) amountCdfEl.textContent = "Montant à virer : " + cdfLabel;
+      if (amountOrangeEl) amountOrangeEl.textContent = "Montant à envoyer : " + cdfLabel;
+      if (amountMpesaEl) amountMpesaEl.textContent = "Montant à envoyer : " + cdfLabel;
+
+      document.querySelectorAll(".pricing-tiers li").forEach((li) => {
+        li.classList.toggle("active-tier", li.dataset.tier === role);
+      });
+
+      renderAllBorderaux();
+    }
+
+    function resetPayment() {
+      paymentCompleted = false;
+      pendingProfile = null;
+      paymentPaid.classList.remove("visible");
+    }
+
+    function setRole(role) {
+      resetPayment();
+      currentRole = role;
+      const config = ROLES[role];
+
+      tabs.forEach((tab) => {
+        const active = tab.dataset.role === role;
+        tab.classList.toggle("active", active);
+        tab.setAttribute("aria-selected", active);
+      });
+
+      roleBadge.dataset.role = role;
+      roleBadgeIcon.textContent = config.icon;
+      roleBadgeText.textContent = config.badge;
+      roleNote.textContent = config.note;
+      btnSubmit.dataset.role = role;
+      connexionLink.href = `connexion.html?role=${config.connexionParam}`;
+      refreshPricing(role);
+
+      benefitsList.innerHTML = config.benefits
+        .map((b) => `<li>${b}</li>`)
+        .join("");
+
+      sections.forEach((sec) => {
+        sec.classList.toggle("visible", sec.dataset.role === role);
+      });
+
+      const isUni = role === "universite";
+      grpPrenom.style.display = isUni ? "none" : "";
+      grpNom.style.display = isUni ? "none" : "";
+      if (!isUni) {
+        labelNom.innerHTML = `${config.labelNom} <span class="hint">*</span>`;
+        document.getElementById("nom").placeholder = "";
+      }
+      if (role === "professeur") ensureCoursList("coursClasseListProf");
+      if (role === "assistant") ensureCoursList("coursClasseListAssist");
+      if (role === "universite") ensureFacultySectionsList();
+    }
+
+    function showError(fieldId, show, message) {
+      const input = document.getElementById(fieldId);
+      const err = document.querySelector(`.field-error[data-for="${fieldId}"]`);
+      if (input) input.classList.toggle("error", show);
+      if (err) {
+        err.classList.toggle("visible", show);
+        if (message) err.textContent = message;
+      }
+      return !show;
+    }
+
+    function validateRegistrationProfile(profile) {
+      if (profile.role !== "universite") {
+        const p = SAC_IDENTITY.validatePersonName(profile.prenom, "Prénom");
+        if (!p.ok) return { ok: false, field: "prenom", message: p.message };
+        const n = SAC_IDENTITY.validatePersonName(profile.nom, "Nom");
+        if (!n.ok) return { ok: false, field: "nom", message: n.message };
+        profile.prenom = p.value;
+        profile.nom = n.value;
+      } else {
+        const u = SAC_IDENTITY.validatePersonName(profile.nomUniversite, "Nom de l'université");
+        if (!u.ok) return { ok: false, field: "nomUniversite", message: u.message };
+        const r = SAC_IDENTITY.validatePersonName(profile.responsable, "Responsable");
+        if (!r.ok) return { ok: false, field: "responsable", message: r.message };
+      }
+
+      const em = SAC_IDENTITY.validateEmail(profile.email);
+      if (!em.ok) return { ok: false, field: "email", message: em.message };
+
+      const ph = SAC_IDENTITY.validatePhone(profile.telephone);
+      if (!ph.ok) return { ok: false, field: "telephone", message: ph.message };
+
+      const pw = SAC_IDENTITY.validatePassword(profile.password);
+      if (!pw.ok) return { ok: false, field: "password", message: pw.message };
+
+      const dup = SAC_IDENTITY.checkRegistration(
+        { ...profile, email: em.value, telephone: ph.value }
+      );
+      if (!dup.ok) return dup;
+
+      if (profile.role === "etudiant" && profile.matricule) {
+        const mat = SAC_IDENTITY.validateMatricule(
+          profile.matricule,
+          SAC_IDENTITY.getLocalUsers(),
+          em.value
+        );
+        if (!mat.ok) return { ok: false, field: "matricule", message: mat.message };
+      }
+
+      if (profile.role === "etudiant" && profile.dateNaissance) {
+        const birth = new Date(profile.dateNaissance);
+        const now = new Date();
+        if (birth >= now) {
+          return { ok: false, field: "dateNaissance", message: "Date de naissance invalide." };
+        }
+        const age = (now - birth) / (365.25 * 24 * 60 * 60 * 1000);
+        if (age < 15 || age > 90) {
+          return {
+            ok: false,
+            field: "dateNaissance",
+            message: "Vérifiez la date de naissance saisie.",
+          };
+        }
+      }
+
+      profile.email = em.value;
+      profile.telephone = ph.value;
+      return { ok: true };
+    }
+
+    const NIVEAU_OPTS = `
+      <option value="l1">L1</option><option value="l2">L2</option><option value="l3">L3</option>
+      <option value="master1">Master 1</option><option value="master2">Master 2</option><option value="doctorat">Doctorat</option>`;
+
+    function createCoursRow() {
+      const row = document.createElement("div");
+      row.className = "cours-row";
+      row.innerHTML = `
+        <input type="text" class="form-input" data-cc="courseCode" placeholder="Code *" required />
+        <input type="text" class="form-input" data-cc="courseName" placeholder="Intitulé du cours *" required />
+        <input type="text" class="form-input" data-cc="filiere" placeholder="Filière *" required />
+        <select class="form-input" data-cc="niveau" required>${NIVEAU_OPTS}</select>
+        <input type="text" class="form-input" data-cc="classe" placeholder="Nom classe *" required />
+        <button type="button" class="btn-remove-cours" title="Supprimer">✕</button>`;
+      row.querySelector(".btn-remove-cours").addEventListener("click", () => row.remove());
+      return row;
+    }
+
+    function ensureCoursList(listId) {
+      const list = document.getElementById(listId);
+      if (list && !list.children.length) list.appendChild(createCoursRow());
+    }
+
+    function createFacultySectionRow() {
+      const row = document.createElement("div");
+      row.className = "section-row";
+      row.innerHTML = `
+        <input type="text" class="form-input" data-sec="name" placeholder="Nom section / faculté *" required />
+        <input type="text" class="form-input" data-sec="filiere" placeholder="Filière couverte *" required />
+        <input type="text" class="form-input" data-sec="responsable" placeholder="Responsable (opt.)" />
+        <button type="button" class="btn-remove-cours" title="Supprimer">✕</button>`;
+      row.querySelector(".btn-remove-cours").addEventListener("click", () => row.remove());
+      return row;
+    }
+
+    function ensureFacultySectionsList() {
+      const list = document.getElementById("facultySectionsList");
+      if (list && !list.children.length) list.appendChild(createFacultySectionRow());
+    }
+
+    function collectFacultySections() {
+      const list = document.getElementById("facultySectionsList");
+      if (!list) return [];
+      return Array.from(list.querySelectorAll(".section-row"))
+        .map((row) => ({
+          name: row.querySelector('[data-sec="name"]')?.value.trim() || "",
+          filiere: row.querySelector('[data-sec="filiere"]')?.value.trim() || "",
+          responsableNom: row.querySelector('[data-sec="responsable"]')?.value.trim() || "",
+        }))
+        .filter((s) => s.name && s.filiere);
+    }
+
+    function validateFacultySections() {
+      const ok = collectFacultySections().length > 0;
+      const err = document.querySelector('.field-error[data-for="facultySections"]');
+      if (err) err.classList.toggle("visible", !ok);
+      return ok;
+    }
+
+    function collectCoursClasses(listId, universite) {
+      const list = document.getElementById(listId);
+      if (!list) return [];
+      return Array.from(list.querySelectorAll(".cours-row"))
+        .map((row) => ({
+          courseCode: row.querySelector('[data-cc="courseCode"]').value.trim(),
+          courseName: row.querySelector('[data-cc="courseName"]').value.trim(),
+          filiere: row.querySelector('[data-cc="filiere"]').value.trim(),
+          niveau: row.querySelector('[data-cc="niveau"]').value,
+          classe: row.querySelector('[data-cc="classe"]').value.trim(),
+          universite: universite || "",
+        }))
+        .filter((c) => c.courseCode && c.courseName && c.filiere && c.niveau && c.classe);
+    }
+
+    function validateCoursClasses(listId, errorKey) {
+      const rows = collectCoursClasses(listId, "");
+      const ok = rows.length > 0;
+      const err = document.querySelector(`.field-error[data-for="${errorKey}"]`);
+      if (err) err.classList.toggle("visible", !ok);
+      return ok;
+    }
+
+    document.getElementById("btnAddCoursProf").addEventListener("click", () => {
+      document.getElementById("coursClasseListProf").appendChild(createCoursRow());
+    });
+    document.getElementById("btnAddCoursAssist").addEventListener("click", () => {
+      document.getElementById("coursClasseListAssist").appendChild(createCoursRow());
+    });
+    ensureCoursList("coursClasseListProf");
+    ensureCoursList("coursClasseListAssist");
+    ensureFacultySectionsList();
+    document.getElementById("btnAddFacultySection")?.addEventListener("click", () => {
+      document.getElementById("facultySectionsList")?.appendChild(createFacultySectionRow());
+    });
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => setRole(tab.dataset.role));
+    });
+
+    function generateTransactionId() {
+      return "SAC-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
+    }
+
+    async function openPaymentModal(profile) {
+      pendingProfile = { ...profile, _pwd: profile.password };
+      pendingTxId = generateTransactionId();
+      const uni = profile.universite || getUniversiteForRole(profile.role);
+      if (profile.role !== "universite" && uni) {
+        activeFee = await SAC_TARIFFS.resolve(profile.role, uni);
+      } else {
+        activeFee = SAC_TARIFFS.defaultFor(profile.role);
+      }
+      const fee = getFee(profile.role);
+      document.getElementById("paySummaryEmail").textContent =
+        "Compte : " + profile.email + " · " + ROLES[profile.role].badge + " · " + formatUsd(fee.amount);
+      document.getElementById("modalSubtitle").textContent =
+        "Frais d'inscription " + fee.label;
+
+      const stripeLink = STRIPE_PAYMENT_LINKS[profile.role];
+      if (stripeLink) {
+        window.location.href =
+          stripeLink +
+          (stripeLink.includes("?") ? "&" : "?") +
+          "client_reference_id=" + encodeURIComponent(profile.email);
+        return;
+      }
+
+      document.getElementById("bankRef").value = "";
+      document.getElementById("bankConfirm").checked = false;
+      const telForm = document.getElementById("telephone").value.trim();
+      document.getElementById("payerPhone").value = telForm.length >= 9 ? telForm : "";
+      resetMobilePayUI();
+      updatePricingUI(profile.role);
+      renderAllBorderaux();
+      setTimeout(refreshActiveBordereauScroll, 100);
+
+      paymentModal.classList.add("open");
+      paymentModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closePaymentModal() {
+      paymentModal.classList.remove("open");
+      paymentModal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      resetMobilePayUI();
+    }
+
+    let activeMobileMethod = null;
+    let mobileProcessTimer = null;
+    let skipMobileAutoStart = false;
+
+    function isMobileMethod(m) {
+      return m === "orange" || m === "mpesa";
+    }
+
+    function formatPayerPhoneDisplay(raw) {
+      const d = raw.replace(/\D/g, "");
+      if (d.length >= 9) {
+        const local = d.slice(-9);
+        return "+243 " + local.slice(0, 3) + " " + local.slice(3, 6) + " " + local.slice(6);
+      }
+      return raw;
+    }
+
+    function validatePayerPhone() {
+      const check = SAC_IDENTITY.validatePhone(document.getElementById("payerPhone").value);
+      const ok = check.ok;
+      document.getElementById("payerPhone").classList.toggle("error", !ok);
+      const errEl = document.getElementById("payerPhoneError");
+      errEl.classList.toggle("visible", !ok);
+      if (!ok && check.message) errEl.textContent = check.message;
+      return ok;
+    }
+
+    function resetMobilePayUI() {
+      if (mobileProcessTimer) clearTimeout(mobileProcessTimer);
+      activeMobileMethod = null;
+      document.getElementById("mobileProcessing").classList.remove("active");
+      document.getElementById("mobileAlertStep").classList.remove("active");
+      document.getElementById("payMethodsBar").style.display = "";
+      document.getElementById("payPanelsWrap").classList.remove("hidden");
+      document.getElementById("mobilePayerSection").classList.remove("visible");
+      document.getElementById("bankPayFlow").classList.remove("hidden");
+      document.getElementById("secureNoteBank").style.display = "";
+      document.getElementById("secureNoteMobile").style.display = "none";
+      const hint = document.getElementById("bordereauHint");
+      if (hint) hint.style.display = "";
+      document.getElementById("mobilePin").value = "";
+      document.getElementById("btnStartMobilePay").disabled = false;
+      const btnPin = document.getElementById("btnConfirmPin");
+      btnPin.disabled = true;
+      btnPin.textContent = "Soumettre — Confirmer le paiement";
+    }
+
+    function updateSubmitPinButton() {
+      const pin = document.getElementById("mobilePin").value;
+      const btn = document.getElementById("btnConfirmPin");
+      btn.disabled = pin.length < 4;
+    }
+
+    function submitMobilePayment() {
+      const pin = document.getElementById("mobilePin").value;
+      if (pin.length < 4) {
+        document.getElementById("mobilePin").focus();
+        updateSubmitPinButton();
+        return;
+      }
+      const method = activeMobileMethod;
+      if (!method) return;
+
+      const btn = document.getElementById("btnConfirmPin");
+      btn.disabled = true;
+      btn.textContent = "Envoi en cours…";
+
+      setTimeout(() => {
+        const txAuto = "MM-" + Date.now().toString(36).toUpperCase();
+        markPaymentPaid(method, txAuto, {
+          payerPhone: document.getElementById("payerPhone").value.trim(),
+          status: "completed",
+          confirmedByPin: true,
+        });
+      }, 1500);
+    }
+
+    function switchPayPanel(method) {
+      Object.keys(PAY_PANELS).forEach((m) => {
+        document.getElementById(PAY_PANELS[m]).classList.toggle("active", m === method);
+      });
+
+      const mobile = isMobileMethod(method);
+      document.getElementById("mobilePayerSection").classList.toggle("visible", mobile);
+      document.getElementById("bankPayFlow").classList.toggle("hidden", mobile);
+      document.getElementById("secureNoteBank").style.display = mobile ? "none" : "";
+      document.getElementById("secureNoteMobile").style.display = mobile ? "" : "none";
+
+      const btnStart = document.getElementById("btnStartMobilePay");
+      const payerLabel = document.getElementById("payerPhoneLabel");
+      if (method === "orange") {
+        btnStart.textContent = "Recevoir l'alerte Orange Money";
+        btnStart.classList.remove("mpesa-style");
+        payerLabel.innerHTML = 'Votre numéro Orange Money <span class="hint">*</span>';
+        document.getElementById("payerPhone").placeholder = "Ex. 085 184 8859";
+      } else if (method === "mpesa") {
+        btnStart.textContent = "Recevoir l'alerte M-Pesa";
+        btnStart.classList.add("mpesa-style");
+        payerLabel.innerHTML = 'Votre numéro M-Pesa <span class="hint">*</span>';
+        document.getElementById("payerPhone").placeholder = "Ex. 083 247 9012";
+      }
+
+      const texts = {
+        usd: "Je confirme avoir viré le montant en USD sur le compte UBA BANK indiqué.",
+        cdf: "Je confirme avoir viré le montant en CDF sur le compte First Bank indiqué.",
+      };
+      if (!mobile) document.getElementById("confirmPayText").textContent = texts[method] || texts.usd;
+
+      if (mobile) {
+        resetMobilePayUI();
+        document.getElementById("mobilePayerSection").classList.add("visible");
+        document.getElementById("bankPayFlow").classList.add("hidden");
+        document.getElementById("secureNoteMobile").style.display = "";
+        const tel = document.getElementById("telephone").value.trim();
+        if (tel.length >= 9 && !document.getElementById("payerPhone").value) {
+          document.getElementById("payerPhone").value = tel;
+        }
+        if (!skipMobileAutoStart) {
+          setTimeout(() => {
+            if (validatePayerPhone()) startMobilePaymentFlow(method);
+            else document.getElementById("payerPhone").focus();
+          }, 600);
+        }
+        skipMobileAutoStart = false;
+      } else {
+        resetMobilePayUI();
+        setTimeout(refreshActiveBordereauScroll, 80);
+      }
+    }
+
+    function startMobilePaymentFlow(method) {
+      if (!validatePayerPhone()) return;
+
+      activeMobileMethod = method;
+      const fee = getFee(pendingProfile?.role || currentRole);
+      const payerPhone = document.getElementById("payerPhone").value.trim();
+      const provider = method === "orange" ? MOBILE_MONEY.orange : MOBILE_MONEY.mpesa;
+      const cdfLabel = fee.cdf.toLocaleString("fr-FR") + " CDF";
+
+      document.getElementById("payMethodsBar").style.display = "none";
+      document.getElementById("payPanelsWrap").classList.add("hidden");
+      const hint = document.getElementById("bordereauHint");
+      if (hint) hint.style.display = "none";
+      document.getElementById("mobilePayerSection").classList.remove("visible");
+      document.getElementById("mobileProcessing").classList.add("active");
+      document.getElementById("mobileAlertStep").classList.remove("active");
+      document.getElementById("btnStartMobilePay").disabled = true;
+
+      let seconds = 0;
+      const timerEl = document.getElementById("mobileTimer");
+      const tick = setInterval(() => {
+        seconds++;
+        timerEl.textContent = "Traitement… " + seconds + " s (moins d'une minute)";
+      }, 1000);
+
+      const processMs = 8000 + Math.floor(Math.random() * 22000);
+
+      mobileProcessTimer = setTimeout(() => {
+        clearInterval(tick);
+        document.getElementById("mobileProcessing").classList.remove("active");
+        document.getElementById("mobileAlertStep").classList.add("active");
+
+        document.getElementById("alertPhoneDisplay").textContent = formatPayerPhoneDisplay(payerPhone);
+        document.getElementById("alertProviderIcon").textContent = method === "orange" ? "🟠" : "📱";
+        document.getElementById("alertProviderName").textContent = provider.name;
+        document.getElementById("alertAmount").textContent = cdfLabel;
+        document.getElementById("alertMerchantPhone").textContent = provider.phone;
+        document.getElementById("mobilePin").value = "";
+        updateSubmitPinButton();
+        document.getElementById("mobilePin").focus();
+      }, processMs);
+    }
+
+    async function completeRegistration(profile, payment) {
+      const sec = validateRegistrationProfile({
+        ...profile,
+        password: pendingProfile?._pwd || profile.password || "",
+      });
+      if (!sec.ok) {
+        alert(sec.message);
+        if (sec.field) {
+          showError(sec.field, true, sec.message);
+          document.getElementById(sec.field)?.focus();
+        }
+        return;
+      }
+      profile.email = sec.email || profile.email;
+      profile.telephone = sec.telephone || profile.telephone;
+
+      profile.payment = payment;
+      if (typeof SAC_TARIFFS !== "undefined") {
+        profile = await SAC_TARIFFS.applyCampusTariffsOnRegister(profile);
+      } else {
+        profile.inscriptionFee = getFee(profile.role);
+      }
+
+      const dashboards = {
+        etudiant: "dashboard-etudiant.html",
+        professeur: "dashboard-professeur.html",
+        assistant: "dashboard-assistant.html",
+        universite: "dashboard-universite.html",
+      };
+
+      try {
+        if (typeof SAC_API !== "undefined" && (await SAC_API.ensureOnline())) {
+          const pwd = pendingProfile?._pwd || profile.password;
+          const regPayload = { ...profile, password: pwd };
+          delete regPayload._pwd;
+          await SAC_API.register(regPayload);
+          if (profile.role === "universite" && profile.facultySections?.length && typeof SAC_SECTIONS !== "undefined") {
+            SAC_SECTIONS.importSectionsForUniversity({
+              ...profile,
+              email: profile.email,
+              identifiant: profile.email,
+            });
+          }
+          window.location.href = dashboards[profile.role];
+          return;
+        }
+      } catch (err) {
+        alert(err.message || "Inscription impossible. Vérifiez vos données.");
+        return;
+      }
+
+      const users = SAC_IDENTITY.getLocalUsers();
+      const dupAgain = SAC_IDENTITY.checkRegistration(profile, users);
+      if (!dupAgain.ok) {
+        alert(dupAgain.message);
+        return;
+      }
+
+      const plainPwd = pendingProfile?._pwd || profile.password;
+      if (!plainPwd) {
+        alert("Mot de passe manquant. Recommencez l'inscription.");
+        return;
+      }
+      profile.passwordHash = await SAC_IDENTITY.hashPassword(plainPwd);
+      profile.universiteLocked = SAC_IDENTITY.getRegisteredUniversite(profile);
+      delete profile.password;
+      delete profile._pwd;
+
+      users.push(profile);
+      localStorage.setItem("sac_users", JSON.stringify(users));
+
+      if (profile.role === "universite" && profile.facultySections?.length && typeof SAC_SECTIONS !== "undefined") {
+        SAC_SECTIONS.importSectionsForUniversity({
+          ...profile,
+          email: profile.email,
+          identifiant: profile.email,
+        });
+      }
+
+      const session = SAC_IDENTITY.buildSessionFromUser(profile);
+      session.newAccount = true;
+      session.payment = payment;
+      SAC_SESSION.saveSession(session);
+
+      window.location.href = dashboards[profile.role];
+    }
+
+    const PAY_PANELS = {
+      usd: "panelUsd",
+      cdf: "panelCdf",
+      orange: "panelOrange",
+      mpesa: "panelMpesa",
+    };
+
+    function markPaymentPaid(payMethod, paymentReference, extra = {}) {
+      const role = pendingProfile?.role || currentRole;
+      const fee = getFee(role);
+      const txId = pendingTxId || generateTransactionId();
+
+      let payment = {
+        amountUsd: fee.amount,
+        amountCdf: fee.cdf,
+        role,
+        paymentReference: paymentReference,
+        transactionId: txId,
+        paidAt: new Date().toISOString(),
+        status: "pending_verification",
+        ...extra,
+      };
+
+      if (payMethod === "usd") {
+        payment = {
+          ...payment,
+          amount: fee.amount,
+          currency: "USD",
+          method: "virement_bancaire",
+          provider: BANK_ACCOUNTS.usd.bank,
+          account: BANK_ACCOUNTS.usd.accountDisplay,
+        };
+        paymentPaidText.textContent = "Paiement " + fee.amount + " USD → UBA enregistré";
+      } else if (payMethod === "cdf") {
+        payment = {
+          ...payment,
+          amount: fee.cdf,
+          currency: "CDF",
+          method: "virement_bancaire",
+          provider: BANK_ACCOUNTS.cdf.bank,
+          account: BANK_ACCOUNTS.cdf.accountDisplay,
+        };
+        paymentPaidText.textContent = "Paiement " + fee.cdf.toLocaleString("fr-FR") + " CDF → First Bank enregistré";
+      } else if (payMethod === "orange") {
+        payment = {
+          ...payment,
+          amount: fee.cdf,
+          currency: "CDF",
+          method: "orange_money",
+          provider: MOBILE_MONEY.orange.name,
+          merchantPhone: MOBILE_MONEY.orange.phone,
+          payerPhone: extra.payerPhone || null,
+          status: extra.status || "completed",
+        };
+        paymentPaidText.textContent = "Paiement Orange Money confirmé ✓";
+      } else if (payMethod === "mpesa") {
+        payment = {
+          ...payment,
+          amount: fee.cdf,
+          currency: "CDF",
+          method: "mpesa",
+          provider: MOBILE_MONEY.mpesa.name,
+          merchantPhone: MOBILE_MONEY.mpesa.phone,
+          payerPhone: extra.payerPhone || null,
+          status: extra.status || "completed",
+        };
+        paymentPaidText.textContent = "Paiement M-Pesa confirmé ✓";
+      }
+
+      paymentCompleted = true;
+      paymentRef.textContent = "Réf. " + txId + " · " + paymentReference;
+      paymentPaid.classList.add("visible");
+      closePaymentModal();
+
+      if (pendingProfile) completeRegistration(pendingProfile, payment);
+    }
+
+    document.querySelectorAll(".pay-method").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".pay-method").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        switchPayPanel(btn.dataset.method);
+      });
+    });
+
+    document.getElementById("btnPauseBordereau")?.addEventListener("click", () => {
+      bordereauPaused = !bordereauPaused;
+      const btn = document.getElementById("btnPauseBordereau");
+      btn.textContent = bordereauPaused ? "Reprendre" : "Pause";
+      btn.setAttribute("aria-pressed", bordereauPaused ? "true" : "false");
+      document.querySelectorAll("[data-bordereau-viewport]").forEach((vp) => {
+        vp.classList.toggle("is-paused", bordereauPaused);
+      });
+    });
+
+    window.addEventListener("resize", () => {
+      if (paymentModal.classList.contains("open")) refreshActiveBordereauScroll();
+    });
+
+    document.getElementById("btnStartMobilePay").addEventListener("click", () => {
+      const method = document.querySelector(".pay-method.active")?.dataset.method;
+      if (isMobileMethod(method)) startMobilePaymentFlow(method);
+    });
+
+    document.getElementById("payerPhone").addEventListener("input", () => {
+      validatePayerPhone();
+    });
+
+    document.getElementById("mobilePin").addEventListener("input", updateSubmitPinButton);
+
+    document.getElementById("mobileConfirmForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      submitMobilePayment();
+    });
+
+    document.getElementById("btnCancelMobile").addEventListener("click", () => {
+      skipMobileAutoStart = true;
+      resetMobilePayUI();
+      const method = document.querySelector(".pay-method.active")?.dataset.method;
+      if (isMobileMethod(method)) {
+        document.getElementById("mobilePayerSection").classList.add("visible");
+        document.getElementById("bankPayFlow").classList.add("hidden");
+        Object.keys(PAY_PANELS).forEach((m) => {
+          document.getElementById(PAY_PANELS[m]).classList.toggle("active", m === method);
+        });
+      }
+    });
+
+    document.querySelectorAll(".btn-copy").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const num = btn.dataset.copy;
+        navigator.clipboard?.writeText(num).then(() => {
+          btn.textContent = "Copié ✓";
+          setTimeout(() => { btn.textContent = "Copier"; }, 2000);
+        });
+      });
+    });
+
+    document.getElementById("btnCancelPay").addEventListener("click", closePaymentModal);
+    paymentModal.addEventListener("click", (e) => {
+      if (e.target === paymentModal) closePaymentModal();
+    });
+
+    btnConfirmPay.addEventListener("click", () => {
+      const payMethod = document.querySelector(".pay-method.active").dataset.method;
+      if (isMobileMethod(payMethod)) return;
+
+      const paymentRef = document.getElementById("bankRef").value.trim();
+      const confirmed = document.getElementById("bankConfirm").checked;
+
+      const refCheck = SAC_IDENTITY.validateBankReference(paymentRef, payMethod);
+      if (!refCheck.ok) {
+        alert(refCheck.message);
+        document.getElementById("bankRef").focus();
+        return;
+      }
+      if (!confirmed) {
+        document.getElementById("bankConfirm").focus();
+        return;
+      }
+
+      btnConfirmPay.disabled = true;
+      btnConfirmPay.textContent = "Enregistrement…";
+
+      setTimeout(() => {
+        markPaymentPaid(payMethod, refCheck.value);
+        btnConfirmPay.disabled = false;
+        btnConfirmPay.textContent = "Confirmer mon paiement";
+      }, 800);
+    });
+
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (paymentCompleted && pendingProfile) {
+        return;
+      }
+
+      let valid = true;
+
+      const prenom = document.getElementById("prenom").value.trim();
+      const nom = document.getElementById("nom").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const tel = document.getElementById("telephone").value.trim();
+      const pwd = document.getElementById("password").value;
+      const pwd2 = document.getElementById("passwordConfirm").value;
+      const terms = document.getElementById("terms").checked;
+
+      if (currentRole !== "universite") {
+        valid = showError("prenom", prenom.length < 2) && valid;
+        valid = showError("nom", nom.length < 2) && valid;
+      }
+      const em = SAC_IDENTITY.validateEmail(email);
+      valid = showError("email", !em.ok, em.message) && valid;
+      const ph = SAC_IDENTITY.validatePhone(tel);
+      valid = showError("telephone", !ph.ok, ph.message) && valid;
+      const pw = SAC_IDENTITY.validatePassword(pwd);
+      valid = showError("password", !pw.ok, pw.message) && valid;
+      valid = showError("passwordConfirm", pwd !== pwd2, "Les mots de passe ne correspondent pas") && valid;
+
+      if (!terms) {
+        document.getElementById("terms").focus();
+        return;
+      }
+
+      const profile = {
+        role: currentRole,
+        prenom: currentRole !== "universite" ? prenom : null,
+        nom: currentRole === "universite" ? "" : nom,
+        email,
+        telephone: tel,
+        password: pwd,
+        createdAt: new Date().toISOString(),
+      };
+
+      if (currentRole === "etudiant") {
+        const uni = document.getElementById("universiteEtu").value;
+        const filiere = document.getElementById("filiere").value.trim();
+        valid = showError("universiteEtu", !uni) && valid;
+        valid = showError("filiere", filiere.length < 2) && valid;
+        Object.assign(profile, {
+          universite: uni,
+          filiere,
+          niveau: document.getElementById("niveau").value,
+          dateNaissance: document.getElementById("dateNaissance").value,
+          matricule: document.getElementById("matricule").value.trim() || null,
+        });
+      }
+
+      if (currentRole === "professeur") {
+        const uni = document.getElementById("universiteProf").value;
+        const dept = document.getElementById("departement").value.trim();
+        valid = showError("universiteProf", !uni) && valid;
+        valid = showError("departement", dept.length < 2) && valid;
+        valid = validateCoursClasses("coursClasseListProf", "coursClassesProf") && valid;
+        Object.assign(profile, {
+          universite: uni,
+          departement: dept,
+          grade: document.getElementById("grade").value,
+          numEmploye: document.getElementById("numEmploye").value.trim() || null,
+          coursClasses: collectCoursClasses("coursClasseListProf", uni),
+        });
+      }
+
+      if (currentRole === "assistant") {
+        const uni = document.getElementById("universiteAssist").value;
+        const service = document.getElementById("service").value;
+        valid = showError("universiteAssist", !uni) && valid;
+        valid = showError("service", !service) && valid;
+        valid = validateCoursClasses("coursClasseListAssist", "coursClassesAssist") && valid;
+        Object.assign(profile, {
+          universite: uni,
+          service,
+          fonction: document.getElementById("fonction").value,
+          numAssist: document.getElementById("numAssist").value.trim() || null,
+          coursClasses: collectCoursClasses("coursClasseListAssist", uni),
+        });
+      }
+
+      if (currentRole === "universite") {
+        const nomU = document.getElementById("nomUniversite").value.trim();
+        const sigle = document.getElementById("sigle").value.trim();
+        const ville = document.getElementById("ville").value.trim();
+        const resp = document.getElementById("responsable").value.trim();
+        valid = showError("nomUniversite", nomU.length < 3) && valid;
+        valid = showError("sigle", sigle.length < 2) && valid;
+        valid = showError("ville", ville.length < 2) && valid;
+        valid = showError("responsable", resp.length < 3) && valid;
+        valid = validateFacultySections() && valid;
+        const sigleId = sigle.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 20) || "campus";
+        Object.assign(profile, {
+          nomUniversite: nomU,
+          nom: nomU,
+          sigle,
+          universite: sigleId,
+          codeUni: "SAC-" + sigle.toUpperCase().replace(/\s+/g, "") + "-" + new Date().getFullYear(),
+          ville,
+          adresse: document.getElementById("adresse").value.trim(),
+          nbEtudiants: document.getElementById("nbEtudiants").value,
+          siteWeb: document.getElementById("siteWeb").value.trim() || null,
+          responsable: resp,
+          facultySections: collectFacultySections(),
+        });
+      }
+
+      if (!valid) return;
+
+      profile.password = pwd;
+      const identity = validateRegistrationProfile(profile);
+      if (!identity.ok) {
+        showError(identity.field, true, identity.message);
+        document.getElementById(identity.field)?.focus();
+        return;
+      }
+      profile.email = identity.email || profile.email;
+      profile.telephone = identity.telephone || profile.telephone;
+      delete profile.password;
+      profile._pwd = pwd;
+
+      await openPaymentModal({ ...profile, password: pwd, _pwd: pwd });
+    });
+
+    ["email", "telephone"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener("blur", () => {
+        if (id === "email") {
+          const r = SAC_IDENTITY.validateEmail(el.value);
+          showError("email", !r.ok, r.message);
+        } else {
+          const r = SAC_IDENTITY.validatePhone(el.value);
+          showError("telephone", !r.ok, r.message);
+        }
+      });
+    });
+
+    SAC_UNIVERSITIES.populateAll("[data-sac-universities]");
+
+    ["universiteEtu", "universiteProf", "universiteAssist"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener("change", () => {
+        if (
+          (id === "universiteEtu" && currentRole === "etudiant") ||
+          (id === "universiteProf" && currentRole === "professeur") ||
+          (id === "universiteAssist" && currentRole === "assistant")
+        ) {
+          refreshPricing(currentRole);
+        }
+      });
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    const roleParam = params.get("role");
+    if (roleParam && ROLES[roleParam]) setRole(roleParam);
+    else setRole("etudiant");
+
+    if (params.get("paid") === "1" && roleParam) {
+      pendingProfile = { role: roleParam, email: "stripe@return", nom: "Utilisateur" };
+      markPaymentPaid("usd", "stripe-return");
+    }
+  </script>
+</body>
+</html>

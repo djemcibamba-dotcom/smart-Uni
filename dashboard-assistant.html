@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profil Assistant — Smart Academy of Congo</title>
+  <link rel="icon" href="logos.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/logo.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/reclamations.css" />
+  <style>
+    .badge-role { background: rgba(107,76,154,0.15); color: var(--assistant); }
+    .btn--role { background: var(--assistant); }
+    .nav-tab--priority.active { border-bottom-color: var(--assistant); color: var(--assistant); }
+    .profile-hero { background: linear-gradient(135deg, #6b4c9a, #8260b5); }
+    .task-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
+    .task-stat { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem; text-align: center; }
+    .task-stat strong { display: block; font-size: 1.35rem; color: var(--primary); }
+    .task-stat span { font-size: 0.78rem; color: var(--muted); }
+    .task-stat--warn strong { color: var(--warning); }
+    .task-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
+    .task-row:last-child { border-bottom: none; }
+    .task-row__meta { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; }
+    .task-row__actions { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .btn--sm { font-size: 0.78rem; padding: 0.35rem 0.75rem; }
+    .btn--ok { background: var(--success); color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .btn--reject { background: rgba(185,28,28,0.1); color: #b91c1c; border: 1px solid rgba(185,28,28,0.3); border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit; padding: 0.35rem 0.75rem; font-size: 0.78rem; }
+    .panel--tasks { border-left: 4px solid var(--assistant); }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+    .stat-card strong { display: block; font-size: 1.4rem; color: var(--primary); font-family: "Playfair Display", serif; }
+    .stat-card span { font-size: 0.8rem; color: var(--muted); }
+    .empty-tasks { text-align: center; color: var(--muted); padding: 1.25rem; font-size: 0.9rem; }
+    .task-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .task-filter button { padding: 0.4rem 0.85rem; border-radius: 100px; border: 1.5px solid var(--border); background: #fff; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: inherit; color: var(--muted); }
+    .task-filter button.active { border-color: var(--assistant); color: var(--assistant); background: rgba(107,76,154,0.08); }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header__top">
+      <a href="index.html" class="logo"><img src="logos.png" alt="Smart Academy of Congo" class="logo__img" width="44" height="44" /><span class="logo__text">Smart Academy</span></a>
+      <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+        <span class="badge-role">📋 Profil assistant</span>
+        <span id="userName" style="font-size:0.9rem;color:var(--muted);"></span>
+        <button type="button" class="btn btn--ghost" id="btnLogout">Déconnexion</button>
+      </div>
+    </div>
+    <nav class="nav-tabs" aria-label="Navigation assistant">
+      <button type="button" class="nav-tab active" data-section="profil">Mon profil</button>
+      <button type="button" class="nav-tab nav-tab--priority" data-section="taches">📋 Tâches admin</button>
+      <button type="button" class="nav-tab nav-tab--priority" data-section="documents">📁 Publier</button>
+      <button type="button" class="nav-tab" data-section="accueil">Tableau de bord</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="page-section active" id="section-profil">
+      <div class="profile-hero">
+        <div class="profile-avatar profile-avatar--logo" style="background:rgba(255,255,255,0.2);padding:0.35rem;">
+          <img src="logos.png" alt="" width="80" height="80" style="width:100%;height:100%;object-fit:contain;border-radius:50%;" />
+        </div>
+        <div>
+          <h1 id="profileName">Assistant</h1>
+          <p style="opacity:0.9;font-size:0.9rem;" id="profileMeta">—</p>
+        </div>
+      </div>
+
+      <div class="panel panel--tasks">
+        <div class="panel__head">
+          <h2>File d'attente — mon campus</h2>
+          <button type="button" class="btn btn--role btn--sm" data-goto="taches">Traiter</button>
+        </div>
+        <div class="panel__body" id="profileTaskSummary"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head"><h2>Informations</h2></div>
+        <div class="panel__body" id="profileInfo"></div>
+      </div>
+
+      <div class="panel" style="display:flex;flex-wrap:wrap;gap:0.5rem;padding:1rem 1.25rem;">
+        <button type="button" class="btn btn--role" data-goto="taches">📋 Tâches administratives</button>
+        <button type="button" class="btn btn--ghost" data-goto="documents">📁 Publier pour mes classes</button>
+      </div>
+    </section>
+
+    <section class="page-section" id="section-taches">
+      <h1 class="page-title">Tâches administratives</h1>
+      <p class="page-desc">
+        Gérez les dossiers de <strong>votre université</strong> : validation des paiements d'inscription,
+        suivi des demandes étudiants (réclamations, attestations).
+      </p>
+
+      <div class="task-stats" id="taskStatsBar"></div>
+
+      <div class="task-filter" id="taskFilterBar">
+        <button type="button" class="active" data-task-filter="payments">💳 Paiements</button>
+        <button type="button" data-task-filter="registrations">📝 Inscriptions</button>
+        <button type="button" data-task-filter="reclamations">📩 Réclamations</button>
+        <button type="button" data-task-filter="attestations">📄 Attestations</button>
+      </div>
+
+      <div class="panel panel--tasks" id="panelPayments">
+        <div class="panel__head"><h2>💳 Paiements à valider</h2><span id="countPayments" style="font-size:0.82rem;color:var(--muted);"></span></div>
+        <div class="panel__body" id="listPayments"></div>
+      </div>
+
+      <div class="panel" id="panelRegistrations" style="display:none;">
+        <div class="panel__head"><h2>📝 Inscriptions à finaliser</h2><span id="countRegistrations" style="font-size:0.82rem;color:var(--muted);"></span></div>
+        <div class="panel__body" id="listRegistrations"></div>
+      </div>
+
+      <div class="panel" id="panelReclamations" style="display:none;">
+        <div class="panel__head">
+          <h2>📩 Réclamations du campus</h2>
+          <select id="filterRecStatut" class="fi" style="width:auto;padding:0.4rem 0.6rem;font-size:0.85rem;">
+            <option value="active">Ouvertes & en cours</option>
+            <option value="all">Toutes</option>
+            <option value="ouverte">Ouvertes</option>
+            <option value="en_cours">En cours</option>
+            <option value="resolue">Résolues</option>
+          </select>
+        </div>
+        <div class="panel__body">
+          <div class="rec-list" id="listReclamations"></div>
+          <p class="empty-tasks" id="emptyReclamations" style="display:none;">Aucune réclamation pour ce filtre.</p>
+        </div>
+      </div>
+
+      <div class="panel" id="panelAttestations" style="display:none;">
+        <div class="panel__head"><h2>📄 Demandes d'attestation / documents</h2><span id="countAttestations" style="font-size:0.82rem;color:var(--muted);"></span></div>
+        <div class="panel__body">
+          <div class="rec-list" id="listAttestations"></div>
+          <p class="empty-tasks" id="emptyAttestations" style="display:none;">Aucune demande d'attestation en attente.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="section-documents">
+      <h1 class="page-title">Publication pour mes classes</h1>
+      <p class="page-desc">Diffusez informations et documents aux étudiants de vos classes (même université, filière et niveau).</p>
+      <div id="publisherRoot"></div>
+    </section>
+
+    <section class="page-section" id="section-accueil">
+      <h1 class="page-title">Tableau de bord assistant</h1>
+      <p class="page-desc" id="welcomeDesc">Vue d'ensemble de votre activité.</p>
+
+      <div class="stats-grid" id="dashStatsGrid"></div>
+
+      <div class="panel">
+        <div class="panel__head"><h2>Priorités</h2></div>
+        <div class="panel__body" style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+          <button type="button" class="btn btn--role" data-goto="taches" data-task-focus="payments">Valider les paiements</button>
+          <button type="button" class="btn btn--ghost" data-goto="taches" data-task-focus="reclamations">Traiter les réclamations</button>
+          <button type="button" class="btn btn--ghost" data-goto="documents">Publier un document</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/sac-universities.js"></script>
+  <script src="js/sac-identity.js"></script>
+  <script src="js/sac-session.js"></script>
+  <script src="js/sac-api.js"></script>
+  <script src="js/sac-tariffs.js"></script>
+  <script src="js/sac-courses.js"></script>
+  <script src="js/sac-sections.js"></script>
+  <script src="js/sac-tasks.js"></script>
+  <script src="js/sac-data.js"></script>
+  <script src="js/sac-publisher.js"></script>
+  <script>
+    (async function () {
+      let session = SAC_SESSION.guard("assistant");
+      if (!session) return;
+
+      try {
+        if (typeof SAC_API !== "undefined" && (await SAC_API.ensureOnline())) {
+          await SAC_API.me();
+        }
+      } catch {
+        /* mode local */
+      }
+      session = SAC_SESSION.syncSessionWithAccount("assistant") || session;
+      await SAC_DATA.ensureReady();
+
+      const UNI_NAMES = { ...SAC_UNIVERSITIES.NAMES, autre: "Autre établissement" };
+      let currentTaskFilter = "payments";
+
+      function escapeHtml(s) {
+        const d = document.createElement("div");
+        d.textContent = s || "";
+        return d.innerHTML;
+      }
+
+      function formatMoney(payment) {
+        if (!payment) return "—";
+        const usd = payment.amountUsd != null ? payment.amountUsd + " USD" : "";
+        const cdf = payment.amountCdf != null ? " · " + Number(payment.amountCdf).toLocaleString("fr-FR") + " CDF" : "";
+        return (usd || "Montant non renseigné") + cdf;
+      }
+
+      function renderTaskStats() {
+        const s = SAC_TASKS.getSummary(session);
+        document.getElementById("taskStatsBar").innerHTML = `
+          <div class="task-stat task-stat--warn"><strong>${s.pendingPayments}</strong><span>Paiements</span></div>
+          <div class="task-stat"><strong>${s.registrationsToValidate}</strong><span>Inscriptions</span></div>
+          <div class="task-stat task-stat--warn"><strong>${s.openReclamations}</strong><span>Réclamations actives</span></div>
+          <div class="task-stat"><strong>${s.attestations}</strong><span>Attestations</span></div>`;
+
+        document.getElementById("profileTaskSummary").innerHTML = `
+          <div class="info-row"><span>Paiements en attente</span><span style="color:var(--warning);font-weight:600;">${s.pendingPayments}</span></div>
+          <div class="info-row"><span>Inscriptions à finaliser</span><span style="font-weight:600;">${s.registrationsToValidate}</span></div>
+          <div class="info-row"><span>Réclamations actives</span><span style="color:var(--warning);font-weight:600;">${s.openReclamations}</span></div>
+          <div class="info-row"><span>Demandes attestation</span><span style="font-weight:600;">${s.attestations}</span></div>`;
+
+        document.getElementById("dashStatsGrid").innerHTML = `
+          <div class="stat-card"><strong>${s.totalPending}</strong><span>Dossiers prioritaires</span></div>
+          <div class="stat-card"><strong id="statDocs">0</strong><span>Mes publications</span></div>
+          <div class="stat-card"><strong id="statReact">0</strong><span>Réactions reçues</span></div>
+          <div class="stat-card"><strong>${s.openReclamations}</strong><span>Réclamations campus</span></div>`;
+      }
+
+      function renderPaymentRow(user) {
+        const p = user.payment || {};
+        const ref = p.paymentReference || p.transactionId || "—";
+        const paidAt = p.paidAt ? new Date(p.paidAt).toLocaleString("fr-FR") : "—";
+        return `<div class="task-row" data-email="${escapeHtml(user.email)}">
+          <div>
+            <strong>${escapeHtml(SAC_TASKS.displayName(user))}</strong>
+            <span style="font-size:0.78rem;color:var(--muted);margin-left:0.35rem;">${escapeHtml(SAC_TASKS.ROLE_LABELS[user.role] || user.role)}</span>
+            <div class="task-row__meta">${escapeHtml(user.email)} · ${formatMoney(p)} · Réf. ${escapeHtml(ref)} · ${paidAt}</div>
+          </div>
+          <div class="task-row__actions">
+            <button type="button" class="btn--ok btn--sm" data-verify="${escapeHtml(user.email)}">✓ Valider</button>
+            <button type="button" class="btn--reject" data-reject="${escapeHtml(user.email)}">Refuser</button>
+          </div>
+        </div>`;
+      }
+
+      function renderRegistrationRow(user) {
+        const st = user.payment?.status || "non payé";
+        const stLabel =
+          st === "pending_verification"
+            ? "Paiement en attente"
+            : st === "verified"
+              ? "Payé"
+              : st === "rejected"
+                ? "Refusé"
+                : "Non finalisé";
+        return `<div class="task-row">
+          <div>
+            <strong>${escapeHtml(SAC_TASKS.displayName(user))}</strong>
+            <span style="font-size:0.78rem;color:var(--muted);margin-left:0.35rem;">${escapeHtml(SAC_TASKS.ROLE_LABELS[user.role])}</span>
+            <div class="task-row__meta">${escapeHtml(user.email)} · ${escapeHtml(stLabel)} · Inscrit ${user.createdAt ? new Date(user.createdAt).toLocaleDateString("fr-FR") : "—"}</div>
+          </div>
+          <div class="task-row__actions">
+            ${st === "pending_verification" ? `<button type="button" class="btn--ok btn--sm" data-verify="${escapeHtml(user.email)}">Valider paiement</button>` : `<button type="button" class="btn btn--ghost btn--sm" data-goto-payments>Voir paiements</button>`}
+          </div>
+        </div>`;
+      }
+
+      function renderReclamationCard(r, listId) {
+        const sec = SAC_SECTIONS.getSectionById(r.sectionId);
+        return `<article class="rec-card" data-statut="${r.statut}" data-id="${r.id}">
+          <div class="rec-card__head">
+            <span class="rec-card__title">${escapeHtml(r.sujet)}</span>
+            <span class="rec-badge" style="background:${SAC_SECTIONS.statutColor(r.statut)}">${SAC_SECTIONS.statutLabel(r.statut)}</span>
+          </div>
+          <div class="rec-card__meta">
+            ${escapeHtml(r.studentNom)} · ${escapeHtml(r.matricule)} · ${escapeHtml(r.sectionName)} ·
+            ${escapeHtml(SAC_SECTIONS.categoryLabel(r.categorie, r.categorieDetail))} ·
+            ${new Date(r.createdAt).toLocaleDateString("fr-FR")}
+          </div>
+          <p class="rec-card__msg">${escapeHtml(r.message)}</p>
+          ${SAC_SECTIONS.attachmentsHtml(r.attachments, false)}
+          ${r.reponse ? `<div class="rec-card__reply"><strong>Réponse :</strong> ${escapeHtml(r.reponse)} <small>(${escapeHtml(r.traitePar)})</small></div>` : ""}
+          <div class="rec-actions">
+            <select data-statut-select="${r.id}">
+              ${SAC_SECTIONS.STATUTS.map((s) => `<option value="${s.id}" ${r.statut === s.id ? "selected" : ""}>${s.label}</option>`).join("")}
+            </select>
+            <input type="text" class="fi" placeholder="Réponse à l'étudiant…" data-reply="${r.id}" style="flex:1;min-width:160px;padding:0.45rem 0.65rem;font-size:0.85rem;" />
+            <button type="button" class="btn btn--role btn--sm" data-save-rec="${r.id}">Enregistrer</button>
+          </div>
+        </article>`;
+      }
+
+      function bindReclamationActions(container) {
+        container.querySelectorAll("[data-reply]").forEach((inp) => {
+          const rec = SAC_TASKS.getCampusReclamations(session).find((x) => x.id === inp.dataset.reply);
+          if (rec?.reponse) inp.value = rec.reponse;
+        });
+        container.querySelectorAll("[data-save-rec]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const id = btn.dataset.saveRec;
+            const root = btn.closest(".rec-list") || document;
+            try {
+              SAC_SECTIONS.updateReclamation(id, session, {
+                statut: root.querySelector(`[data-statut-select="${id}"]`)?.value,
+                reponse: root.querySelector(`[data-reply="${id}"]`)?.value?.trim() || "",
+                sectionName: SAC_SECTIONS.getSectionById(
+                  SAC_TASKS.getCampusReclamations(session).find((x) => x.id === id)?.sectionId
+                )?.name,
+              });
+              renderAllTasks();
+              refreshPubStats();
+            } catch (e) {
+              alert(e.message);
+            }
+          });
+        });
+      }
+
+      function renderPayments() {
+        const list = SAC_TASKS.getPendingPayments(session);
+        const el = document.getElementById("listPayments");
+        document.getElementById("countPayments").textContent = list.length + " dossier(s)";
+        if (!list.length) {
+          el.innerHTML = '<p class="empty-tasks">Aucun paiement en attente de validation.</p>';
+          return;
+        }
+        el.innerHTML = list.map(renderPaymentRow).join("");
+        el.querySelectorAll("[data-verify]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            if (!confirm("Confirmer la validation de ce paiement ?")) return;
+            try {
+              SAC_TASKS.verifyPayment(session, btn.dataset.verify);
+              renderAllTasks();
+              refreshPubStats();
+              alert("Paiement validé. Le compte est actif côté étudiant.");
+            } catch (e) {
+              alert(e.message);
+            }
+          });
+        });
+        el.querySelectorAll("[data-reject]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const reason = prompt("Motif du refus (optionnel) :");
+            if (reason === null) return;
+            try {
+              SAC_TASKS.rejectPayment(session, btn.dataset.reject, reason);
+              renderAllTasks();
+              alert("Paiement refusé. L'utilisateur pourra soumettre à nouveau.");
+            } catch (e) {
+              alert(e.message);
+            }
+          });
+        });
+      }
+
+      function renderRegistrations() {
+        const list = SAC_TASKS.getRegistrationsToValidate(session);
+        const el = document.getElementById("listRegistrations");
+        document.getElementById("countRegistrations").textContent = list.length + " compte(s)";
+        if (!list.length) {
+          el.innerHTML = '<p class="empty-tasks">Toutes les inscriptions récentes sont finalisées.</p>';
+          return;
+        }
+        el.innerHTML = list.map(renderRegistrationRow).join("");
+        el.querySelectorAll("[data-verify]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            if (!confirm("Valider le paiement de ce compte ?")) return;
+            try {
+              SAC_TASKS.verifyPayment(session, btn.dataset.verify);
+              renderAllTasks();
+              alert("Compte validé.");
+            } catch (e) {
+              alert(e.message);
+            }
+          });
+        });
+        el.querySelectorAll("[data-goto-payments]").forEach((btn) => {
+          btn.addEventListener("click", () => setTaskFilter("payments"));
+        });
+      }
+
+      function renderReclamations() {
+        const filter = document.getElementById("filterRecStatut").value;
+        let list = SAC_TASKS.getCampusReclamations(session);
+        if (filter === "active") {
+          list = list.filter((r) => r.statut === "ouverte" || r.statut === "en_cours");
+        } else if (filter !== "all") {
+          list = list.filter((r) => r.statut === filter);
+        }
+        const el = document.getElementById("listReclamations");
+        const empty = document.getElementById("emptyReclamations");
+        if (!list.length) {
+          el.innerHTML = "";
+          empty.style.display = "block";
+          return;
+        }
+        empty.style.display = "none";
+        el.innerHTML = list.map((r) => renderReclamationCard(r)).join("");
+        bindReclamationActions(el);
+      }
+
+      function renderAttestations() {
+        const list = SAC_TASKS.getAttestationRequests(session);
+        const el = document.getElementById("listAttestations");
+        const empty = document.getElementById("emptyAttestations");
+        document.getElementById("countAttestations").textContent = list.length + " demande(s)";
+        if (!list.length) {
+          el.innerHTML = "";
+          empty.style.display = "block";
+          return;
+        }
+        empty.style.display = "none";
+        el.innerHTML = list.map((r) => renderReclamationCard(r)).join("");
+        bindReclamationActions(el);
+      }
+
+      function setTaskFilter(id) {
+        currentTaskFilter = id;
+        document.querySelectorAll("[data-task-filter]").forEach((b) => {
+          b.classList.toggle("active", b.dataset.taskFilter === id);
+        });
+        document.getElementById("panelPayments").style.display = id === "payments" ? "block" : "none";
+        document.getElementById("panelRegistrations").style.display = id === "registrations" ? "block" : "none";
+        document.getElementById("panelReclamations").style.display = id === "reclamations" ? "block" : "none";
+        document.getElementById("panelAttestations").style.display = id === "attestations" ? "block" : "none";
+      }
+
+      function renderAllTasks() {
+        renderTaskStats();
+        renderPayments();
+        renderRegistrations();
+        renderReclamations();
+        renderAttestations();
+      }
+
+      function refreshPubStats() {
+        const docs = SAC_DATA.getPublicationsByAuthor(session);
+        let r = 0;
+        docs.forEach((d) => {
+          const c = SAC_DATA.reactionCounts(d);
+          r += c.useful + c.question + c.thanks;
+        });
+        const statDocs = document.getElementById("statDocs");
+        const statReact = document.getElementById("statReact");
+        if (statDocs) statDocs.textContent = docs.length;
+        if (statReact) statReact.textContent = r;
+      }
+
+      function renderProfile() {
+        const users = SAC_IDENTITY.getLocalUsers();
+        const found = users.find((u) => u.role === "assistant" && u.email === session.identifiant);
+        const person = SAC_IDENTITY.resolvePersonFromRecords(session, found);
+        const uniLabel = UNI_NAMES[session.universite] || session.universite || "—";
+
+        document.getElementById("profileName").textContent = person.fullName || "Assistant";
+        document.getElementById("userName").textContent = person.fullName || "Assistant";
+        document.getElementById("profileMeta").textContent = uniLabel + " · " + (session.service || "Administration");
+        document.getElementById("welcomeDesc").textContent =
+          "Campus " + uniLabel + " — " + (person.prenom || "Assistant") + ", voici vos priorités.";
+
+        const classes = SAC_COURSES.getTeachingClasses(session);
+        const coursHtml = classes.length
+          ? classes.map((c) => `<div class="info-row"><span>${escapeHtml(c.courseCode)}</span><span>${escapeHtml(c.courseName)} — ${escapeHtml(c.classe)}</span></div>`).join("")
+          : '<p style="color:var(--muted);font-size:0.9rem;">Déclarez vos classes à l\'inscription pour publier par groupe.</p>';
+
+        document.getElementById("profileInfo").innerHTML = `
+          <div class="info-row"><span>Prénom</span><span>${escapeHtml(person.prenom) || "—"}</span></div>
+          <div class="info-row"><span>Nom</span><span>${escapeHtml(person.nom) || "—"}</span></div>
+          <div class="info-row"><span>E-mail</span><span>${escapeHtml(session.identifiant)}</span></div>
+          <div class="info-row"><span>Université</span><span>${escapeHtml(uniLabel)}</span></div>
+          <div class="info-row"><span>Service</span><span>${escapeHtml(session.service || found?.service || "Administration")}</span></div>
+          <div class="info-row"><span>Rôle</span><span>Assistant — tâches & publication</span></div>
+          <h3 style="margin:1rem 0 0.5rem;font-size:0.95rem;">Classes accompagnées</h3>${coursHtml}`;
+      }
+
+      document.querySelectorAll("[data-task-filter]").forEach((btn) => {
+        btn.addEventListener("click", () => setTaskFilter(btn.dataset.taskFilter));
+      });
+      document.getElementById("filterRecStatut").addEventListener("change", renderReclamations);
+
+      function showSection(id) {
+        document.querySelectorAll(".nav-tab").forEach((x) => x.classList.remove("active"));
+        document.querySelectorAll(".page-section").forEach((x) => x.classList.remove("active"));
+        document.querySelector(`[data-section="${id}"]`)?.classList.add("active");
+        document.getElementById("section-" + id)?.classList.add("active");
+        if (id === "taches" || id === "profil" || id === "accueil") renderAllTasks();
+      }
+
+      document.querySelectorAll(".nav-tab").forEach((t) => {
+        t.addEventListener("click", () => showSection(t.dataset.section));
+      });
+      document.querySelectorAll("[data-goto]").forEach((b) => {
+        b.addEventListener("click", () => showSection(b.dataset.goto));
+      });
+      document.querySelectorAll("[data-task-focus]").forEach((b) => {
+        b.addEventListener("click", () => {
+          showSection("taches");
+          setTaskFilter(b.dataset.taskFocus);
+        });
+      });
+
+      document.getElementById("btnLogout").addEventListener("click", async () => {
+        if (typeof SAC_API !== "undefined") await SAC_API.logout();
+        else localStorage.removeItem("sac_session");
+        location.href = "connexion.html";
+      });
+
+      renderProfile();
+      renderAllTasks();
+      SAC_initPublisherPage({ session, rootId: "publisherRoot", accentColor: "#6b4c9a", pageTitle: "", multiFile: true, maxFiles: 10 });
+      refreshPubStats();
+
+      const publisherRoot = document.getElementById("publisherRoot");
+      if (publisherRoot) {
+        const obs = new MutationObserver(refreshPubStats);
+        obs.observe(publisherRoot, { childList: true, subtree: true });
+      }
+    })();
+  </script>
+</body>
+</html>

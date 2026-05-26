@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portail Université — Smart Academy of Congo</title>
+  <link rel="icon" href="logos.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/logo.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/reclamations.css" />
+  <link rel="stylesheet" href="css/home-news.css" />
+  <style>
+    .badge-role { background: rgba(13,122,74,0.12); color: var(--uni); }
+    .btn--role { background: var(--uni); }
+    .nav-tab--priority.active { border-bottom-color: var(--uni); color: var(--uni); }
+    .profile-hero { background: linear-gradient(135deg, #0d7a4a, #10b981); }
+    .profile-hero__badge { display: inline-block; margin-top: 0.5rem; padding: 0.25rem 0.65rem; background: rgba(255,255,255,0.2); border-radius: 100px; font-size: 0.78rem; font-weight: 600; }
+    .profile-hero__badge--warn { background: rgba(180,83,9,0.4); }
+    .task-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
+    .task-stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem; text-align: center; box-shadow: var(--shadow); }
+    .task-stat strong { display: block; font-size: 1.35rem; color: var(--primary); font-family: "Playfair Display", serif; }
+    .task-stat span { font-size: 0.76rem; color: var(--muted); }
+    .task-stat--warn strong { color: var(--warning); }
+    .task-stat--ok strong { color: var(--uni); }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; box-shadow: var(--shadow); }
+    .stat-card strong { display: block; font-size: 1.35rem; color: var(--primary); font-family: "Playfair Display", serif; }
+    .stat-card span { font-size: 0.8rem; color: var(--muted); }
+    .panel--workspace { border-left: 4px solid var(--uni); }
+    .panel--comm { border-left: 4px solid #0d7a4a; }
+    .panel--national { border-left: 4px solid #1e40af; }
+    .guide-steps { display: grid; gap: 0.65rem; margin: 0; padding: 0; list-style: none; }
+    .guide-steps li { padding: 0.65rem 0.85rem; background: var(--bg); border-radius: 8px; font-size: 0.88rem; border: 1px solid var(--border); }
+    .guide-steps strong { color: var(--uni); }
+    .comm-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .comm-filter button { padding: 0.45rem 0.9rem; border-radius: 100px; border: 1.5px solid var(--border); background: #fff; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: inherit; color: var(--muted); }
+    .comm-filter button.active { border-color: var(--uni); color: var(--uni); background: rgba(13,122,74,0.08); }
+    .task-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
+    .task-row:last-child { border-bottom: none; }
+    .task-row__meta { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; }
+    .btn--ok { background: var(--success); color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit; padding: 0.35rem 0.75rem; font-size: 0.78rem; }
+    .btn--reject { background: rgba(185,28,28,0.1); color: #b91c1c; border: 1px solid rgba(185,28,28,0.3); border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit; padding: 0.35rem 0.75rem; font-size: 0.78rem; }
+    .sections-layout { display: grid; grid-template-columns: 280px 1fr; gap: 1.25rem; align-items: start; }
+    @media (max-width: 900px) { .sections-layout { grid-template-columns: 1fr; } }
+    .section-pick-list { display: flex; flex-direction: column; gap: 0.4rem; max-height: 420px; overflow-y: auto; }
+    .section-pick { text-align: left; padding: 0.75rem 0.85rem; border: 1.5px solid var(--border); border-radius: 8px; background: var(--surface); cursor: pointer; font-family: inherit; font-size: 0.88rem; transition: border-color 0.2s, background 0.2s; }
+    .section-pick:hover { border-color: var(--uni); }
+    .section-pick.active { border-color: var(--uni); background: rgba(13,122,74,0.08); }
+    .section-pick strong { display: block; color: var(--primary); font-size: 0.9rem; }
+    .section-pick span { font-size: 0.78rem; color: var(--muted); }
+    .section-pick .badge-count { float: right; background: #b45309; color: #fff; font-size: 0.7rem; padding: 0.1rem 0.45rem; border-radius: 100px; font-weight: 700; }
+    tr.section-row-clickable { cursor: pointer; }
+    tr.section-row-clickable:hover { background: rgba(13,122,74,0.05); }
+    tr.section-row-clickable.active { background: rgba(13,122,74,0.1); }
+    .toast { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 200; padding: 0.85rem 1.15rem; background: var(--primary); color: #fff; border-radius: 10px; font-size: 0.9rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: none; max-width: 360px; }
+    .toast.show { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .empty-tasks { text-align: center; color: var(--muted); padding: 1.25rem; font-size: 0.9rem; }
+    .comm-panel { display: none; }
+    .comm-panel.active { display: block; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header__top">
+      <a href="index.html" class="logo"><img src="logos.png" alt="Smart Academy of Congo" class="logo__img" width="44" height="44" /><span class="logo__text">Smart Academy</span></a>
+      <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+        <span class="badge-role">🏛️ Administration université</span>
+        <span id="userName" style="font-size:0.9rem;color:var(--muted);"></span>
+        <button type="button" class="btn btn--ghost" id="btnLogout">Déconnexion</button>
+      </div>
+    </div>
+    <nav class="nav-tabs" aria-label="Navigation université">
+      <button type="button" class="nav-tab active" data-section="accueil">Tableau de bord</button>
+      <button type="button" class="nav-tab nav-tab--priority" data-section="communiquer">📢 Communiquer</button>
+      <button type="button" class="nav-tab nav-tab--priority" data-section="sections">🏫 Sections & réclamations</button>
+      <button type="button" class="nav-tab" data-section="administration">⚙️ Campus & tarifs</button>
+    </nav>
+  </header>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <main class="layout">
+    <!-- TABLEAU DE BORD -->
+    <section class="page-section active" id="section-accueil">
+      <div class="profile-hero">
+        <div class="profile-avatar profile-avatar--logo" style="background:rgba(255,255,255,0.2);padding:0.35rem;">
+          <img src="logos.png" alt="" width="80" height="80" style="width:100%;height:100%;object-fit:contain;border-radius:50%;" />
+        </div>
+        <div>
+          <h1 id="profileName">Université</h1>
+          <p style="opacity:0.9;font-size:0.9rem;" id="profileMeta">Portail officiel Smart Academy of Congo</p>
+          <span class="profile-hero__badge" id="profileBadge">Campus connecté</span>
+        </div>
+      </div>
+
+      <p class="page-desc" id="welcomeDesc">Vue d'ensemble de votre établissement sur la plateforme.</p>
+
+      <div class="task-stats" id="dashTaskStats"></div>
+
+      <div class="profile-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;margin-bottom:1.25rem;">
+        <div class="panel panel--workspace">
+          <div class="panel__head"><h2>Priorités du jour</h2></div>
+          <div class="panel__body" id="priorityList"></div>
+        </div>
+        <div class="panel">
+          <div class="panel__head"><h2>Guide — bien communiquer</h2></div>
+          <div class="panel__body">
+            <ul class="guide-steps">
+              <li><strong>1. Mon université</strong> — annonces texte sur le profil de vos étudiants uniquement.</li>
+              <li><strong>2. Portail campus</strong> — fichiers, photos, vidéos pour tout le campus.</li>
+              <li><strong>3. Espace national</strong> — informations pour toutes les universités partenaires.</li>
+              <li><strong>4. Par section</strong> — messages ciblés filière + réponses aux réclamations.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head"><h2>Actions rapides</h2></div>
+        <div class="panel__body" style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+          <button type="button" class="btn btn--role" data-goto="communiquer">📢 Publier un communiqué</button>
+          <button type="button" class="btn btn--role" data-goto="sections" data-focus="rec">📩 Traiter les réclamations</button>
+          <button type="button" class="btn btn--ghost" data-goto="administration" data-focus="payments">💳 Valider les paiements</button>
+          <button type="button" class="btn btn--ghost" data-goto="administration" data-focus="tariffs">💰 Tarifs campus</button>
+        </div>
+      </div>
+
+      <div class="panel" id="panelRecentRec" style="display:none;">
+        <div class="panel__head"><h2>Réclamations récentes</h2><button type="button" class="btn btn--ghost btn--sm" data-goto="sections">Tout voir</button></div>
+        <div class="panel__body"><div class="rec-list" id="recentRecList"></div></div>
+      </div>
+    </section>
+
+    <!-- COMMUNIQUER -->
+    <section class="page-section" id="section-communiquer">
+      <h1 class="page-title">Communiquer</h1>
+      <p class="page-desc">
+        Centralisez toutes vos publications : choisissez le canal adapté à votre message.
+        Chaque canal a une portée différente — lisez les descriptions avant de publier.
+      </p>
+
+      <div class="comm-filter" id="commFilter">
+        <button type="button" class="active" data-comm="etu">📋 Annonces étudiants</button>
+        <button type="button" data-comm="portail">📁 Portail campus</button>
+        <button type="button" data-comm="national">🇨🇩 Espace national</button>
+        <button type="button" data-comm="docs">📄 Documents officiels</button>
+      </div>
+
+      <div class="comm-panel active panel--comm" id="commEtu" data-comm-panel="etu">
+        <div class="panel__head"><h2>Annonces — profil étudiants (mon université)</h2></div>
+        <div class="panel__body">
+          <p class="page-desc" style="margin:0 0 1rem;font-size:0.88rem;">Texte court visible <strong>uniquement</strong> sur le profil des étudiants de votre établissement.</p>
+          <div id="campusHomeNewsRoot"></div>
+        </div>
+      </div>
+
+      <div class="comm-panel panel--comm" id="commPortail" data-comm-panel="portail">
+        <div class="panel__head"><h2>Portail campus — fichiers & médias</h2></div>
+        <div class="panel__body">
+          <p class="page-desc" style="margin:0 0 1rem;font-size:0.88rem;">Documents, images, audio et vidéos pour tous les membres du campus.</p>
+          <div id="campusPortalPublisherRoot"></div>
+        </div>
+      </div>
+
+      <div class="comm-panel panel--national" id="commNational" data-comm-panel="national">
+        <div class="panel__head"><h2>Espace national</h2></div>
+        <div class="panel__body">
+          <p class="page-desc" style="margin:0 0 1rem;font-size:0.88rem;">Visible par toutes les universités, tous les étudiants et sur la page d'accueil du site.</p>
+          <div id="nationalPublisherRoot"></div>
+          <div id="nationalFeedReadonly" style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px dashed var(--border);"></div>
+        </div>
+      </div>
+
+      <div class="comm-panel" id="commDocs" data-comm-panel="docs">
+        <div class="panel__head"><h2>Documents officiels</h2></div>
+        <div class="panel__body">
+          <p class="page-desc" style="margin:0 0 1rem;font-size:0.88rem;">Calendriers, règlements et circulaires administratives du campus.</p>
+          <div id="publisherRoot"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTIONS -->
+    <section class="page-section" id="section-sections">
+      <h1 class="page-title">Sections & réclamations</h1>
+      <p class="page-desc">Organisez vos facultés, traitez les demandes étudiants et publiez par section.</p>
+
+      <div class="rec-stats" id="uniRecStats"></div>
+
+      <div class="panel panel--workspace" style="margin-bottom:1.25rem;">
+        <div class="panel__head">
+          <h2>Sections de l'établissement</h2>
+          <span id="secCountHead" style="font-size:0.82rem;color:var(--muted);"></span>
+        </div>
+        <div class="panel__body">
+          <form id="formCreateSection" class="rec-form" style="margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);">
+            <div class="form-row-2">
+              <div class="fg">
+                <label>Nom de la section / faculté *</label>
+                <input type="text" class="fi" id="secName" required placeholder="Ex. Faculté des Sciences économiques" />
+              </div>
+              <div class="fg">
+                <label>Filière(s) couverte(s) *</label>
+                <input type="text" class="fi" id="secFiliere" required placeholder="Ex. Sciences économiques — Gestion" />
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="fg">
+                <label>Responsable</label>
+                <input type="text" class="fi" id="secResp" placeholder="Ex. Dr. Mukendi" />
+              </div>
+              <div class="fg">
+                <label>E-mail section</label>
+                <input type="email" class="fi" id="secEmail" placeholder="section@universite.cd" />
+              </div>
+            </div>
+            <div class="fg">
+              <label>Téléphone</label>
+              <input type="tel" class="fi" id="secTel" placeholder="+243 …" style="max-width:280px;" />
+            </div>
+            <button type="submit" class="btn btn--role">Ajouter la section</button>
+          </form>
+          <div style="overflow-x:auto;">
+            <table class="section-table">
+              <thead><tr><th>Section</th><th>Filière</th><th>Contact</th><th>Responsable</th><th>Ouvertes</th></tr></thead>
+              <tbody id="sectionsTable"></tbody>
+            </table>
+          </div>
+          <p class="empty" id="sectionsEmpty" style="display:none;">Aucune section. Ajoutez vos facultés ci-dessus.</p>
+        </div>
+      </div>
+
+      <div class="sections-layout">
+        <div class="panel">
+          <div class="panel__head"><h2>Sections</h2><span id="secCount" style="font-size:0.82rem;color:var(--muted);"></span></div>
+          <div class="panel__body"><div class="section-pick-list" id="sectionPickList"></div></div>
+        </div>
+        <div>
+          <div class="panel">
+            <div class="panel__head">
+              <h2 id="recPanelTitle">Réclamations</h2>
+              <select id="filterStatut" class="fi" style="width:auto;padding:0.4rem 0.6rem;font-size:0.85rem;display:none;">
+                <option value="all">Tous</option>
+                <option value="ouverte">Ouvertes</option>
+                <option value="en_cours">En cours</option>
+                <option value="resolue">Résolues</option>
+                <option value="fermee">Fermées</option>
+              </select>
+            </div>
+            <div class="panel__body">
+              <p id="recPanelHint" class="page-desc" style="margin:0 0 1rem;">Sélectionnez une section à gauche.</p>
+              <div class="rec-list" id="uniRecList"></div>
+              <p class="empty" id="uniRecEmpty" style="display:none;">Aucune réclamation pour cette section.</p>
+            </div>
+          </div>
+          <div id="sectionPublisherRoot" style="margin-top:1.25rem;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMINISTRATION -->
+    <section class="page-section" id="section-administration">
+      <h1 class="page-title">Campus & tarifs</h1>
+      <p class="page-desc">Gérez les frais d'inscription Smart Academy et validez les paiements des membres de votre établissement.</p>
+
+      <div class="panel">
+        <div class="panel__head"><h2>Établissement</h2></div>
+        <div class="panel__body" id="profileInfo"></div>
+      </div>
+
+      <div class="panel panel--workspace" id="panelTariffs">
+        <div class="panel__head">
+          <h2>Tarifs d'inscription campus</h2>
+          <span style="font-size:0.82rem;color:var(--muted);">Synchronisés sur tous les profils</span>
+        </div>
+        <div class="panel__body">
+          <p class="page-desc" style="margin:0 0 1rem;">Montants en USD — équivalent CDF calculé (~2 800 CDF / USD).</p>
+          <form id="formCampusTariffs" class="rec-form">
+            <div class="form-row-2">
+              <div class="fg">
+                <label for="tarifEtu">Étudiant (USD) *</label>
+                <input type="number" class="fi" id="tarifEtu" min="0.5" max="500" step="0.01" required />
+                <small class="tarif-cdf-hint" id="tarifEtuCdf" style="color:var(--muted);font-size:0.78rem;"></small>
+              </div>
+              <div class="fg">
+                <label for="tarifProf">Professeur (USD) *</label>
+                <input type="number" class="fi" id="tarifProf" min="0.5" max="500" step="0.01" required />
+                <small class="tarif-cdf-hint" id="tarifProfCdf" style="color:var(--muted);font-size:0.78rem;"></small>
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="fg">
+                <label for="tarifAssist">Assistant (USD) *</label>
+                <input type="number" class="fi" id="tarifAssist" min="0.5" max="500" step="0.01" required />
+                <small class="tarif-cdf-hint" id="tarifAssistCdf" style="color:var(--muted);font-size:0.78rem;"></small>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--role">Enregistrer les tarifs</button>
+            <p id="tarifSaveMsg" style="display:none;margin-top:0.75rem;font-size:0.88rem;color:var(--uni);"></p>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel" id="panelPayments">
+        <div class="panel__head"><h2>💳 Paiements à valider</h2><span id="countPayments" style="font-size:0.82rem;color:var(--muted);"></span></div>
+        <div class="panel__body" id="listPayments"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head"><h2>Membres inscrits sur le campus</h2></div>
+        <div class="panel__body" style="overflow-x:auto;">
+          <table>
+            <thead><tr><th>Nom</th><th>Rôle</th><th>E-mail</th><th>Paiement</th></tr></thead>
+            <tbody id="membersTable"></tbody>
+          </table>
+          <p class="empty-tasks" id="membersEmpty" style="display:none;">Aucun membre inscrit pour ce campus.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/sac-identity.js"></script>
+  <script src="js/sac-session.js"></script>
+  <script src="js/sac-api.js"></script>
+  <script src="js/sac-tariffs.js"></script>
+  <script src="js/sac-universities.js"></script>
+  <script src="js/sac-data.js"></script>
+  <script src="js/sac-sections.js"></script>
+  <script src="js/sac-tasks.js"></script>
+  <script src="js/sac-university-workspace.js"></script>
+  <script src="js/sac-home-news.js"></script>
+  <script src="js/sac-publisher.js"></script>
+  <script>
+    (async function () {
+      let session = SAC_SESSION.guard("universite");
+      if (!session) return;
+
+      try {
+        if (typeof SAC_API !== "undefined" && (await SAC_API.ensureOnline())) {
+          await SAC_API.me();
+        }
+      } catch { /* mode local */ }
+
+      session = SAC_SESSION.syncSessionWithAccount("universite") || session;
+      await SAC_DATA.ensureReady();
+
+      const UNI_NAMES = { ...SAC_UNIVERSITIES.NAMES };
+      let selectedSectionId = null;
+      let publishersReady = false;
+
+      function esc(s) {
+        const d = document.createElement("div");
+        d.textContent = s || "";
+        return d.innerHTML;
+      }
+
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        if (!t) return;
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 4500);
+      }
+
+      function formatMoney(p) {
+        if (!p) return "—";
+        const usd = p.amountUsd != null ? p.amountUsd + " USD" : "";
+        const cdf = p.amountCdf != null ? " · " + Number(p.amountCdf).toLocaleString("fr-FR") + " CDF" : "";
+        return (usd || "—") + cdf;
+      }
+
+      function paymentLabel(status) {
+        const map = {
+          verified: '<span style="color:var(--success);font-weight:600;">Validé</span>',
+          pending_verification: '<span style="color:var(--warning);font-weight:600;">En attente</span>',
+          rejected: '<span style="color:#b91c1c;font-weight:600;">Refusé</span>',
+        };
+        return map[status] || "—";
+      }
+
+      function renderDashboard() {
+        const s = SAC_UNIVERSITY.getSummary(session);
+        const est = SAC_UNIVERSITY.getEstablishmentProfile(session);
+        const uniLabel = UNI_NAMES[est.code] || est.nomUniversite || est.code;
+
+        document.getElementById("profileName").textContent = est.nomUniversite;
+        document.getElementById("userName").textContent = est.nomUniversite;
+        document.getElementById("profileMeta").textContent = uniLabel + " · Code " + (est.code || "—");
+        document.getElementById("welcomeDesc").textContent =
+          "Bienvenue sur le portail " + est.nomUniversite + ". Communiquez, gérez les sections et validez les inscriptions.";
+
+        const badge = document.getElementById("profileBadge");
+        if (s.totalPriority > 0) {
+          badge.textContent = s.totalPriority + " action(s) prioritaire(s)";
+          badge.classList.add("profile-hero__badge--warn");
+        } else {
+          badge.textContent = "Campus à jour";
+          badge.classList.remove("profile-hero__badge--warn");
+        }
+
+        document.getElementById("dashTaskStats").innerHTML = `
+          <div class="task-stat task-stat--warn"><strong>${s.openReclamations}</strong><span>Réclam. ouvertes</span></div>
+          <div class="task-stat task-stat--warn"><strong>${s.pendingPayments}</strong><span>Paiements</span></div>
+          <div class="task-stat task-stat--ok"><strong>${s.sectionsCount}</strong><span>Sections</span></div>
+          <div class="task-stat"><strong>${s.studentsCount}</strong><span>Étudiants</span></div>
+          <div class="task-stat"><strong>${s.professorsCount}</strong><span>Professeurs</span></div>
+          <div class="task-stat"><strong>${s.campusAnnouncements}</strong><span>Annonces campus</span></div>
+          <div class="task-stat"><strong>${s.nationalAnnouncements}</strong><span>National</span></div>`;
+
+        const priorities = [];
+        if (s.openReclamations)
+          priorities.push(`<div class="info-row"><span>Réclamations ouvertes</span><span style="color:var(--warning);font-weight:600;">${s.openReclamations}</span></div>`);
+        if (s.pendingPayments)
+          priorities.push(`<div class="info-row"><span>Paiements à valider</span><span style="color:var(--warning);font-weight:600;">${s.pendingPayments}</span></div>`);
+        if (!s.sectionsCount)
+          priorities.push(`<div class="info-row"><span>Sections</span><span style="color:var(--warning);">Aucune — ajoutez vos facultés</span></div>`);
+        if (!priorities.length)
+          priorities.push('<p style="color:var(--muted);font-size:0.9rem;margin:0;">Aucune urgence. Publiez une annonce ou consultez les statistiques.</p>');
+        document.getElementById("priorityList").innerHTML = priorities.join("");
+
+        const openRecs = SAC_SECTIONS.getReclamationsForCampus(SAC_UNIVERSITY.campusCode(session))
+          .filter((r) => r.statut === "ouverte" || r.statut === "en_cours")
+          .slice(0, 4);
+        const recPanel = document.getElementById("panelRecentRec");
+        const recList = document.getElementById("recentRecList");
+        if (openRecs.length) {
+          recPanel.style.display = "block";
+          recList.innerHTML = openRecs
+            .map(
+              (r) => `<article class="rec-card">
+                <div class="rec-card__head"><span class="rec-card__title">${esc(r.sujet)}</span>
+                <span class="rec-badge" style="background:${SAC_SECTIONS.statutColor(r.statut)}">${SAC_SECTIONS.statutLabel(r.statut)}</span></div>
+                <div class="rec-card__meta">${esc(r.sectionName)} · ${esc(r.studentNom)} · ${new Date(r.createdAt).toLocaleDateString("fr-FR")}</div>
+              </article>`
+            )
+            .join("");
+        } else {
+          recPanel.style.display = "none";
+        }
+
+        document.getElementById("profileInfo").innerHTML = `
+          <div class="info-row"><span>Établissement</span><span>${esc(est.nomUniversite)}</span></div>
+          <div class="info-row"><span>Code campus</span><span>${esc(est.code)}</span></div>
+          <div class="info-row"><span>Sigle</span><span>${esc(est.sigle)}</span></div>
+          <div class="info-row"><span>Administration</span><span>${esc(est.email)}</span></div>
+          <div class="info-row"><span>Responsable</span><span>${esc(est.responsable)}</span></div>
+          <div class="info-row"><span>Ville</span><span>${esc(est.ville)}</span></div>
+          <div class="info-row"><span>Membres inscrits</span><span>${s.membersCount}</span></div>`;
+      }
+
+      function renderPayments() {
+        if (typeof SAC_TASKS === "undefined") {
+          document.getElementById("listPayments").innerHTML =
+            '<p class="empty-tasks">Module tâches indisponible.</p>';
+          return;
+        }
+        const list = SAC_TASKS.getPendingPayments(session);
+        const el = document.getElementById("listPayments");
+        document.getElementById("countPayments").textContent = list.length + " en attente";
+        if (!list.length) {
+          el.innerHTML = '<p class="empty-tasks">Aucun paiement en attente de validation.</p>';
+          return;
+        }
+        el.innerHTML = list
+          .map(
+            (u) => `<div class="task-row">
+            <div>
+              <strong>${esc(SAC_TASKS.displayName(u))}</strong>
+              <span style="font-size:0.78rem;color:var(--muted);margin-left:0.35rem;">${esc(SAC_TASKS.ROLE_LABELS[u.role])}</span>
+              <div class="task-row__meta">${esc(u.email)} · ${formatMoney(u.payment)}</div>
+            </div>
+            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+              <button type="button" class="btn--ok" data-verify="${esc(u.email)}">Valider</button>
+              <button type="button" class="btn--reject" data-reject="${esc(u.email)}">Refuser</button>
+            </div>
+          </div>`
+          )
+          .join("");
+
+        el.querySelectorAll("[data-verify]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            if (!confirm("Confirmer la validation du paiement ?")) return;
+            try {
+              SAC_TASKS.verifyPayment(session, btn.dataset.verify);
+              showToast("Paiement validé.");
+              refreshAll();
+            } catch (e) {
+              alert(e.message);
+            }
+          });
+        });
+        el.querySelectorAll("[data-reject]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const reason = prompt("Motif du refus (optionnel) :");
+            if (reason === null) return;
+            try {
+              SAC_TASKS.rejectPayment(session, btn.dataset.reject, reason);
+              showToast("Paiement refusé.");
+              refreshAll();
+            } catch (e) {
+              alert(e.message);
+            }
+          });
+        });
+      }
+
+      function renderMembers() {
+        const users = SAC_UNIVERSITY.getCampusUsers(session);
+        const tbody = document.getElementById("membersTable");
+        const empty = document.getElementById("membersEmpty");
+        if (!users.length) {
+          tbody.innerHTML = "";
+          empty.style.display = "block";
+          return;
+        }
+        empty.style.display = "none";
+        tbody.innerHTML = users
+          .map(
+            (u) => `<tr>
+            <td>${esc(SAC_UNIVERSITY.displayName(u))}</td>
+            <td>${esc(SAC_TASKS?.ROLE_LABELS?.[u.role] || u.role)}</td>
+            <td>${esc(u.email)}</td>
+            <td>${paymentLabel(u.payment?.status)}</td>
+          </tr>`
+          )
+          .join("");
+      }
+
+      function initPublishers() {
+        if (publishersReady) return;
+        SAC_HOME_NEWS.initProfilePublishers(session);
+        SAC_HOME_NEWS.renderNationalFeedReadonly("nationalFeedReadonly");
+        SAC_initPublisherPage({
+          session,
+          rootId: "publisherRoot",
+          accentColor: "#0d7a4a",
+          pageTitle: "",
+          multiFile: true,
+          maxFiles: 10,
+        });
+        publishersReady = true;
+      }
+
+      /* --- Sections (logique existante) --- */
+      function countOpenForSection(sectionId) {
+        return SAC_SECTIONS.getReclamationsForSection(sectionId).filter((r) => r.statut === "ouverte").length;
+      }
+
+      function getSelectedSectionLabel() {
+        const sec = selectedSectionId ? SAC_SECTIONS.getSectionById(selectedSectionId) : null;
+        return sec ? sec.name + " — " + sec.filiere : "";
+      }
+
+      function initSectionPublisher() {
+        const root = document.getElementById("sectionPublisherRoot");
+        if (!root) return;
+        if (!selectedSectionId) {
+          root.innerHTML =
+            '<p class="page-desc" style="margin:1rem 0 0;padding:1rem;background:var(--bg);border-radius:8px;border:1px dashed var(--border);">Sélectionnez une section pour publier un message à ses étudiants.</p>';
+          return;
+        }
+        root.innerHTML = "";
+        SAC_initSectionPublisher(session, "sectionPublisherRoot", () => selectedSectionId, getSelectedSectionLabel);
+      }
+
+      function selectSection(sectionId) {
+        selectedSectionId = sectionId;
+        const sec = SAC_SECTIONS.getSectionById(sectionId);
+        document.querySelectorAll(".section-pick").forEach((b) => {
+          b.classList.toggle("active", b.dataset.id === sectionId);
+        });
+        document.querySelectorAll(".section-row-clickable").forEach((tr) => {
+          tr.classList.toggle("active", tr.dataset.id === sectionId);
+        });
+        document.getElementById("filterStatut").style.display = sec ? "" : "none";
+        document.getElementById("recPanelTitle").textContent = sec ? "Réclamations — " + sec.name : "Réclamations";
+        document.getElementById("recPanelHint").style.display = sec ? "none" : "block";
+        renderSectionReclamations();
+        initSectionPublisher();
+      }
+
+      function renderSectionPickList() {
+        const list = SAC_SECTIONS.getSectionsByUniversity(session);
+        const countLabel = list.length + " section(s)";
+        document.getElementById("secCount").textContent = countLabel;
+        const secHead = document.getElementById("secCountHead");
+        if (secHead) secHead.textContent = countLabel;
+        const pickEl = document.getElementById("sectionPickList");
+        const empty = document.getElementById("sectionsEmpty");
+
+        if (!list.length) {
+          pickEl.innerHTML = "";
+          empty.style.display = "block";
+          selectedSectionId = null;
+          renderSectionReclamations();
+          initSectionPublisher();
+          return;
+        }
+        empty.style.display = "none";
+        pickEl.innerHTML = list
+          .map((s) => {
+            const open = countOpenForSection(s.id);
+            return `<button type="button" class="section-pick ${selectedSectionId === s.id ? "active" : ""}" data-id="${s.id}">
+              ${open ? `<span class="badge-count">${open}</span>` : ""}
+              <strong>${esc(s.name)}</strong><span>${esc(s.filiere)}</span>
+            </button>`;
+          })
+          .join("");
+        pickEl.querySelectorAll(".section-pick").forEach((btn) => {
+          btn.addEventListener("click", () => selectSection(btn.dataset.id));
+        });
+        if (!selectedSectionId && list.length) selectSection(list[0].id);
+        else if (selectedSectionId) selectSection(selectedSectionId);
+      }
+
+      function renderSectionsTable() {
+        const list = SAC_SECTIONS.getSectionsByUniversity(session);
+        const tbody = document.getElementById("sectionsTable");
+        tbody.innerHTML = list
+          .map((s) => {
+            const open = countOpenForSection(s.id);
+            return `<tr class="section-row-clickable ${selectedSectionId === s.id ? "active" : ""}" data-id="${s.id}">
+              <td><strong>${esc(s.name)}</strong></td><td>${esc(s.filiere)}</td>
+              <td>${esc(s.email || "—")}</td><td>${esc(s.responsableNom || "—")}</td>
+              <td>${open ? `<strong style="color:#b45309">${open}</strong>` : "0"}</td>
+            </tr>`;
+          })
+          .join("");
+        tbody.querySelectorAll(".section-row-clickable").forEach((tr) => {
+          tr.addEventListener("click", () => {
+            selectSection(tr.dataset.id);
+            showSection("sections");
+          });
+        });
+      }
+
+      function renderSectionReclamations() {
+        const allRecs = SAC_SECTIONS.getReclamationsForUniversity(session);
+        const c = SAC_SECTIONS.countByStatut(allRecs);
+        document.getElementById("uniRecStats").innerHTML = `
+          <div class="rec-stat"><strong>${c.ouverte}</strong><span>Ouvertes</span></div>
+          <div class="rec-stat"><strong>${c.en_cours}</strong><span>En cours</span></div>
+          <div class="rec-stat"><strong>${c.resolue}</strong><span>Résolues</span></div>
+          <div class="rec-stat"><strong>${allRecs.length}</strong><span>Total</span></div>`;
+
+        if (!selectedSectionId) {
+          document.getElementById("uniRecList").innerHTML = "";
+          document.getElementById("uniRecEmpty").style.display = "none";
+          return;
+        }
+
+        const filter = document.getElementById("filterStatut").value;
+        let recs = SAC_SECTIONS.getReclamationsForSection(selectedSectionId);
+        if (filter !== "all") recs = recs.filter((r) => r.statut === filter);
+
+        const sec = SAC_SECTIONS.getSectionById(selectedSectionId);
+        const el = document.getElementById("uniRecList");
+        const empty = document.getElementById("uniRecEmpty");
+
+        if (!recs.length) {
+          el.innerHTML = "";
+          empty.style.display = "block";
+          return;
+        }
+        empty.style.display = "none";
+        el.innerHTML = recs
+          .map(
+            (r) => `<article class="rec-card" data-id="${r.id}">
+            <div class="rec-card__head"><span class="rec-card__title">${esc(r.sujet)}</span>
+            <span class="rec-badge" style="background:${SAC_SECTIONS.statutColor(r.statut)}">${SAC_SECTIONS.statutLabel(r.statut)}</span></div>
+            <div class="rec-card__meta">${esc(r.studentNom)} · ${esc(r.matricule)} · ${esc(SAC_SECTIONS.categoryLabel(r.categorie, r.categorieDetail))} · ${new Date(r.createdAt).toLocaleDateString("fr-FR")}</div>
+            <p class="rec-card__msg">${esc(r.message)}</p>
+            ${SAC_SECTIONS.attachmentsHtml(r.attachments, false)}
+            ${r.reponse ? `<div class="rec-card__reply"><strong>Réponse :</strong> ${esc(r.reponse)}</div>` : ""}
+            <div class="rec-actions">
+              <select data-statut-select="${r.id}">${SAC_SECTIONS.STATUTS.map((s) => `<option value="${s.id}" ${r.statut === s.id ? "selected" : ""}>${s.label}</option>`).join("")}</select>
+              <input type="text" class="fi" placeholder="Réponse à l'étudiant…" data-reply="${r.id}" style="flex:1;min-width:160px;padding:0.45rem 0.65rem;font-size:0.85rem;" />
+              <button type="button" class="btn btn--role" data-save="${r.id}" style="font-size:0.8rem;padding:0.4rem 0.85rem;">Enregistrer</button>
+            </div>
+          </article>`
+          )
+          .join("");
+
+        el.querySelectorAll("[data-reply]").forEach((inp) => {
+          const rec = recs.find((x) => x.id === inp.dataset.reply);
+          if (rec?.reponse) inp.value = rec.reponse;
+        });
+        el.querySelectorAll("[data-save]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const id = btn.dataset.save;
+            try {
+              SAC_SECTIONS.updateReclamation(id, session, {
+                statut: el.querySelector(`[data-statut-select="${id}"]`).value,
+                reponse: el.querySelector(`[data-reply="${id}"]`).value.trim(),
+                sectionName: sec?.name,
+              });
+              showToast("Réclamation mise à jour — l'étudiant est notifié sur son profil.");
+              refreshAll();
+            } catch (e) {
+              alert(e.message);
+            }
+          });
+        });
+      }
+
+      /* Tarifs */
+      function updateCdfHints() {
+        [["tarifEtu", "tarifEtuCdf"], ["tarifProf", "tarifProfCdf"], ["tarifAssist", "tarifAssistCdf"]].forEach(
+          ([inpId, hintId]) => {
+            const v = parseFloat(document.getElementById(inpId)?.value);
+            const el = document.getElementById(hintId);
+            if (!el) return;
+            el.textContent =
+              Number.isFinite(v) && v > 0 ? "≈ " + SAC_TARIFFS.toCdf(v).toLocaleString("fr-FR") + " CDF" : "";
+          }
+        );
+      }
+
+      async function loadCampusTariffForm() {
+        const defs = SAC_TARIFFS.DEFAULT_FEES;
+        let tariffs = session.campusTariffs;
+        const code = SAC_UNIVERSITY.campusCode(session);
+        if (!tariffs && code && typeof SAC_API !== "undefined" && (await SAC_API.ensureOnline())) {
+          try {
+            tariffs = (await SAC_API.getCampusTariffs(code)).tariffs;
+          } catch { /* défauts */ }
+        }
+        const t = tariffs || {};
+        document.getElementById("tarifEtu").value = t.etudiant?.amount ?? defs.etudiant.amount;
+        document.getElementById("tarifProf").value = t.professeur?.amount ?? defs.professeur.amount;
+        document.getElementById("tarifAssist").value = t.assistant?.amount ?? defs.assistant.amount;
+        updateCdfHints();
+      }
+
+      ["tarifEtu", "tarifProf", "tarifAssist"].forEach((id) => {
+        document.getElementById(id)?.addEventListener("input", updateCdfHints);
+      });
+
+      document.getElementById("formCampusTariffs").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const msg = document.getElementById("tarifSaveMsg");
+        const tariffs = {
+          etudiant: { amount: parseFloat(document.getElementById("tarifEtu").value) },
+          professeur: { amount: parseFloat(document.getElementById("tarifProf").value) },
+          assistant: { amount: parseFloat(document.getElementById("tarifAssist").value) },
+        };
+        try {
+          const code = SAC_UNIVERSITY.campusCode(session);
+          let membersUpdated = 0;
+          if (typeof SAC_API !== "undefined" && (await SAC_API.ensureOnline())) {
+            const data = await SAC_API.updateCampusTariffs(tariffs);
+            session.campusTariffs = data.tariffs;
+            localStorage.setItem("sac_session", JSON.stringify(session));
+            if (code && data.tariffs) {
+              const sync = SAC_TARIFFS.syncCampusTariffsToMembers(code, data.tariffs);
+              membersUpdated = sync.updated || data.membersUpdated || 0;
+            }
+          } else {
+            const saved = SAC_TARIFFS.saveLocalCampusTariffs(session, tariffs);
+            session.campusTariffs = saved.campusTariffs || tariffs;
+            membersUpdated = saved.membersUpdated || 0;
+          }
+          SAC_TARIFFS.clearCache();
+          msg.textContent = membersUpdated + " profil(s) mis à jour avec les nouveaux tarifs.";
+          msg.style.display = "block";
+          showToast("Tarifs campus enregistrés.");
+          setTimeout(() => { msg.style.display = "none"; }, 5000);
+        } catch (err) {
+          alert(err.message || "Impossible d'enregistrer les tarifs.");
+        }
+      });
+
+      function setCommFilter(id) {
+        document.querySelectorAll("[data-comm]").forEach((b) => {
+          b.classList.toggle("active", b.dataset.comm === id);
+        });
+        document.querySelectorAll("[data-comm-panel]").forEach((p) => {
+          p.classList.toggle("active", p.dataset.commPanel === id);
+        });
+      }
+
+      function showSection(id) {
+        document.querySelectorAll(".nav-tab").forEach((x) => x.classList.remove("active"));
+        document.querySelectorAll(".page-section").forEach((x) => x.classList.remove("active"));
+        document.querySelector(`[data-section="${id}"]`)?.classList.add("active");
+        document.getElementById("section-" + id)?.classList.add("active");
+        if (id === "communiquer") initPublishers();
+        if (id === "sections") {
+          renderSectionPickList();
+          renderSectionsTable();
+          renderSectionReclamations();
+        }
+        if (id === "accueil" || id === "administration" || id === "sections") refreshAll();
+      }
+
+      function refreshAll() {
+        renderDashboard();
+        renderPayments();
+        renderMembers();
+        renderSectionPickList();
+        renderSectionsTable();
+        renderSectionReclamations();
+      }
+
+      document.querySelectorAll(".nav-tab").forEach((t) => {
+        t.addEventListener("click", () => showSection(t.dataset.section));
+      });
+      document.querySelectorAll("[data-goto]").forEach((b) => {
+        b.addEventListener("click", () => {
+          showSection(b.dataset.goto);
+          if (b.dataset.focus === "payments") {
+            document.getElementById("panelPayments")?.scrollIntoView({ behavior: "smooth" });
+          }
+          if (b.dataset.focus === "tariffs") {
+            document.getElementById("panelTariffs")?.scrollIntoView({ behavior: "smooth" });
+          }
+          if (b.dataset.focus === "rec") showSection("sections");
+        });
+      });
+      document.querySelectorAll("#commFilter [data-comm]").forEach((btn) => {
+        btn.addEventListener("click", () => setCommFilter(btn.dataset.comm));
+      });
+
+      document.getElementById("formCreateSection").addEventListener("submit", (e) => {
+        e.preventDefault();
+        try {
+          const newSec = SAC_SECTIONS.createSection(session, {
+            name: document.getElementById("secName").value,
+            filiere: document.getElementById("secFiliere").value,
+            responsableNom: document.getElementById("secResp").value,
+            telephone: document.getElementById("secTel").value,
+            email: document.getElementById("secEmail").value,
+            universite: SAC_UNIVERSITY.campusCode(session) || "unkin",
+          });
+          e.target.reset();
+          showToast("Section ajoutée.");
+          refreshAll();
+          selectSection(newSec.id);
+        } catch (err) {
+          alert(err.message);
+        }
+      });
+
+      document.getElementById("filterStatut").addEventListener("change", renderSectionReclamations);
+
+      document.getElementById("btnLogout").addEventListener("click", async () => {
+        if (typeof SAC_API !== "undefined") await SAC_API.logout();
+        else localStorage.removeItem("sac_session");
+        location.href = "connexion.html";
+      });
+
+      await loadCampusTariffForm();
+      refreshAll();
+      renderSectionPickList();
+      renderSectionsTable();
+      initSectionPublisher();
+
+      if (location.hash === "#sections") showSection("sections");
+      if (location.hash === "#publications" || location.hash === "#communiquer") showSection("communiquer");
+    })();
+  </script>
+</body>
+</html>

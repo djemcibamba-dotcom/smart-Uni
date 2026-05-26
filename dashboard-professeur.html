@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profil Professeur — Smart Academy of Congo</title>
+  <link rel="icon" href="logos.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/logo.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/grades.css" />
+  <link rel="stylesheet" href="css/home-news.css" />
+  <style>
+    .badge-role { background: rgba(201,162,39,0.2); color: var(--prof); }
+    .btn--role { background: var(--prof); }
+    .nav-tab--priority.active { border-bottom-color: var(--prof); color: var(--prof); }
+    .profile-hero { background: linear-gradient(135deg, #9a7b1a, #c9a227); }
+    .profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem; }
+    .profile-hero__badge { display: inline-block; margin-top: 0.5rem; padding: 0.25rem 0.65rem; background: rgba(255,255,255,0.2); border-radius: 100px; font-size: 0.78rem; font-weight: 600; }
+    .profile-hero__badge--warn { background: rgba(180,83,9,0.35); }
+    .doc-list { display: flex; flex-direction: column; gap: 0.65rem; }
+    .doc-item { display: flex; gap: 0.85rem; padding: 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; align-items: flex-start; }
+    .doc-item__icon { width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center; font-size: 1.2rem; flex-shrink: 0; background: rgba(201,162,39,0.2); }
+    .doc-item__title { font-weight: 600; color: var(--primary); }
+    .doc-item__meta { font-size: 0.82rem; color: var(--muted); }
+    .doc-item__desc { font-size: 0.85rem; color: var(--muted); margin-top: 0.35rem; }
+    .react-sum { font-size: 0.82rem; color: var(--primary); font-weight: 600; margin-top: 0.35rem; }
+    .react-sum--alert { color: var(--warning); }
+    .pub-empty, .empty-tasks { text-align: center; color: var(--muted); font-size: 0.9rem; padding: 1.25rem; }
+    .hn-student-feed .hn-card { margin-bottom: 0.75rem; }
+    .task-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
+    .task-stat { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem; text-align: center; }
+    .task-stat strong { display: block; font-size: 1.35rem; color: var(--primary); }
+    .task-stat span { font-size: 0.78rem; color: var(--muted); }
+    .task-stat--warn strong { color: var(--warning); }
+    .task-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
+    .task-row:last-child { border-bottom: none; }
+    .task-row__meta { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; }
+    .task-row__actions { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .btn--sm { font-size: 0.78rem; padding: 0.35rem 0.75rem; }
+    .panel--workspace { border-left: 4px solid var(--prof); }
+    .panel--national { border-left: 4px solid #1e40af; }
+    .panel--campus { border-left: 4px solid var(--uni); }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+    .stat-card strong { display: block; font-size: 1.4rem; color: var(--primary); font-family: "Playfair Display", serif; }
+    .stat-card span { font-size: 0.8rem; color: var(--muted); }
+    .task-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .task-filter button { padding: 0.4rem 0.85rem; border-radius: 100px; border: 1.5px solid var(--border); background: #fff; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: inherit; color: var(--muted); }
+    .task-filter button.active { border-color: var(--prof); color: var(--prof); background: rgba(201,162,39,0.1); }
+    .student-chip { display: inline-block; padding: 0.2rem 0.55rem; margin: 0.15rem 0.25rem 0.15rem 0; background: rgba(12,61,110,0.06); border-radius: 6px; font-size: 0.78rem; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header__top">
+      <a href="index.html" class="logo"><img src="logos.png" alt="Smart Academy of Congo" class="logo__img" width="44" height="44" /><span class="logo__text">Smart Academy</span></a>
+      <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+        <span class="badge-role">📚 Profil professeur</span>
+        <span id="userName" style="font-size:0.9rem;color:var(--muted);"></span>
+        <button type="button" class="btn btn--ghost" id="btnLogout">Déconnexion</button>
+      </div>
+    </div>
+    <nav class="nav-tabs" aria-label="Navigation professeur">
+      <button type="button" class="nav-tab active" data-section="profil">Mon profil</button>
+      <button type="button" class="nav-tab nav-tab--priority" data-section="activite">📋 Mon activité</button>
+      <button type="button" class="nav-tab nav-tab--priority" data-section="documents">📁 Publier</button>
+      <button type="button" class="nav-tab nav-tab--priority" data-section="notes">📊 Notes & cotes</button>
+      <button type="button" class="nav-tab" data-section="annonces">📢 Annonces</button>
+      <button type="button" class="nav-tab" data-section="accueil">Tableau de bord</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="page-section active" id="section-profil">
+      <div class="profile-hero">
+        <div class="profile-avatar profile-avatar--logo" style="background:rgba(255,255,255,0.2);padding:0.35rem;">
+          <img src="logos.png" alt="" width="80" height="80" style="width:100%;height:100%;object-fit:contain;border-radius:50%;" />
+        </div>
+        <div>
+          <h1 id="profileName">Professeur</h1>
+          <p style="opacity:0.9;font-size:0.9rem;" id="profileMeta">—</p>
+          <span class="profile-hero__badge" id="profileBadge">Compte actif</span>
+        </div>
+      </div>
+
+      <div class="panel panel--workspace">
+        <div class="panel__head">
+          <h2>Mon activité pédagogique</h2>
+          <button type="button" class="btn btn--role btn--sm" data-goto="activite">Voir tout</button>
+        </div>
+        <div class="panel__body" id="profileActivitySummary"></div>
+      </div>
+
+      <div class="profile-grid">
+        <div class="panel">
+          <div class="panel__head"><h2>Identité</h2></div>
+          <div class="panel__body" id="profilePersonal"></div>
+        </div>
+        <div class="panel">
+          <div class="panel__head"><h2>Établissement & enseignement</h2></div>
+          <div class="panel__body" id="profileAcademic"></div>
+        </div>
+      </div>
+
+      <div class="panel panel--accent" style="border-left:4px solid var(--prof);">
+        <div class="panel__head"><h2>Mes cours & classes</h2><button type="button" class="btn btn--ghost btn--sm" data-goto="notes">Saisir les cotes</button></div>
+        <div class="panel__body" id="profileCourses"></div>
+      </div>
+
+      <div class="panel" style="display:flex;flex-wrap:wrap;gap:0.5rem;padding:1rem 1.25rem;">
+        <button type="button" class="btn btn--role" data-goto="activite">📋 Mon activité</button>
+        <button type="button" class="btn btn--role" data-goto="documents">📁 Publier</button>
+        <button type="button" class="btn btn--ghost" data-goto="notes">📊 Cotes</button>
+        <button type="button" class="btn btn--ghost" data-goto="annonces">📢 Annonces</button>
+      </div>
+    </section>
+
+    <section class="page-section" id="section-activite">
+      <h1 class="page-title">Mon activité pédagogique</h1>
+      <p class="page-desc">
+        Priorités de votre enseignement : cotes à compléter, retours étudiants sur vos publications,
+        effectifs par classe et statut de votre compte.
+      </p>
+
+      <div class="task-stats" id="activityStatsBar"></div>
+
+      <div class="task-filter" id="activityFilterBar">
+        <button type="button" class="active" data-act-filter="grades">📊 Cotes à saisir</button>
+        <button type="button" data-act-filter="publications">📁 Publications</button>
+        <button type="button" data-act-filter="students">👥 Mes étudiants</button>
+        <button type="button" data-act-filter="account">💳 Mon compte</button>
+      </div>
+
+      <div class="panel panel--workspace" id="panelActGrades">
+        <div class="panel__head"><h2>📊 Cotes à compléter</h2><span id="countPendingGrades" style="font-size:0.82rem;color:var(--muted);"></span></div>
+        <div class="panel__body" id="listPendingGrades"></div>
+      </div>
+
+      <div class="panel" id="panelActPublications" style="display:none;">
+        <div class="panel__head"><h2>📁 Mes publications & retours</h2><button type="button" class="btn btn--ghost btn--sm" data-goto="documents">Publier</button></div>
+        <div class="panel__body" id="listPublications"></div>
+      </div>
+
+      <div class="panel" id="panelActStudents" style="display:none;">
+        <div class="panel__head"><h2>👥 Étudiants par classe</h2></div>
+        <div class="panel__body" id="listStudents"></div>
+      </div>
+
+      <div class="panel" id="panelActAccount" style="display:none;">
+        <div class="panel__head"><h2>💳 Mon compte & inscription</h2></div>
+        <div class="panel__body" id="panelAccountBody"></div>
+      </div>
+    </section>
+
+    <section class="page-section" id="section-documents">
+      <h1 class="page-title">Publication pour mes classes</h1>
+      <p class="page-desc">
+        Diffusez informations, documents, images, audio et vidéos. Visible
+        <strong>uniquement</strong> par les étudiants de la même université, filière et niveau.
+        Les étudiants peuvent réagir (👍 ❓ 🙏).
+      </p>
+      <div id="publisherRoot"></div>
+    </section>
+
+    <section class="page-section" id="section-notes">
+      <h1 class="page-title">Notes & cotes</h1>
+      <p class="page-desc">
+        Saisissez les cotes CC (/40) et examen (/60). Les moyennes apparaissent dans l'espace « Mes cotes » des étudiants.
+      </p>
+      <div class="panel">
+        <div class="panel__head">
+          <h2>Mes cours</h2>
+          <div class="grades-toolbar" style="margin:0;">
+            <label for="profSemesterFilter">Session</label>
+            <select id="profSemesterFilter" aria-label="Semestre"></select>
+          </div>
+        </div>
+        <div class="panel__body" style="overflow-x:auto;">
+          <table>
+            <thead><tr><th>Code</th><th>Cours</th><th>Classe</th><th>Étudiants</th><th>Moy. classe</th><th>Action</th></tr></thead>
+            <tbody id="profCoursesTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <p class="page-desc" style="font-size:0.85rem;margin-top:0;">
+        💡 Aucun étudiant ? Vérifiez que vos classes à l'inscription correspondent à la filière et au niveau des étudiants.
+      </p>
+    </section>
+
+    <section class="page-section" id="section-annonces">
+      <h1 class="page-title">Annonces officielles</h1>
+      <p class="page-desc">Communications de votre université et espace national.</p>
+      <div class="panel panel--campus">
+        <div class="panel__head"><h2>🏛️ Mon université</h2></div>
+        <div class="panel__body">
+          <div class="doc-list" id="campusAdminDocs"></div>
+          <div class="hn-student-feed" id="campusHomeNews"></div>
+          <p class="pub-empty" id="campusAnnounceEmpty" style="display:none;">Aucune annonce campus.</p>
+        </div>
+      </div>
+      <div class="panel panel--national">
+        <div class="panel__head"><h2>🇨🇩 Espace national</h2></div>
+        <div class="panel__body">
+          <div class="hn-student-feed" id="nationalHomeNews"></div>
+          <p class="pub-empty" id="nationalAnnounceEmpty" style="display:none;">Aucune publication nationale.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="grades-modal-overlay" id="gradesModal" aria-hidden="true" role="dialog" aria-labelledby="gradesModalTitle">
+      <div class="grades-modal">
+        <div class="grades-modal__head">
+          <h3 id="gradesModalTitle">Saisie des cotes</h3>
+          <p id="gradesModalSubtitle">—</p>
+        </div>
+        <div class="grades-modal__body" id="gradesModalBody"></div>
+        <div class="grades-modal__actions" style="padding:0 1.5rem 1.5rem;">
+          <button type="button" class="btn btn--role" id="btnSaveGrades">Enregistrer les cotes</button>
+          <button type="button" class="btn btn--ghost" id="btnCloseGrades">Fermer</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="page-section" id="section-accueil">
+      <h1 class="page-title">Tableau de bord</h1>
+      <p class="page-desc" id="welcomeDesc">Bienvenue sur votre espace professeur.</p>
+      <div class="stats-grid" id="dashStatsGrid"></div>
+      <div class="panel">
+        <div class="panel__head"><h2>Priorités</h2></div>
+        <div class="panel__body" style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+          <button type="button" class="btn btn--role" data-goto="activite" data-act-focus="grades">Cotes à saisir</button>
+          <button type="button" class="btn btn--role" data-goto="documents">Publier</button>
+          <button type="button" class="btn btn--ghost" data-goto="notes">Notes & cotes</button>
+          <button type="button" class="btn btn--ghost" data-goto="annonces">Annonces</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel__head"><h2>Dernières publications</h2></div>
+        <div class="panel__body"><div class="doc-list" id="accueilRecentDocs"></div></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/sac-universities.js"></script>
+  <script src="js/sac-identity.js"></script>
+  <script src="js/sac-session.js"></script>
+  <script src="js/sac-api.js"></script>
+  <script src="js/sac-tariffs.js"></script>
+  <script src="js/sac-courses.js"></script>
+  <script src="js/sac-data.js"></script>
+  <script src="js/sac-home-news.js"></script>
+  <script src="js/sac-grades.js"></script>
+  <script src="js/sac-professor-workspace.js"></script>
+  <script src="js/sac-publisher.js"></script>
+  <script>
+    (async function () {
+      let session = SAC_SESSION.guard("professeur");
+      if (!session) return;
+
+      try {
+        if (typeof SAC_API !== "undefined" && (await SAC_API.ensureOnline())) {
+          await SAC_API.me();
+        }
+      } catch { /* mode local */ }
+      session = SAC_SESSION.syncSessionWithAccount("professeur") || session;
+      await SAC_DATA.ensureReady();
+
+      const GRADE_LABELS = {
+        professeur: "Professeur",
+        professeur_ordinaire: "Professeur ordinaire",
+        professeur_associe: "Professeur associé",
+        maitre_conferences: "Maître de conférences",
+        charge_cours: "Chargé de cours",
+        vacataire: "Vacataire",
+      };
+      const UNI_NAMES = { ...SAC_UNIVERSITIES.NAMES, autre: "Autre établissement" };
+      let currentActFilter = "grades";
+      let gradesUi = null;
+
+      function escapeHtml(s) {
+        const d = document.createElement("div");
+        d.textContent = s || "";
+        return d.innerHTML;
+      }
+
+      function getProfessorProfile(session) {
+        const found = SAC_IDENTITY.getLocalUsers().find(
+          (u) => u.role === "professeur" && u.email === session?.identifiant
+        );
+        const person = SAC_IDENTITY.resolvePersonFromRecords(session, found);
+        return {
+          prenom: person.prenom,
+          nom: person.nom,
+          fullName: person.fullName || "Professeur",
+          email: session?.identifiant || found?.email || "—",
+          telephone: found?.telephone || session?.telephone || "—",
+          universite: found?.universite || session?.universite || "",
+          departement: found?.departement || session?.departement || "—",
+          grade: found?.grade || session?.grade || "—",
+          numEmploye: found?.numEmploye || "—",
+          inscriptionFee: found?.inscriptionFee || session?.inscriptionFee || null,
+          payment: found?.payment || session?.payment,
+        };
+      }
+
+      function renderDocItem(doc, reactHtml) {
+        const icons = { info: "📢", document: "📄", image: "🖼️", audio: "🔊", video: "🎬" };
+        return `<article class="doc-item">
+          <div class="doc-item__icon">${icons[doc.mediaCategory] || "📄"}</div>
+          <div class="doc-item__content">
+            <div class="doc-item__title">${escapeHtml(doc.title)}</div>
+            <div class="doc-item__meta">${escapeHtml(doc.date)} · ${escapeHtml(doc.classe || doc.courseCode || "")}</div>
+            ${doc.description ? `<p class="doc-item__desc">${escapeHtml(doc.description)}</p>` : ""}
+            ${reactHtml || ""}
+          </div>
+        </article>`;
+      }
+
+      function reactHtmlFor(doc) {
+        const c = SAC_DATA.reactionCounts(doc);
+        const total = c.useful + c.question + c.thanks;
+        if (!total) return "";
+        const cls = c.question > 0 ? "react-sum react-sum--alert" : "react-sum";
+        return `<div class="${cls}">👍 ${c.useful} · ❓ ${c.question} · 🙏 ${c.thanks}</div>`;
+      }
+
+      function renderHomeNewsFeed(containerId, items, emptyId) {
+        const el = document.getElementById(containerId);
+        const empty = emptyId ? document.getElementById(emptyId) : null;
+        if (!el) return;
+        if (!items.length) { el.innerHTML = ""; if (empty) empty.style.display = "block"; return; }
+        if (empty) empty.style.display = "none";
+        el.innerHTML = items.map((n) => SAC_HOME_NEWS.renderCard(n)).join("");
+      }
+
+      function renderActivityStats() {
+        const s = SAC_PROFESSOR.getSummary(session, gradesUi?.getSemester?.());
+        document.getElementById("activityStatsBar").innerHTML = `
+          <div class="task-stat task-stat--warn"><strong>${s.pendingGrades}</strong><span>Cotes à saisir</span></div>
+          <div class="task-stat"><strong>${s.studentsCount}</strong><span>Étudiants</span></div>
+          <div class="task-stat"><strong>${s.publicationsCount}</strong><span>Publications</span></div>
+          <div class="task-stat ${s.questionsCount ? "task-stat--warn" : ""}"><strong>${s.questionsCount}</strong><span>Questions ❓</span></div>
+          <div class="task-stat"><strong>${s.gradesEntered}</strong><span>Cotes enregistrées</span></div>`;
+
+        document.getElementById("profileActivitySummary").innerHTML = `
+          <div class="info-row"><span>Cotes à compléter</span><span style="color:var(--warning);font-weight:600;">${s.pendingGrades}</span></div>
+          <div class="info-row"><span>Étudiants (mes classes)</span><span style="font-weight:600;">${s.studentsCount}</span></div>
+          <div class="info-row"><span>Publications</span><span style="font-weight:600;">${s.publicationsCount}</span></div>
+          <div class="info-row"><span>Retours étudiants (❓)</span><span style="font-weight:600;">${s.questionsCount}</span></div>
+          <div class="info-row"><span>Cours déclarés</span><span style="font-weight:600;">${s.coursesCount}</span></div>`;
+
+        document.getElementById("dashStatsGrid").innerHTML = `
+          <div class="stat-card"><strong>${s.totalPriority}</strong><span>Priorités</span></div>
+          <div class="stat-card"><strong>${s.coursesCount}</strong><span>Cours</span></div>
+          <div class="stat-card"><strong>${s.studentsCount}</strong><span>Étudiants</span></div>
+          <div class="stat-card"><strong>${s.publicationsCount}</strong><span>Publications</span></div>
+          <div class="stat-card"><strong>${s.reactionsTotal}</strong><span>Réactions</span></div>`;
+
+        const badge = document.getElementById("profileBadge");
+        if (s.accountPending) {
+          badge.textContent = "Paiement en attente de validation";
+          badge.classList.add("profile-hero__badge--warn");
+        } else if (s.coursesCount === 0) {
+          badge.textContent = "Ajoutez vos cours à l'inscription";
+          badge.classList.add("profile-hero__badge--warn");
+        } else {
+          badge.textContent = "Compte actif · Enseignement";
+          badge.classList.remove("profile-hero__badge--warn");
+        }
+      }
+
+      function renderPendingGrades() {
+        const semester = gradesUi?.getSemester?.() || SAC_PROFESSOR.getSemester();
+        const list = SAC_PROFESSOR.getCoursesWithPendingGrades(session, semester);
+        const el = document.getElementById("listPendingGrades");
+        document.getElementById("countPendingGrades").textContent =
+          list.length ? list.length + " cours avec cotes manquantes" : "À jour";
+
+        if (!list.length) {
+          el.innerHTML = '<p class="empty-tasks">Toutes les cotes sont saisies pour cette session, ou aucun étudiant inscrit dans vos classes.</p>';
+          return;
+        }
+        el.innerHTML = list
+          .map(
+            (row) => `<div class="task-row">
+            <div>
+              <strong>${escapeHtml(row.courseClass.courseCode)} — ${escapeHtml(row.courseClass.courseName)}</strong>
+              <div class="task-row__meta">${escapeHtml(row.courseClass.classe || row.courseClass.niveau)} · ${row.pendingCount} étudiant(s) sans cote · ${row.gradedCount}/${row.studentCount} notés</div>
+            </div>
+            <div class="task-row__actions">
+              <button type="button" class="btn btn--role btn--sm" data-grade-idx="${row.idx}">Saisir les cotes</button>
+            </div>
+          </div>`
+          )
+          .join("");
+
+        el.querySelectorAll("[data-grade-idx]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            showSection("notes");
+            if (gradesUi?.openCourseByIndex) {
+              setTimeout(() => gradesUi.openCourseByIndex(Number(btn.dataset.gradeIdx)), 200);
+            }
+          });
+        });
+      }
+
+      function renderPublicationsActivity() {
+        const items = SAC_PROFESSOR.getPublicationsWithEngagement(session);
+        const el = document.getElementById("listPublications");
+        if (!items.length) {
+          el.innerHTML = '<p class="empty-tasks">Aucune publication. Utilisez l\'onglet « Publier ».</p>';
+          return;
+        }
+        el.innerHTML = items
+          .map((p) => renderDocItem(p.doc, reactHtmlFor(p.doc)))
+          .join("");
+      }
+
+      function renderStudentsActivity() {
+        const groups = SAC_PROFESSOR.getStudentsByClass(session);
+        const el = document.getElementById("listStudents");
+        if (!groups.length) {
+          el.innerHTML = '<p class="empty-tasks">Aucun cours déclaré à l\'inscription.</p>';
+          return;
+        }
+        el.innerHTML = groups
+          .map((g) => {
+            const chips = g.students.length
+              ? g.students
+                  .map(
+                    (s) =>
+                      `<span class="student-chip">${escapeHtml(SAC_PROFESSOR.displayName(s))} (${escapeHtml(s.matricule)})</span>`
+                  )
+                  .join("")
+              : '<span style="color:var(--muted);font-size:0.85rem;">Aucun étudiant pour cette classe (vérifiez filière / niveau).</span>';
+            return `<div style="margin-bottom:1.25rem;">
+              <strong>${escapeHtml(g.courseClass.courseCode)} — ${escapeHtml(g.courseClass.courseName)}</strong>
+              <div class="task-row__meta">${escapeHtml(g.courseClass.classe)} · ${g.students.length} étudiant(s)</div>
+              <div style="margin-top:0.5rem;">${chips}</div>
+            </div>`;
+          })
+          .join("");
+      }
+
+      function renderAccountPanel() {
+        const p = getProfessorProfile(session);
+        const acc = SAC_PROFESSOR.getAccountStatus(session);
+        const uniLabel = UNI_NAMES[p.universite] || p.universite;
+        let payHtml = "";
+        if (acc.pending) {
+          payHtml = `<p style="padding:0.75rem;background:rgba(180,83,9,0.1);border-radius:8px;font-size:0.9rem;margin-bottom:1rem;">
+            ⏳ Votre paiement d'inscription est <strong>en attente de validation</strong> par l'administration du campus.
+            Contactez un assistant de ${escapeHtml(uniLabel)}.</p>`;
+        } else if (acc.verified) {
+          payHtml = `<p style="padding:0.75rem;background:rgba(13,122,74,0.1);border-radius:8px;font-size:0.9rem;margin-bottom:1rem;">✓ Inscription validée · Paiement confirmé</p>`;
+        } else if (acc.rejected) {
+          payHtml = `<p style="padding:0.75rem;background:rgba(185,28,28,0.08);border-radius:8px;font-size:0.9rem;margin-bottom:1rem;">Paiement refusé. Soumettez à nouveau via l'inscription ou contactez l'administration.</p>`;
+        }
+        const tarif = p.inscriptionFee
+          ? `<div class="info-row"><span>Tarif campus (professeur)</span><span><strong>${p.inscriptionFee.amount} USD</strong></span></div>`
+          : "";
+        document.getElementById("panelAccountBody").innerHTML =
+          payHtml +
+          `<div class="info-row"><span>E-mail</span><span>${escapeHtml(p.email)}</span></div>
+          <div class="info-row"><span>Université</span><span>${escapeHtml(uniLabel)}</span></div>
+          ${tarif}
+          <div class="info-row"><span>Réf. transaction</span><span>${escapeHtml(acc.payment?.transactionId || acc.payment?.paymentReference || "—")}</span></div>`;
+      }
+
+      function setActFilter(id) {
+        currentActFilter = id;
+        document.querySelectorAll("[data-act-filter]").forEach((b) => {
+          b.classList.toggle("active", b.dataset.actFilter === id);
+        });
+        document.getElementById("panelActGrades").style.display = id === "grades" ? "block" : "none";
+        document.getElementById("panelActPublications").style.display = id === "publications" ? "block" : "none";
+        document.getElementById("panelActStudents").style.display = id === "students" ? "block" : "none";
+        document.getElementById("panelActAccount").style.display = id === "account" ? "block" : "none";
+      }
+
+      function renderAllActivity() {
+        renderActivityStats();
+        renderPendingGrades();
+        renderPublicationsActivity();
+        renderStudentsActivity();
+        renderAccountPanel();
+      }
+
+      function renderProfile(session) {
+        const p = getProfessorProfile(session);
+        const uniLabel = UNI_NAMES[p.universite] || p.universite || "—";
+        const classes = SAC_COURSES.getTeachingClasses(session);
+
+        document.getElementById("profileName").textContent = p.fullName;
+        document.getElementById("userName").textContent = p.fullName;
+        document.getElementById("profileMeta").textContent =
+          uniLabel + " · " + (GRADE_LABELS[p.grade] || p.grade);
+        document.getElementById("welcomeDesc").textContent =
+          "Bonjour " + (p.prenom || p.fullName.split(" ")[0]) + " — " + uniLabel;
+
+        const tarifHtml = p.inscriptionFee
+          ? `<div class="info-row"><span>Tarif inscription SAC</span><span><strong>${p.inscriptionFee.amount} USD</strong></span></div>`
+          : "";
+
+        document.getElementById("profilePersonal").innerHTML = `
+          <div class="info-row"><span>Prénom</span><span>${escapeHtml(p.prenom) || "—"}</span></div>
+          <div class="info-row"><span>Nom</span><span>${escapeHtml(p.nom) || "—"}</span></div>
+          <div class="info-row"><span>E-mail</span><span>${escapeHtml(p.email)}</span></div>
+          <div class="info-row"><span>Téléphone</span><span>${escapeHtml(p.telephone)}</span></div>
+          ${tarifHtml}`;
+
+        document.getElementById("profileAcademic").innerHTML = `
+          <div class="info-row"><span>Université</span><span>${escapeHtml(uniLabel)}</span></div>
+          <div class="info-row"><span>Département</span><span>${escapeHtml(p.departement)}</span></div>
+          <div class="info-row"><span>Grade</span><span>${escapeHtml(GRADE_LABELS[p.grade] || p.grade)}</span></div>
+          <div class="info-row"><span>N° employé</span><span>${escapeHtml(p.numEmploye)}</span></div>
+          <div class="info-row"><span>Rôle</span><span>Professeur — publication & cotes</span></div>`;
+
+        const coursesEl = document.getElementById("profileCourses");
+        if (!classes.length) {
+          coursesEl.innerHTML =
+            '<p style="color:var(--muted);font-size:0.9rem;">Aucun cours enregistré. Complétez votre inscription avec vos classes pour publier et noter.</p>';
+        } else {
+          coursesEl.innerHTML = classes
+            .map(
+              (c) =>
+                `<div class="info-row"><span><strong>${escapeHtml(c.courseCode)}</strong></span><span>${escapeHtml(c.courseName)} — ${escapeHtml(c.classe || c.niveau)}</span></div>`
+            )
+            .join("");
+        }
+      }
+
+      function renderRecentPublications() {
+        const docs = SAC_DATA.getPublicationsByAuthor(session).slice(0, 5);
+        const el = document.getElementById("accueilRecentDocs");
+        if (el) {
+          el.innerHTML = docs.length
+            ? docs.map((d) => renderDocItem(d, reactHtmlFor(d))).join("")
+            : '<p class="pub-empty">Aucune publication récente.</p>';
+        }
+      }
+
+      function renderAnnouncements() {
+        const p = getProfessorProfile(session);
+        const campusDocs = SAC_DATA.getCampusPublicationsForStaff(session).slice(0, 6);
+        const campusDocsEl = document.getElementById("campusAdminDocs");
+        if (campusDocsEl) {
+          campusDocsEl.innerHTML = campusDocs.length ? campusDocs.map((d) => renderDocItem(d)).join("") : "";
+        }
+        const uniNews = SAC_HOME_NEWS.getUniversityNewsForStudent(p.universite);
+        const nationalNews = SAC_HOME_NEWS.getNationalNewsForStudent();
+        renderHomeNewsFeed("campusHomeNews", uniNews, null);
+        renderHomeNewsFeed("nationalHomeNews", nationalNews, "nationalAnnounceEmpty");
+        const campusEmpty = document.getElementById("campusAnnounceEmpty");
+        if (campusEmpty) {
+          campusEmpty.style.display = campusDocs.length || uniNews.length ? "none" : "block";
+        }
+      }
+
+      async function applyCampusTariffToProfile() {
+        if (typeof SAC_TARIFFS === "undefined") return;
+        const users = SAC_IDENTITY.getLocalUsers();
+        const idx = users.findIndex((u) => u.role === "professeur" && u.email === session.identifiant);
+        if (idx < 0) return;
+        const uni = users[idx].universite || session.universite;
+        const tariffs = await SAC_TARIFFS.fetchCampusTariffPack(uni);
+        if (tariffs?.professeur) {
+          users[idx] = SAC_TARIFFS.applyTariffsToMemberProfile(users[idx], tariffs, uni);
+          localStorage.setItem("sac_users", JSON.stringify(users));
+          session = SAC_SESSION.syncSessionWithAccount("professeur") || session;
+        }
+      }
+
+      function showSection(id) {
+        document.querySelectorAll(".nav-tab").forEach((x) => x.classList.remove("active"));
+        document.querySelectorAll(".page-section").forEach((x) => x.classList.remove("active"));
+        document.querySelector(`[data-section="${id}"]`)?.classList.add("active");
+        document.getElementById("section-" + id)?.classList.add("active");
+        if (id === "profil" || id === "activite" || id === "accueil") renderAllActivity();
+        if (id === "documents" || id === "accueil") renderRecentPublications();
+        if (id === "notes" && gradesUi?.refresh) gradesUi.refresh();
+        if (id === "annonces") renderAnnouncements();
+      }
+
+      document.querySelectorAll("[data-act-filter]").forEach((btn) => {
+        btn.addEventListener("click", () => setActFilter(btn.dataset.actFilter));
+      });
+      document.querySelectorAll(".nav-tab").forEach((t) => {
+        t.addEventListener("click", () => showSection(t.dataset.section));
+      });
+      document.querySelectorAll("[data-goto]").forEach((b) => {
+        b.addEventListener("click", () => showSection(b.dataset.goto));
+      });
+      document.querySelectorAll("[data-act-focus]").forEach((b) => {
+        b.addEventListener("click", () => {
+          showSection("activite");
+          setActFilter(b.dataset.actFocus);
+        });
+      });
+
+      document.getElementById("btnLogout").addEventListener("click", async () => {
+        if (typeof SAC_API !== "undefined") await SAC_API.logout();
+        else localStorage.removeItem("sac_session");
+        location.href = "connexion.html";
+      });
+
+      await applyCampusTariffToProfile();
+      renderProfile(session);
+      renderAllActivity();
+      renderAnnouncements();
+
+      SAC_initPublisherPage({
+        session,
+        rootId: "publisherRoot",
+        accentColor: "#c9a227",
+        pageTitle: "",
+        multiFile: true,
+        maxFiles: 10,
+      });
+
+      gradesUi = SAC_GRADES.initProfessorGrades(session);
+      const semesterSel = document.getElementById("profSemesterFilter");
+      if (semesterSel && gradesUi) {
+        semesterSel.addEventListener("change", () => {
+          if (gradesUi.setSemester) gradesUi.setSemester(semesterSel.value);
+          renderAllActivity();
+        });
+      }
+
+      const publisherRoot = document.getElementById("publisherRoot");
+      if (publisherRoot) {
+        const obs = new MutationObserver(() => {
+          renderRecentPublications();
+          renderAllActivity();
+        });
+        obs.observe(publisherRoot, { childList: true, subtree: true });
+      }
+
+      const modal = document.getElementById("gradesModal");
+      if (modal) {
+        const modalObs = new MutationObserver(() => {
+          if (!modal.classList.contains("open")) renderAllActivity();
+        });
+        modalObs.observe(modal, { attributes: true, attributeFilter: ["class"] });
+      }
+    })();
+  </script>
+</body>
+</html>

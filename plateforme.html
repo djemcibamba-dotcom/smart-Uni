@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Écosystème unifié — Smart Academy of Congo</title>
+  <link rel="icon" href="logos.png" type="image/png" />
+  <link rel="stylesheet" href="css/logo.css" />
+  <link rel="stylesheet" href="css/platform.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0c3d6e;
+      --accent: #c9a227;
+      --bg: #f4f7fb;
+      --surface: #fff;
+      --text: #1a2b3c;
+      --text-muted: #5a6d7e;
+      --border: #e2e8f0;
+      --success: #0d7a4a;
+    }
+    body { font-family: "DM Sans", system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; }
+    .plat-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .plat-header a.logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+    .btn { padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.88rem; cursor: pointer; border: none; font-family: inherit; text-decoration: none; display: inline-block; }
+    .btn--primary { background: var(--primary); color: #fff; }
+    .btn--ghost { background: transparent; border: 1.5px solid var(--border); color: var(--text-muted); }
+    .hero-plat { max-width: 1280px; margin: 0 auto; padding: 1.5rem 1.5rem 0; }
+    .hero-plat h1 { font-family: "Playfair Display", serif; font-size: 1.6rem; color: var(--primary); }
+    .hero-plat p { color: var(--text-muted); font-size: 0.95rem; max-width: 720px; }
+  </style>
+</head>
+<body>
+  <header class="plat-header">
+    <a href="index.html" class="logo">
+      <img src="logos.png" alt="" width="40" height="40" style="border-radius:50%" />
+      Smart Academy of Congo
+    </a>
+    <div id="headerActions">
+      <a href="connexion.html" class="btn btn--primary">Connexion</a>
+    </div>
+  </header>
+
+  <div class="hero-plat">
+    <h1>Écosystème académique unifié</h1>
+    <p>Un seul portail national pour l'inscription, les résultats, les frais, la bibliothèque, l'orientation IA, les stages, le réseau étudiant, les cours en ligne et la vérification officielle des diplômes — avec contrôle d'accès par rôle et par campus.</p>
+  </div>
+
+  <div class="platform-layout" id="platformApp" style="display:none">
+    <aside class="platform-sidebar">
+      <h2>Modules</h2>
+      <nav id="platformNav"></nav>
+      <p class="platform-security-note" style="margin-top:1rem;font-size:0.75rem">
+        🔒 Données filtrées par université · journal d'audit · API sécurisée JWT
+      </p>
+    </aside>
+    <main id="platformPanels"></main>
+  </div>
+
+  <div id="loginPrompt" style="max-width:480px;margin:3rem auto;text-align:center;padding:2rem;background:#fff;border-radius:12px;border:1px solid var(--border)">
+    <p>Connectez-vous pour accéder à l'écosystème complet.</p>
+    <a href="connexion.html" class="btn btn--primary" style="margin-top:1rem">Se connecter</a>
+    <p style="margin-top:1rem;font-size:0.85rem"><a href="verifier-diplome.html">Vérifier un diplôme</a> (public, sans compte)</p>
+  </div>
+
+  <script src="js/sac-session.js"></script>
+  <script src="js/sac-identity.js"></script>
+  <script src="js/sac-api.js"></script>
+  <script src="js/sac-platform.js"></script>
+  <script>
+    (function () {
+      const session = SAC_SESSION.getSession();
+      const app = document.getElementById("platformApp");
+      const prompt = document.getElementById("loginPrompt");
+      const navEl = document.getElementById("platformNav");
+      const panelsEl = document.getElementById("platformPanels");
+      const headerActions = document.getElementById("headerActions");
+
+      if (!session) return;
+
+      prompt.style.display = "none";
+      app.style.display = "grid";
+      SAC_PLATFORM.seedDemoIfEmpty();
+
+      const dash = {
+        etudiant: "dashboard-etudiant.html",
+        professeur: "dashboard-professeur.html",
+        assistant: "dashboard-assistant.html",
+        universite: "dashboard-universite.html",
+      }[session.role] || "index.html";
+
+      headerActions.innerHTML =
+        '<span style="font-size:0.88rem;color:var(--text-muted)">' +
+        (typeof SAC_IDENTITY !== "undefined" ? SAC_IDENTITY.getDisplayName(session) : session.email) +
+        '</span><a href="' + dash + '" class="btn btn--ghost">Mon tableau de bord</a>' +
+        '<button type="button" class="btn btn--ghost" id="btnLogout">Déconnexion</button>';
+
+      document.getElementById("btnLogout")?.addEventListener("click", () => {
+        SAC_SESSION.clearSession();
+        location.href = "index.html";
+      });
+
+      const modules = SAC_PLATFORM.modulesForRole(session.role);
+      const panelDefs = {
+        resultats: { title: "Résultats académiques", lead: "Relevés par semestre, validés par vos professeurs et votre université.", render: renderGrades },
+        bibliotheque: { title: "Bibliothèque numérique", lead: "Ouvrages et ressources du campus, accès selon votre rôle.", render: renderLibrary },
+        orientation_ia: { title: "IA — Orientation académique", lead: "Recommandations de parcours, compétences et stages (conseil indicatif).", render: renderOrientation },
+        stages_emplois: { title: "Stages & emplois", lead: "Offres campus et nationales publiées par les universités partenaires.", render: renderCareers },
+        reseau: { title: "Réseau social étudiant", lead: "Fil sécurisé de votre campus — publications modérées par établissement.", render: renderSocial },
+        cours_ligne: { title: "Cours en ligne", lead: "MOOC et modules publiés par vos professeurs.", render: renderCourses },
+        verification_diplome: { title: "Mes diplômes & vérification", lead: "Codes officiels pour employeurs et institutions.", render: renderDiplomas },
+        frais: { title: "Paiement des frais", lead: "Suivi et validation sécurisée des paiements campus.", render: renderFees },
+        inscription: { title: "Inscription en ligne", lead: "Création de compte et dossier administratif numérique.", render: renderInscription },
+      };
+
+      modules.forEach((m, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "platform-nav-btn" + (i === 0 ? " active" : "");
+        btn.dataset.panel = m.id;
+        btn.innerHTML = "<span>" + m.icon + "</span> " + m.title;
+        btn.addEventListener("click", () => showPanel(m.id));
+        navEl.appendChild(btn);
+
+        const panel = document.createElement("section");
+        panel.className = "platform-panel" + (i === 0 ? " active" : "");
+        panel.id = "panel-" + m.id;
+        panel.innerHTML = "<h3>" + m.icon + " " + (panelDefs[m.id]?.title || m.title) + "</h3><p class='lead'>" + (panelDefs[m.id]?.lead || "") + "</p><div class='panel-body'></div>";
+        panelsEl.appendChild(panel);
+      });
+
+      function showPanel(id) {
+        document.querySelectorAll(".platform-nav-btn").forEach((b) => b.classList.toggle("active", b.dataset.panel === id));
+        document.querySelectorAll(".platform-panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + id));
+        const def = panelDefs[id];
+        if (def?.render) def.render(document.querySelector("#panel-" + id + " .panel-body"));
+      }
+
+      if (modules[0]) showPanel(modules[0].id);
+
+      async function renderGrades(el) {
+        const grades = await SAC_PLATFORM.getGrades();
+        if (!grades.length) {
+          el.innerHTML = "<p>Aucune cote publiée. Votre professeur les saisit depuis son espace.</p>";
+          return;
+        }
+        el.innerHTML =
+          "<ul class='platform-list'>" +
+          grades
+            .map(
+              (g) =>
+                "<li><strong>" +
+                (g.courseName || g.course_name) +
+                "</strong> — " +
+                (g.semester || "") +
+                " · Moy. <strong>" +
+                (g.avg ?? "—") +
+                "</strong>/20 · <span style='color:var(--success)'>" +
+                (g.status || "") +
+                "</span></li>"
+            )
+            .join("") +
+          "</ul>";
+      }
+
+      async function renderLibrary(el) {
+        const items = await SAC_PLATFORM.getLibrary();
+        el.innerHTML =
+          "<div class='platform-grid'>" +
+          items
+            .map(
+              (i) =>
+                "<article class='platform-card'><h4>" +
+                i.title +
+                "</h4><p>" +
+                (i.author || "") +
+                " · " +
+                (i.category || "") +
+                "</p><p>" +
+                (i.description || "") +
+                "</p></article>"
+            )
+            .join("") +
+          "</div>";
+      }
+
+      async function renderOrientation(el) {
+        el.innerHTML = "<button type='button' class='btn btn--primary' id='btnOrient'>Obtenir une orientation</button><div id='orientOut'></div>";
+        document.getElementById("btnOrient").onclick = async () => {
+          const advice = await SAC_PLATFORM.getOrientation();
+          document.getElementById("orientOut").innerHTML =
+            "<div class='platform-card' style='margin-top:1rem'><p><strong>Parcours :</strong> " +
+            advice.academicPath +
+            "</p><p><strong>Filières :</strong> " +
+            advice.recommendedFilieres.join(", ") +
+            "</p><p><strong>Stages suggérés :</strong> " +
+            advice.suggestedInternships.join(", ") +
+            "</p><p><strong>Compétences :</strong> " +
+            advice.skillsToDevelop.join(", ") +
+            "</p><p style='font-size:0.8rem;margin-top:0.5rem'>" +
+            advice.disclaimer +
+            "</p></div>";
+        };
+      }
+
+      async function renderCareers(el) {
+        const items = await SAC_PLATFORM.getCareers();
+        el.innerHTML = items.length
+          ? "<ul class='platform-list'>" +
+            items
+              .map(
+                (c) =>
+                  "<li><span class='platform-badge'>" +
+                  c.type +
+                  "</span> <strong>" +
+                  c.title +
+                  "</strong> — " +
+                  c.organization +
+                  " (" +
+                  (c.location || "RDC") +
+                  ")</li>"
+              )
+              .join("") +
+            "</ul>"
+          : "<p>Aucune offre pour le moment.</p>";
+        if (["universite", "professeur", "assistant"].includes(session.role)) {
+          el.innerHTML +=
+            '<form class="platform-form" id="careerForm"><select name="type"><option value="stage">Stage</option><option value="emploi">Emploi</option></select><input name="title" placeholder="Titre" required /><input name="organization" placeholder="Organisation" required /><textarea name="description" placeholder="Description" required></textarea><button type="submit" class="btn btn--primary">Publier (campus)</button></form>';
+          document.getElementById("careerForm").onsubmit = (e) => {
+            e.preventDefault();
+            const fd = new FormData(e.target);
+            SAC_PLATFORM.addCareerLocal({
+              type: fd.get("type"),
+              title: fd.get("title"),
+              organization: fd.get("organization"),
+              description: fd.get("description"),
+              scope: "campus",
+            });
+            renderCareers(el);
+          };
+        }
+      }
+
+      async function renderSocial(el) {
+        const posts = await SAC_PLATFORM.getSocialPosts();
+        let html = '<form class="platform-form" id="socialForm"><textarea name="content" placeholder="Publier sur le fil campus…" maxlength="2000" required></textarea><button type="submit" class="btn btn--primary">Publier</button></form><div class="platform-feed">';
+        posts.forEach((p) => {
+          html +=
+            '<article class="post"><div class="post-meta">' +
+            (p.authorName || "") +
+            " · " +
+            (p.authorRole || "") +
+            "</div><p>" +
+            escapeHtml(p.content) +
+            "</p><button type='button' class='btn btn--ghost btn-like" data-id="' +
+            p.id +
+            '">👍 ' +
+            (p.likes?.length || 0) +
+            "</button></article>";
+        });
+        html += "</div>";
+        el.innerHTML = html;
+        document.getElementById("socialForm").onsubmit = (e) => {
+          e.preventDefault();
+          SAC_PLATFORM.addSocialLocal(new FormData(e.target).get("content"));
+          renderSocial(el);
+        };
+        el.querySelectorAll(".btn-like").forEach((b) => {
+          b.onclick = () => {
+            SAC_PLATFORM.toggleLikeLocal(b.dataset.id);
+            renderSocial(el);
+          };
+        });
+      }
+
+      async function renderCourses(el) {
+        const courses = await SAC_PLATFORM.getCourses();
+        el.innerHTML = courses.length
+          ? "<div class='platform-grid'>" +
+            courses
+              .map(
+                (c) =>
+                  "<article class='platform-card'><h4>" +
+                  c.title +
+                  "</h4><p>" +
+                  (c.description || "") +
+                  "</p>" +
+                  (session.role === "etudiant"
+                    ? '<button type="button" class="btn btn--primary btn-enroll" data-id="' +
+                      c.id +
+                      '">S\'inscrire</button>'
+                    : "") +
+                  "</article>"
+              )
+              .join("") +
+            "</div>"
+          : "<p>Aucun cours en ligne publié.</p>";
+        el.querySelectorAll(".btn-enroll").forEach((b) => {
+          b.onclick = async () => {
+            await SAC_PLATFORM.enrollCourse(b.dataset.id);
+            alert("Inscription enregistrée.");
+          };
+        });
+      }
+
+      async function renderDiplomas(el) {
+        if (session.role === "universite") {
+          el.innerHTML =
+            '<form class="platform-form" id="dipForm"><input name="studentName" placeholder="Nom complet étudiant" required /><input name="studentEmail" type="email" placeholder="Email étudiant" required /><input name="matricule" placeholder="Matricule" required /><input name="filiere" placeholder="Filière" required /><input name="niveau" placeholder="Niveau" required /><button type="submit" class="btn btn--primary">Émettre diplôme (signature SAC)</button></form><div id="dipIssued"></div><p style="margin-top:1rem"><a href="verifier-diplome.html">Page publique de vérification →</a></p>';
+          document.getElementById("dipForm").onsubmit = (e) => {
+            e.preventDefault();
+            const fd = new FormData(e.target);
+            const d = SAC_PLATFORM.issueDiplomaLocal({
+              universite: session.universite || session.nomUniversite,
+              studentName: fd.get("studentName"),
+              studentEmail: fd.get("studentEmail"),
+              matricule: fd.get("matricule"),
+              filiere: fd.get("filiere"),
+              niveau: fd.get("niveau"),
+              graduationYear: new Date().getFullYear(),
+            });
+            document.getElementById("dipIssued").innerHTML =
+              '<div class="platform-verify-result ok">Diplôme émis.<br/>N° <code>' +
+              d.diplomaNumber +
+              "</code><br/>Code vérification : <code>" +
+              d.verificationCode +
+              "</code></div>";
+          };
+          return;
+        }
+        const dips = await SAC_PLATFORM.getMyDiplomas();
+        el.innerHTML =
+          dips.length
+            ? dips
+                .map(
+                  (d) =>
+                    "<div class='platform-card'><strong>" +
+                    (d.diplomaType || "Diplôme") +
+                    "</strong><br/>N° " +
+                    d.diplomaNumber +
+                    "<br/><small>Code : " +
+                    d.verificationCode +
+                    "</small></div>"
+                )
+                .join("")
+            : "<p>Aucun diplôme numérique enregistré pour votre compte.</p>";
+        el.innerHTML += '<p style="margin-top:1rem"><a href="verifier-diplome.html">Vérifier un diplôme (tiers) →</a></p>';
+      }
+
+      function renderFees(el) {
+        el.innerHTML =
+          '<p>Consultez et réglez vos frais depuis votre tableau de bord étudiant (validation assistant / université).</p><a href="dashboard-etudiant.html" class="btn btn--primary">Ouvrir mes frais</a>';
+      }
+
+      function renderInscription(el) {
+        el.innerHTML =
+          '<p>Inscription en ligne sécurisée avec choix d\'université et paiement initial.</p><a href="inscription.html" class="btn btn--primary">S\'inscrire</a>';
+      }
+
+      function escapeHtml(s) {
+        const d = document.createElement("div");
+        d.textContent = s;
+        return d.innerHTML;
+      }
+    })();
+  </script>
+</body>
+</html>

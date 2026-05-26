@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profil Étudiant — Smart Academy of Congo</title>
+  <link rel="icon" href="logos.png" type="image/png" />
+  <link rel="stylesheet" href="css/logo.css" />
+  <link rel="stylesheet" href="css/reclamations.css" />
+  <link rel="stylesheet" href="css/home-news.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0c3d6e;
+      --primary-light: #145a9e;
+      --accent: #c9a227;
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --text: #1a2b3c;
+      --text-muted: #5a6d7e;
+      --border: #e2e8f0;
+      --success: #0d7a4a;
+      --warning: #b45309;
+      --prof: #7c5c12;
+      --assistant: #6b4c9a;
+      --admin: #0d7a4a;
+      --radius: 12px;
+      --shadow: 0 4px 20px rgba(12, 61, 110, 0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* Header */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header__top {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.05rem;
+    }
+
+    .profile-avatar--logo {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.35rem;
+    }
+    .profile-avatar--logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    .header__user {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .badge-role {
+      background: rgba(12, 61, 110, 0.1);
+      color: var(--primary);
+      padding: 0.35rem 0.85rem;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn--ghost { background: transparent; border: 1.5px solid var(--border); color: var(--text-muted); }
+    .btn--ghost:hover { border-color: var(--primary); color: var(--primary); }
+    .btn--sm { padding: 0.4rem 0.75rem; font-size: 0.82rem; }
+
+    .nav-tabs {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      gap: 0.25rem;
+      overflow-x: auto;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-tab {
+      padding: 0.85rem 1.15rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .nav-tab:hover { color: var(--primary); }
+    .nav-tab.active { color: var(--primary); border-bottom-color: var(--accent); }
+
+    /* Layout */
+    .layout {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.75rem 1.5rem 3rem;
+    }
+
+    .page-section { display: none; }
+    .page-section.active { display: block; }
+
+    .page-title {
+      font-family: "Playfair Display", serif;
+      font-size: 1.6rem;
+      color: var(--primary);
+      margin-bottom: 0.35rem;
+    }
+
+    .page-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.75rem;
+    }
+
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card__label { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.35rem; }
+    .stat-card__value {
+      font-family: "Playfair Display", serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-card__value--accent { color: var(--accent); }
+    .stat-card__value--success { color: var(--success); }
+
+    /* Panels */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .panel__head {
+      padding: 1rem 1.35rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .panel__head h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .panel__body { padding: 1.25rem 1.35rem; }
+
+    /* Table notes */
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--bg);
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    tr:hover td { background: rgba(12, 61, 110, 0.03); }
+
+    .note-badge {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+
+    .note-badge--high { background: rgba(13, 122, 74, 0.12); color: var(--success); }
+    .note-badge--mid { background: rgba(201, 162, 39, 0.2); color: var(--prof); }
+    .note-badge--low { background: rgba(185, 28, 28, 0.1); color: #b91c1c; }
+
+    /* Documents */
+    .doc-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .doc-filter {
+      padding: 0.4rem 0.85rem;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      cursor: pointer;
+      font-family: inherit;
+      color: var(--text-muted);
+    }
+
+    .doc-filter.active {
+      border-color: var(--primary);
+      background: rgba(12, 61, 110, 0.08);
+      color: var(--primary);
+    }
+
+    .doc-list { display: flex; flex-direction: column; gap: 0.65rem; }
+
+    .doc-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .doc-item:hover {
+      border-color: rgba(12, 61, 110, 0.2);
+      box-shadow: var(--shadow);
+    }
+
+    .doc-item__icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .doc-item__icon--prof { background: rgba(201, 162, 39, 0.2); }
+    .doc-item__icon--assistant { background: rgba(107, 76, 154, 0.15); }
+    .doc-item__icon--admin { background: rgba(13, 122, 74, 0.12); }
+
+    .doc-item__content { flex: 1; min-width: 0; }
+    .doc-item__title { font-weight: 600; color: var(--primary); margin-bottom: 0.2rem; }
+    .doc-item__meta { font-size: 0.82rem; color: var(--text-muted); }
+
+    .tag-source {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+    }
+
+    .tag-source--prof { background: rgba(201, 162, 39, 0.25); color: var(--prof); }
+    .tag-source--assistant { background: rgba(107, 76, 154, 0.2); color: var(--assistant); }
+    .tag-source--admin { background: rgba(13, 122, 74, 0.15); color: var(--admin); }
+
+    /* Admin */
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .info-row:last-child { border-bottom: none; }
+    .info-row span:first-child { color: var(--text-muted); }
+
+    .announcement {
+      padding: 1rem;
+      background: var(--bg);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 0.75rem;
+    }
+
+    .announcement__date { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.35rem; }
+    .announcement__title { font-weight: 600; color: var(--primary); margin-bottom: 0.25rem; }
+
+    .status-ok { color: var(--success); font-weight: 600; }
+    .status-pending { color: var(--warning); font-weight: 600; }
+
+    .semester-select {
+      padding: 0.45rem 0.85rem;
+      font-family: inherit;
+      font-size: 0.88rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .doc-item__desc { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .doc-react { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; align-items: center; }
+    .react-btn {
+      padding: 0.35rem 0.7rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      background: var(--surface);
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .react-btn:hover { border-color: var(--primary); }
+    .react-btn.active { border-color: var(--primary); background: rgba(12, 61, 110, 0.1); color: var(--primary); }
+    .react-hint { font-size: 0.75rem; color: var(--text-muted); width: 100%; margin-bottom: 0.15rem; }
+
+    @media (max-width: 992px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .admin-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Profil étudiant */
+    .profile-hero {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: center;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 1.75rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      border: 3px solid var(--accent);
+      display: grid;
+      place-items: center;
+      font-size: 2rem;
+      font-weight: 700;
+      font-family: "Playfair Display", serif;
+    }
+
+    .profile-hero h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 1.5rem;
+      color: #fff;
+      margin-bottom: 0.25rem;
+    }
+
+    .profile-hero__meta {
+      font-size: 0.9rem;
+      opacity: 0.92;
+      line-height: 1.6;
+    }
+
+    .profile-hero__badge {
+      display: inline-block;
+      margin-top: 0.65rem;
+      background: rgba(201, 162, 39, 0.35);
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .profile-hero { grid-template-columns: 1fr; text-align: center; }
+      .profile-avatar { margin: 0 auto; }
+      .profile-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header__top">
+      <a href="index.html" class="logo">
+        <img src="logos.png" alt="Smart Academy of Congo" class="logo__img" width="44" height="44" />
+        <span class="logo__text">Smart Academy</span>
+      </a>
+      <div class="header__user">
+        <a href="plateforme.html" class="btn btn--ghost btn--sm" style="text-decoration:none">Écosystème SAC</a>
+        <span class="badge-role">🎓 Profil étudiant</span>
+        <span id="userName" style="font-size:0.9rem;color:var(--text-muted);"></span>
+        <button type="button" class="btn btn--ghost" id="btnLogout">Déconnexion</button>
+      </div>
+    </div>
+    <nav class="nav-tabs" aria-label="Navigation profil étudiant">
+      <button type="button" class="nav-tab active" data-section="profil">Mon profil</button>
+      <button type="button" class="nav-tab" data-section="accueil">Tableau de bord</button>
+      <button type="button" class="nav-tab" data-section="notes">Mes cotes</button>
+      <button type="button" class="nav-tab" data-section="documents">Documents</button>
+      <button type="button" class="nav-tab" data-section="reclamations">📩 Réclamations</button>
+      <button type="button" class="nav-tab" data-section="admin">Administration</button>
+      <button type="button" class="nav-tab" data-section="frais">Frais</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+
+    <!-- PROFIL ÉTUDIANT -->
+    <section class="page-section active" id="section-profil">
+      <h1 class="page-title" style="display:none;">Profil</h1>
+
+      <div class="profile-hero">
+        <div class="profile-avatar profile-avatar--logo">
+          <img src="logos.png" alt="Smart Academy of Congo" width="80" height="80" />
+        </div>
+        <div>
+          <h1 id="profileFullName">Étudiant</h1>
+          <p class="profile-hero__meta">
+            <span id="profileMatricule">Matricule : ETU-2024-08452</span><br />
+            <span id="profileUni">Université de Kinshasa (UNIKIN)</span><br />
+            <span id="profileFiliere">Sciences économiques — Gestion · Licence 2</span>
+          </p>
+          <span class="profile-hero__badge">🎓 Profil étudiant actif</span>
+        </div>
+      </div>
+
+      <div class="profile-grid">
+        <div class="panel">
+          <div class="panel__head"><h2>Informations personnelles</h2></div>
+          <div class="panel__body" id="profilePersonal"></div>
+        </div>
+        <div class="panel">
+          <div class="panel__head"><h2>Parcours académique</h2></div>
+          <div class="panel__body" id="profileAcademic"></div>
+        </div>
+      </div>
+
+      <div class="panel profile-demand-panel">
+        <div class="panel__head">
+          <h2>📩 Demande à ma section faculté</h2>
+          <span id="profileRecSection" class="rec-file-hint" style="margin:0;">—</span>
+        </div>
+        <div class="panel__body">
+          <form id="formReclamationProfile" class="rec-form">
+           
+            <div class="fg" id="wrapRecAutreProfile" style="display:none;">
+              <label>Précisez (obligatoire si « Autres ») *</label>
+              <input type="text" class="fi" id="recAutreDetailProfile" list="recAutreSuggestions" maxlength="120" placeholder="Ex. Problème de carte étudiant, changement de groupe…" />
+            </div>
+            <div class="fg">
+              <label>Sujet *</label>
+              <input type="text" class="fi" id="recSujetProfile" required maxlength="200" placeholder="Ex. Erreur sur ma note, demande de document…" />
+            </div>
+            <div class="fg">
+              <label>Description détaillée *</label>
+              <textarea class="fi" id="recMessageProfile" rows="4" required placeholder="Expliquez votre situation…"></textarea>
+            </div>
+            <div class="fg">
+              <label>Pièces jointes (optionnel)</label>
+              <input type="file" class="fi" id="recFilesProfile" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,image/*,application/pdf" />
+              <p class="rec-file-hint">Maximum 3 fichiers, environ 800 Ko chacun (PDF, images, Word).</p>
+              <div class="rec-files-preview" id="recFilesPreviewProfile"></div>
+            </div>
+            <button type="submit" class="btn btn--primary">Envoyer à ma section</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel" style="border-left:4px solid #0d7a4a;">
+        <div class="panel__head">
+          <h2>🏛️ Mon université — publications officielles</h2>
+        </div>
+        <div class="panel__body">
+          <div class="doc-list" id="profileCampusDocs"></div>
+          <div class="hn-student-feed" id="profileUniversityNews" style="margin-top:0.75rem;"></div>
+          <p class="pub-empty" id="profileCampusEmpty" style="display:none;">Aucune publication de votre université pour le moment.</p>
+        </div>
+      </div>
+
+      <div class="panel" style="border-left:4px solid #1e40af;">
+        <div class="panel__head">
+          <h2>🇨🇩 Espace national</h2>
+        </div>
+        <div class="panel__body">
+          <div class="hn-student-feed" id="profileNationalNews"></div>
+          <p class="pub-empty" id="profileNationalEmpty" style="display:none;">Aucune publication nationale pour le moment.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head">
+          <h2>📚 Publications — Professeurs & assistants</h2>
+          <button type="button" class="btn btn--ghost btn--sm" data-goto="documents">Voir tout</button>
+        </div>
+        <div class="panel__body">
+          <div class="doc-list" id="profilePublications"></div>
+          <p class="pub-empty" id="profilePubEmpty" style="display:none;">Aucune publication de vos professeurs ou assistants pour votre classe.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head">
+          <h2>Mes demandes à la section</h2>
+          <button type="button" class="btn btn--ghost btn--sm" data-goto="reclamations">Tout voir</button>
+        </div>
+        <div class="panel__body">
+          <div class="rec-list" id="profileRecList"></div>
+          <p class="pub-empty" id="profileRecEmpty" style="display:none;">Vous n'avez pas encore envoyé de demande.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head">
+          <h2>Raccourcis de mon profil</h2>
+        </div>
+        <div class="panel__body" style="display:flex;flex-wrap:wrap;gap:0.65rem;">
+          <button type="button" class="btn btn--ghost btn--sm" data-goto="notes">📊 Mes cotes</button>
+          <button type="button" class="btn btn--ghost btn--sm" data-goto="documents">📁 Documents</button>
+          <button type="button" class="btn btn--ghost btn--sm" data-goto="reclamations">📩 Réclamation</button>
+          <button type="button" class="btn btn--ghost btn--sm" data-goto="admin">🏛️ Administration</button>
+          <button type="button" class="btn btn--ghost btn--sm" data-goto="frais">💳 Frais</button>
+          <button type="button" class="btn btn--ghost btn--sm" data-goto="accueil">🏠 Tableau de bord</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABLEAU DE BORD -->
+    <section class="page-section" id="section-accueil">
+      <h1 class="page-title">Bonjour, <span id="welcomeName">Étudiant</span></h1>
+      <p class="page-desc" id="welcomeDesc">Voici un résumé de votre parcours académique et administratif.</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card__label">Moyenne générale</div>
+          <div class="stat-card__value" id="statMoyenne">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Cours suivis</div>
+          <div class="stat-card__value" id="statCours">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Publications prof. & assist.</div>
+          <div class="stat-card__value stat-card__value--accent" id="statDocs">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Frais payés</div>
+          <div class="stat-card__value stat-card__value--success" id="statFrais">—</div>
+        </div>
+      </div>
+
+      <div class="panel" style="border-left:4px solid #1e40af;">
+        <div class="panel__head">
+          <h2>🇨🇩 Espace national — dernières annonces</h2>
+        </div>
+        <div class="panel__body">
+          <div class="hn-student-feed" id="accueilNationalNews"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head">
+          <h2>Dernières publications (prof. & assistants)</h2>
+          <button type="button" class="btn btn--ghost btn--sm" data-goto="documents">Voir tout</button>
+        </div>
+        <div class="panel__body">
+          <div class="doc-list" id="recentDocs"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head">
+          <h2>Cotes récentes</h2>
+          <button type="button" class="btn btn--ghost btn--sm" data-goto="notes">Voir tout</button>
+        </div>
+        <div class="panel__body table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Cours</th>
+                <th>Professeur</th>
+                <th>CC</th>
+                <th>Examen</th>
+                <th>Moyenne</th>
+              </tr>
+            </thead>
+            <tbody id="recentGrades"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOTES -->
+    <section class="page-section" id="section-notes">
+      <h1 class="page-title">Mes cotes</h1>
+      <p class="page-desc">Toutes les notes publiées par vos professeurs, pour chaque cours et session.</p>
+
+      <div class="panel">
+        <div class="panel__head">
+          <h2>Relevé de cotes</h2>
+          <select class="semester-select" id="semesterFilter" aria-label="Filtrer par semestre">
+            <option value="all">Tous les semestres</option>
+            <option value="s1-2025" selected>Semestre 1 — 2024-2025</option>
+            <option value="s2-2024">Semestre 2 — 2023-2024</option>
+          </select>
+        </div>
+        <div class="panel__body table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Cours / Matière</th>
+                <th>Professeur</th>
+                <th>Crédits</th>
+                <th>CC /40</th>
+                <th>Examen /60</th>
+                <th>Moyenne /20</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody id="gradesTable"></tbody>
+          </table>
+        </div>
+        <div class="panel__body" style="border-top:1px solid var(--border);padding-top:1rem;">
+          <div class="info-row">
+            <span><strong>Moyenne du semestre</strong></span>
+            <span id="semesterAverage" style="font-size:1.25rem;font-weight:700;color:var(--primary);">—</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOCUMENTS -->
+    <section class="page-section" id="section-documents">
+      <h1 class="page-title">Documents & ressources</h1>
+      <p class="page-desc">Contenus de <strong>votre classe uniquement</strong> (même université, filière et niveau) : informations, PDF, images et audio. Réagissez aux publications de vos professeurs et assistants.</p>
+
+      <div class="panel">
+        <div class="panel__head">
+          <h2>Bibliothèque</h2>
+          <div class="doc-filters" id="docFilters">
+            <button type="button" class="doc-filter active" data-filter="all">Tous</button>
+            <button type="button" class="doc-filter" data-filter="professeur">📚 Professeurs</button>
+            <button type="button" class="doc-filter" data-filter="assistant">📋 Assistants</button>
+            <button type="button" class="doc-filter" data-filter="administration">🏛️ Administration</button>
+          </div>
+        </div>
+        <div class="panel__body">
+          <div class="doc-list" id="documentsList"></div>
+          <div class="empty-state" id="docsEmpty" style="display:none;">Aucun contenu pour votre classe (vérifiez université, filière et niveau dans votre profil).</div>
+        </div>
+      </div>
+    </section>
+
+    <datalist id="recAutreSuggestions">
+      <option value="Carte étudiant / badge d'accès"></option>
+      <option value="Changement de groupe ou de classe"></option>
+      <option value="Problème de connexion à la plateforme"></option>
+      <option value="Demande de report d'examen"></option>
+      <option value="Erreur sur relevé ou attestation"></option>
+      <option value="Harcelement ou conflit entre étudiants"></option>
+      <option value="Absence non justifiée"></option>
+      <option value="Cours ou professeur non assigné"></option>
+      <option value="Logement ou transport étudiant"></option>
+      <option value="Autre motif non listé"></option>
+    </datalist>
+
+    <!-- RÉCLAMATIONS -->
+    <section class="page-section" id="section-reclamations">
+      <h1 class="page-title">Réclamations en ligne</h1>
+      <p class="page-desc">Votre demande est envoyée à la <strong>section de votre faculté</strong> au sein de votre université (<span id="recSectionName">—</span>). Elle sera traitée par l'administration de cette section.</p>
+
+      <div class="panel" style="margin-bottom:1.25rem;">
+        <div class="panel__head"><h2>Nouvelle réclamation</h2></div>
+        <div class="panel__body">
+          <form id="formReclamation" class="rec-form">
+            <div class="fg">
+              <label>Catégorie *</label>
+              <select class="fi" id="recCategorie" required></select>
+            </div>
+            <div class="fg" id="wrapRecAutre" style="display:none;">
+              <label>Précisez (obligatoire si « Autres ») *</label>
+              <input type="text" class="fi" id="recAutreDetail" list="recAutreSuggestions" maxlength="120" placeholder="Ex. Réclamation sur un cours optionnel, carte perdue…" />
+            </div>
+            <div class="fg">
+              <label>Sujet *</label>
+              <input type="text" class="fi" id="recSujet" required maxlength="200" placeholder="Ex. Erreur sur ma note de examen" />
+            </div>
+            <div class="fg">
+              <label>Description détaillée *</label>
+              <textarea class="fi" id="recMessage" rows="4" required placeholder="Expliquez votre situation…"></textarea>
+            </div>
+            <div class="fg">
+              <label>Pièces jointes (optionnel)</label>
+              <input type="file" class="fi" id="recFiles" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,image/*,application/pdf" />
+              <p class="rec-file-hint">Maximum 3 fichiers, environ 800 Ko chacun.</p>
+              <div class="rec-files-preview" id="recFilesPreview"></div>
+            </div>
+            <button type="submit" class="btn btn--primary">Envoyer à ma section faculté</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head"><h2>Mes réclamations</h2></div>
+        <div class="panel__body">
+          <div class="rec-list" id="studentRecList"></div>
+          <p class="empty-state" id="studentRecEmpty" style="display:none;">Vous n'avez pas encore de réclamation.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMINISTRATION -->
+    <section class="page-section" id="section-admin">
+      <h1 class="page-title">Administration du campus</h1>
+      <p class="page-desc">Informations officielles de votre université : inscription, statut, annonces.</p>
+
+      <div class="admin-grid">
+        <div class="panel">
+          <div class="panel__head"><h2>Mon dossier</h2></div>
+          <div class="panel__body" id="adminDossier"></div>
+        </div>
+        <div class="panel">
+          <div class="panel__head"><h2>Statut académique</h2></div>
+          <div class="panel__body" id="adminStatus"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head"><h2>Annonces du campus</h2></div>
+        <div class="panel__body" id="announcementsList"></div>
+      </div>
+    </section>
+
+    <!-- FRAIS -->
+    <section class="page-section" id="section-frais">
+      <h1 class="page-title">Frais universitaires</h1>
+      <p class="page-desc">Suivi des paiements validés par l'administration et factures en attente.</p>
+
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="stat-card">
+          <div class="stat-card__label">Total annuel</div>
+          <div class="stat-card__value">600 $</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Payé</div>
+          <div class="stat-card__value stat-card__value--success" id="feesPaid">450 $</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Reste à payer</div>
+          <div class="stat-card__value" style="color:var(--warning);" id="feesDue">150 $</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head"><h2>Détail des factures</h2></div>
+        <div class="panel__body table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Libellé</th>
+                <th>Trimestre</th>
+                <th>Montant</th>
+                <th>Statut</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="feesTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/sac-universities.js"></script>
+  <script src="js/sac-identity.js"></script>
+  <script src="js/sac-session.js"></script>
+  <script src="js/sac-api.js"></script>
+  <script src="js/sac-tariffs.js"></script>
+  <script src="js/sac-courses.js"></script>
+  <script src="js/sac-sections.js"></script>
+  <script src="js/sac-data.js"></script>
+  <script src="js/sac-home-news.js"></script>
+  <script src="js/sac-grades.js"></script>
+  <script>
+    let studentGrades = [];
+
+    let studentId = "";
+
+    const ANNOUNCEMENTS = [
+      { date: "2025-12-01", title: "Publication des résultats partiels", body: "Les notes du Semestre 1 seront disponibles le 15 décembre sur votre espace." },
+      { date: "2025-11-15", title: "Inscription aux cours optionnels", body: "Date limite : 30 novembre. Contactez le service scolarité." },
+      { date: "2025-10-01", title: "Ouverture bibliothèque — Horaires étendus", body: "La bibliothèque est ouverte jusqu'à 20h du lundi au vendredi." },
+    ];
+
+    const DEFAULT_FEES = [
+      { label: "Frais d'inscription", term: "Année 2024-2025", amount: 200, status: "Payé", date: "2024-09-05" },
+      { label: "Frais académiques T1", term: "Trimestre 1", amount: 150, status: "Payé", date: "2024-10-12" },
+      { label: "Frais académiques T2", term: "Trimestre 2", amount: 150, status: "Payé", date: "2025-01-20" },
+      { label: "Frais académiques T3", term: "Trimestre 3", amount: 150, status: "En attente", date: "—" },
+    ];
+
+    const SOURCE_LABELS = {
+      professeur: { label: "Professeur", class: "prof", icon: "📚" },
+      assistant: { label: "Assistant", class: "assistant", icon: "📋" },
+      administration: { label: "Administration", class: "admin", icon: "🏛️" },
+    };
+
+    let currentDocFilter = "all";
+
+    function noteClass(avg) {
+      if (avg >= 14) return "note-badge--high";
+      if (avg >= 10) return "note-badge--mid";
+      return "note-badge--low";
+    }
+
+    function formatNote(avg) {
+      return `<span class="note-badge ${noteClass(avg)}">${avg.toFixed(1)}</span>`;
+    }
+
+    function renderGradeRow(g) {
+      return `<tr>
+        <td><strong>${g.code}</strong></td>
+        <td>${g.course}</td>
+        <td>${g.prof}</td>
+        <td>${g.credits}</td>
+        <td>${g.cc}/40</td>
+        <td>${g.exam}/60</td>
+        <td>${formatNote(g.avg)}</td>
+        <td>${g.status === "Validé" ? '<span class="status-ok">Validé</span>' : '<span class="status-pending">Rattrapage</span>'}</td>
+      </tr>`;
+    }
+
+    function loadStudentGrades(session) {
+      const p = getStudentProfile(session);
+      SAC_GRADES.initDemoGrades();
+      studentGrades = SAC_GRADES.getForStudent({
+        email: p.email,
+        identifiant: p.email,
+        matricule: p.matricule,
+      });
+    }
+
+    function renderGrades() {
+      const semester = document.getElementById("semesterFilter").value;
+      const filtered =
+        semester === "all"
+          ? studentGrades
+          : studentGrades.filter((g) => g.semester === semester);
+      const tableEl = document.getElementById("gradesTable");
+      const recentEl = document.getElementById("recentGrades");
+      if (!filtered.length) {
+        const empty =
+          '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:1.5rem;">Aucune cote publiée pour le moment. Vos professeurs les saisissent dans leur espace.</td></tr>';
+        tableEl.innerHTML = empty;
+        recentEl.innerHTML = empty;
+      } else {
+        tableEl.innerHTML = filtered.map(renderGradeRow).join("");
+        const current =
+          SAC_GRADES.CURRENT_SEMESTER || "s1-2025";
+        recentEl.innerHTML = studentGrades
+          .filter((g) => g.semester === current)
+          .slice(0, 4)
+          .map(renderGradeRow)
+          .join("");
+      }
+
+      const avg = filtered.length
+        ? (filtered.reduce((s, g) => s + g.avg, 0) / filtered.length).toFixed(2)
+        : "—";
+      document.getElementById("semesterAverage").textContent = avg + " / 20";
+      document.getElementById("statMoyenne").textContent = avg + " / 20";
+      document.getElementById("statCours").textContent = filtered.length;
+    }
+
+    function escapeHtml(s) {
+      const d = document.createElement("div");
+      d.textContent = s || "";
+      return d.innerHTML;
+    }
+
+    function mediaPreview(doc) {
+      if (!doc.mediaUrl) return "";
+      if (doc.mediaCategory === "image" || doc.type === "IMAGE")
+        return `<img src="${doc.mediaUrl}" alt="" class="doc-media-preview" style="max-width:100%;max-height:200px;border-radius:8px;margin-top:0.5rem;" />`;
+      if (doc.mediaCategory === "audio" || doc.type === "AUDIO")
+        return `<audio controls src="${doc.mediaUrl}" class="doc-media-audio" style="width:100%;margin-top:0.5rem;"></audio>`;
+      if (doc.mediaCategory === "video" || doc.type === "VIDEO")
+        return `<video controls src="${doc.mediaUrl}" class="doc-media-video" style="max-width:100%;max-height:240px;border-radius:8px;margin-top:0.5rem;"></video>`;
+      return "";
+    }
+
+    function docAttachmentsHtml(doc) {
+      const list = doc.attachments || [];
+      if (!list.length) return "";
+      return `<div class="doc-attachments" style="margin-top:0.5rem;font-size:0.85rem;">
+        ${list.map((a) => `<a href="${escapeHtml(a.mediaUrl || "#")}" target="_blank" rel="noopener" style="display:inline-block;margin:0.2rem 0.5rem 0.2rem 0;">📎 ${escapeHtml(a.name || "Fichier")}</a>`).join("")}
+      </div>`;
+    }
+
+    function renderDocItem(doc) {
+      const src = SOURCE_LABELS[doc.source];
+      const counts = SAC_DATA.reactionCounts(doc);
+      const canReact = SAC_DATA.canReact(doc);
+      const userReact = SAC_DATA.getUserReaction(doc, studentId);
+      const mediaIcons = { info: "📢", document: "📄", image: "🖼️", audio: "🔊", video: "🎬" };
+      const mIcon = mediaIcons[doc.mediaCategory] || "📄";
+      const classTag = doc.audienceType === "section"
+        ? ` · Section ${escapeHtml(doc.sectionName || doc.filiere || "")}`
+        : doc.classe
+          ? ` · ${escapeHtml(doc.courseCode || "")} ${escapeHtml(doc.classe)}`
+          : doc.audienceType === "campus"
+            ? " · Campus"
+            : "";
+
+      let reactHtml = "";
+      if (canReact) {
+        reactHtml = `
+          <div class="doc-react">
+            <span class="react-hint">Votre réaction :</span>
+            <button type="button" class="react-btn ${userReact === "useful" ? "active" : ""}" data-react="useful" data-id="${doc.id}">👍 Utile (${counts.useful})</button>
+            <button type="button" class="react-btn ${userReact === "question" ? "active" : ""}" data-react="question" data-id="${doc.id}">❓ Question (${counts.question})</button>
+            <button type="button" class="react-btn ${userReact === "thanks" ? "active" : ""}" data-react="thanks" data-id="${doc.id}">🙏 Merci (${counts.thanks})</button>
+          </div>`;
+      }
+
+      return `<article class="doc-item" data-doc-id="${doc.id}">
+        <div class="doc-item__icon doc-item__icon--${src.class}">${mIcon}</div>
+        <div class="doc-item__content" style="flex:1;">
+          <div class="doc-item__title">
+            ${escapeHtml(doc.title)}
+            <span class="tag-source tag-source--${src.class}">${src.label}</span>
+          </div>
+          <div class="doc-item__meta">
+            ${escapeHtml(doc.author)} · ${doc.date} · ${doc.type}${classTag}
+          </div>
+          ${doc.description ? `<p class="doc-item__desc">${escapeHtml(doc.description)}</p>` : ""}
+          ${mediaPreview(doc)}
+          ${docAttachmentsHtml(doc)}
+          ${reactHtml}
+        </div>
+        <button type="button" class="btn btn--ghost btn--sm btn-dl" data-id="${doc.id}" data-title="${escapeHtml(doc.title)}">Ouvrir</button>
+      </article>`;
+    }
+
+    function bindDocReactions(container) {
+      container.querySelectorAll("[data-react]").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          await SAC_DATA.addReaction(btn.dataset.id, btn.dataset.react, studentId);
+          renderDocuments();
+          const sess = JSON.parse(localStorage.getItem("sac_session") || "null");
+          if (sess) renderProfilePublications(sess);
+        });
+      });
+      container.querySelectorAll(".btn-dl").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const doc = SAC_DATA.getById(btn.dataset.id);
+          if (doc?.mediaUrl) window.open(doc.mediaUrl, "_blank");
+          else alert("Contenu : " + btn.dataset.title);
+        });
+      });
+    }
+
+    function renderDocuments() {
+      const session = JSON.parse(localStorage.getItem("sac_session") || "null");
+      const p = getStudentProfile(session);
+      const student = {
+        email: p.email,
+        universite: p.universite,
+        filiere: p.filiere,
+        niveau: p.niveau,
+        matricule: p.matricule,
+      };
+      const allDocs = SAC_DATA.getForStudent(student);
+      const filtered = currentDocFilter === "all"
+        ? allDocs
+        : allDocs.filter((d) => d.source === currentDocFilter);
+      const list = document.getElementById("documentsList");
+      const empty = document.getElementById("docsEmpty");
+      if (!filtered.length) {
+        list.innerHTML = "";
+        empty.style.display = "block";
+      } else {
+        list.innerHTML = filtered.map(renderDocItem).join("");
+        empty.style.display = "none";
+        bindDocReactions(list);
+      }
+      const teaching = SAC_DATA.getTeachingForStudent(student);
+      const campus = SAC_DATA.getCampusPublicationsForStudent(student);
+      const recent = document.getElementById("recentDocs");
+      recent.innerHTML = teaching.slice(0, 4).map(renderDocItem).join("");
+      bindDocReactions(recent);
+      document.getElementById("statDocs").textContent =
+        teaching.length + campus.length;
+    }
+
+    function renderHomeNewsFeed(containerId, items, emptyId) {
+      const el = document.getElementById(containerId);
+      const empty = emptyId ? document.getElementById(emptyId) : null;
+      if (!el) return;
+      if (!items.length) {
+        el.innerHTML = "";
+        if (empty) empty.style.display = "block";
+        return;
+      }
+      if (empty) empty.style.display = "none";
+      el.innerHTML = items.map((n) => SAC_HOME_NEWS.renderCard(n)).join("");
+    }
+
+    function renderProfilePublications(session) {
+      const p = getStudentProfile(session);
+      const student = {
+        email: p.email,
+        universite: p.universite,
+        filiere: p.filiere,
+        niveau: p.niveau,
+        matricule: p.matricule,
+      };
+
+      const campusDocs = SAC_DATA.getCampusPublicationsForStudent(student);
+      const campusDocsEl = document.getElementById("profileCampusDocs");
+      const campusEmpty = document.getElementById("profileCampusEmpty");
+      const uniNews =
+        typeof SAC_HOME_NEWS !== "undefined"
+          ? SAC_HOME_NEWS.getUniversityNewsForStudent(p.universite)
+          : [];
+      if (campusDocsEl) {
+        campusDocsEl.innerHTML = campusDocs.length
+          ? campusDocs.map(renderDocItem).join("")
+          : "";
+        if (campusDocs.length) bindDocReactions(campusDocsEl);
+      }
+      renderHomeNewsFeed("profileUniversityNews", uniNews, null);
+
+      const nationalNews =
+        typeof SAC_HOME_NEWS !== "undefined"
+          ? SAC_HOME_NEWS.getNationalNewsForStudent()
+          : [];
+      renderHomeNewsFeed("profileNationalNews", nationalNews, "profileNationalEmpty");
+      renderHomeNewsFeed(
+        "accueilNationalNews",
+        nationalNews.slice(0, 4),
+        null
+      );
+
+      const hasCampus = campusDocs.length > 0 || uniNews.length > 0;
+      if (campusEmpty) campusEmpty.style.display = hasCampus ? "none" : "block";
+
+      const teaching = SAC_DATA.getTeachingForStudent(student);
+      const list = document.getElementById("profilePublications");
+      const empty = document.getElementById("profilePubEmpty");
+      if (!teaching.length) {
+        if (list) list.innerHTML = "";
+        if (empty) empty.style.display = "block";
+        return;
+      }
+      if (empty) empty.style.display = "none";
+      if (list) {
+        list.innerHTML = teaching.map(renderDocItem).join("");
+        bindDocReactions(list);
+      }
+    }
+
+    function bindFilePreview(inputId, previewId) {
+      const input = document.getElementById(inputId);
+      const preview = document.getElementById(previewId);
+      if (!input || !preview) return;
+      input.addEventListener("change", () => {
+        const files = Array.from(input.files || []);
+        if (!files.length) {
+          preview.innerHTML = "";
+          return;
+        }
+        preview.innerHTML = files
+          .map((f) => `<span class="file-chip">📎 ${escapeHtml(f.name)} (${Math.round(f.size / 1024)} Ko)</span>`)
+          .join("");
+      });
+    }
+
+    async function handleReclamationSubmit(e, fields) {
+      e.preventDefault();
+      const session = JSON.parse(localStorage.getItem("sac_session") || "null");
+      const p = getStudentProfile(session);
+      const categorie = document.getElementById(fields.categorieId).value;
+      if (!categorie) {
+        alert("Veuillez choisir une catégorie.");
+        return;
+      }
+      const autreDetailId =
+        fields.categorieId === "recCategorieProfile"
+          ? "recAutreDetailProfile"
+          : "recAutreDetail";
+      const categorieDetail = document.getElementById(autreDetailId)?.value?.trim() || "";
+      if (SAC_SECTIONS.isAutreCategory(categorie) && categorieDetail.length < 3) {
+        alert('Précisez votre demande dans le champ « Autres » (minimum 3 caractères).');
+        document.getElementById(autreDetailId)?.focus();
+        return;
+      }
+      try {
+        const attachments = await SAC_SECTIONS.readAttachmentFiles(
+          document.getElementById(fields.filesId)?.files
+        );
+        SAC_SECTIONS.submitReclamation(session, p, {
+          sujet: document.getElementById(fields.sujetId).value,
+          message: document.getElementById(fields.messageId).value,
+          categorie,
+          categorieDetail,
+          attachments,
+        });
+        e.target.reset();
+        const preview = document.getElementById(fields.previewId);
+        if (preview) preview.innerHTML = "";
+        renderReclamations(session);
+        renderProfilePublications(session);
+        alert("Demande envoyée à votre section faculté.");
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    function renderRecCard(r) {
+      return `
+        <article class="rec-card" data-statut="${r.statut}">
+          <div class="rec-card__head">
+            <span class="rec-card__title">${escapeHtml(r.sujet)}</span>
+            <span class="rec-badge" style="background:${SAC_SECTIONS.statutColor(r.statut)}">${SAC_SECTIONS.statutLabel(r.statut)}</span>
+          </div>
+          <div class="rec-card__meta">${escapeHtml(SAC_SECTIONS.categoryLabel(r.categorie, r.categorieDetail))} · ${new Date(r.createdAt).toLocaleDateString("fr-FR")} · ${escapeHtml(r.sectionName)}</div>
+          <p class="rec-card__msg">${escapeHtml(r.message)}</p>
+          ${SAC_SECTIONS.attachmentsHtml(r.attachments, true)}
+          ${r.reponse ? `<div class="rec-card__reply"><strong>Réponse de la section :</strong> ${escapeHtml(r.reponse)}</div>` : "<p style='font-size:0.85rem;color:var(--muted);'>En attente de traitement par votre section.</p>"}
+        </article>`;
+    }
+
+    function getStudentProfile(session) {
+      const users = JSON.parse(localStorage.getItem("sac_users") || "[]");
+      const found = users.find(
+        (u) => u.role === "etudiant" && u.email === session?.identifiant
+      );
+      const person = SAC_IDENTITY.resolvePersonFromRecords(session, found);
+      return {
+        nom: person.nom || "Étudiant",
+        prenom: person.prenom,
+        fullName: person.fullName || "Étudiant",
+        email: session?.identifiant || found?.email || "—",
+        telephone: found?.telephone || "—",
+        universite: found?.universite || session?.universite || "unkin",
+        filiere: found?.filiere || "Sciences économiques — Gestion",
+        niveau: found?.niveau || "l2",
+        matricule: found?.matricule || "ETU-2024-08452",
+        dateNaissance: found?.dateNaissance || "—",
+        inscriptionFee: found?.inscriptionFee || session?.inscriptionFee || null,
+        universityFees: found?.universityFees || null,
+        campusTariffs: found?.campusTariffs || null,
+        payment: found?.payment || session?.payment || null,
+      };
+    }
+
+    function getStudentFeesList(profile) {
+      if (profile?.universityFees?.length) return profile.universityFees;
+      return DEFAULT_FEES;
+    }
+
+    const UNI_NAMES = {
+      ...SAC_UNIVERSITIES.NAMES,
+      autre: "Autre établissement partenaire",
+    };
+
+    const NIVEAU_LABELS = {
+      l1: "Licence 1 (L1)",
+      l2: "Licence 2 (L2)",
+      l3: "Licence 3 (L3)",
+      master1: "Master 1",
+      master2: "Master 2",
+      doctorat: "Doctorat",
+    };
+
+    function renderProfile(session) {
+      const p = getStudentProfile(session);
+      const fullName = p.fullName;
+      document.getElementById("profileFullName").textContent = fullName;
+      document.getElementById("profileMatricule").textContent = "Matricule : " + p.matricule;
+      document.getElementById("profileUni").textContent = UNI_NAMES[p.universite] || p.universite;
+      document.getElementById("profileFiliere").textContent =
+        p.filiere + " · " + (NIVEAU_LABELS[p.niveau] || p.niveau);
+
+      document.getElementById("profilePersonal").innerHTML = `
+        <div class="info-row"><span>Prénom</span><span>${p.prenom || "—"}</span></div>
+        <div class="info-row"><span>Nom</span><span>${p.nom || "—"}</span></div>
+        <div class="info-row"><span>Date de naissance</span><span>${p.dateNaissance !== "—" ? p.dateNaissance : "Non renseignée"}</span></div>
+        <div class="info-row"><span>E-mail</span><span>${p.email}</span></div>
+        <div class="info-row"><span>Téléphone</span><span>${p.telephone}</span></div>
+        <div class="info-row"><span>Matricule</span><span>${p.matricule}</span></div>
+      `;
+
+      const tarifEtu = p.inscriptionFee;
+      const tarifHtml = tarifEtu
+        ? `<div class="info-row"><span>Tarif campus (inscription SAC)</span><span><strong>${tarifEtu.amount} USD</strong> · ~${(tarifEtu.cdf || 0).toLocaleString("fr-FR")} CDF</span></div>`
+        : `<div class="info-row"><span>Tarif campus</span><span style="color:var(--muted);">Défini par votre université</span></div>`;
+
+      document.getElementById("profileAcademic").innerHTML = `
+        <div class="info-row"><span>Université</span><span>${UNI_NAMES[p.universite] || p.universite}</span></div>
+        <div class="info-row"><span>Faculté / Filière</span><span>${p.filiere}</span></div>
+        <div class="info-row"><span>Niveau</span><span>${NIVEAU_LABELS[p.niveau] || p.niveau}</span></div>
+        ${tarifHtml}
+        <div class="info-row"><span>Année académique</span><span>2024 — 2025</span></div>
+        <div class="info-row"><span>Statut</span><span class="status-ok">Inscrit · Actif</span></div>
+      `;
+
+      document.getElementById("userName").textContent = fullName;
+      document.getElementById("welcomeName").textContent = p.prenom || fullName.split(" ")[0];
+      document.getElementById("dossierNom").textContent = fullName;
+    }
+
+    function renderAdmin(session) {
+      const p = getStudentProfile(session);
+      const uni = UNI_NAMES[p.universite] || p.universite;
+      document.getElementById("adminDossier").innerHTML = `
+        <div class="info-row"><span>Nom complet</span><span id="dossierNom">—</span></div>
+        <div class="info-row"><span>Matricule</span><span>${p.matricule}</span></div>
+        <div class="info-row"><span>Université</span><span>${uni}</span></div>
+        <div class="info-row"><span>Faculté / Filière</span><span>${p.filiere}</span></div>
+        <div class="info-row"><span>Niveau</span><span>${NIVEAU_LABELS[p.niveau] || p.niveau}</span></div>
+        <div class="info-row"><span>E-mail</span><span>${p.email}</span></div>
+      `;
+      document.getElementById("adminStatus").innerHTML = `
+        <div class="info-row"><span>Inscription</span><span class="status-ok">Validée</span></div>
+        <div class="info-row"><span>Année académique</span><span>2024 — 2025</span></div>
+        <div class="info-row"><span>Crédits validés</span><span>42 / 60</span></div>
+        <div class="info-row"><span>Assiduité</span><span class="status-ok">Conforme</span></div>
+        <div class="info-row"><span>Bourse</span><span>Non attribuée</span></div>
+      `;
+      document.getElementById("announcementsList").innerHTML = ANNOUNCEMENTS.map(
+        (a) => `<div class="announcement">
+          <div class="announcement__date">${a.date}</div>
+          <div class="announcement__title">${a.title}</div>
+          <p style="font-size:0.88rem;color:var(--text-muted);">${a.body}</p>
+        </div>`
+      ).join("");
+    }
+
+    function renderFees(profile) {
+      const fees = getStudentFeesList(profile);
+      document.getElementById("feesTable").innerHTML = fees
+        .map(
+          (f) => `<tr>
+          <td>${f.label}</td>
+          <td>${f.term}</td>
+          <td>${f.amount} $</td>
+          <td>${f.status === "Payé" ? '<span class="status-ok">Payé</span>' : '<span class="status-pending">En attente</span>'}</td>
+          <td>${f.date}</td>
+        </tr>`
+        )
+        .join("");
+      const paid = fees.filter((f) => f.status === "Payé").reduce((s, f) => s + f.amount, 0);
+      const due = fees.filter((f) => f.status !== "Payé").reduce((s, f) => s + f.amount, 0);
+      const total = paid + due;
+      document.getElementById("feesPaid").textContent = paid + " $";
+      document.getElementById("feesDue").textContent = due + " $";
+      document.getElementById("statFrais").textContent = paid + " / " + total + " $";
+      const totalEl = document.querySelector("#section-frais .stat-card__value");
+      if (totalEl && !totalEl.id) totalEl.textContent = total + " $";
+    }
+
+    function showSection(id) {
+      document.querySelectorAll(".page-section").forEach((s) => s.classList.remove("active"));
+      document.querySelectorAll(".nav-tab").forEach((t) => t.classList.remove("active"));
+      document.getElementById("section-" + id).classList.add("active");
+      document.querySelector(`.nav-tab[data-section="${id}"]`)?.classList.add("active");
+    }
+
+    function renderReclamations(session) {
+      const p = getStudentProfile(session);
+      const sec = SAC_SECTIONS.findSectionForStudent({
+        universite: p.universite,
+        filiere: p.filiere,
+      });
+      const sectionLabel = sec
+        ? sec.name
+        : "— (aucune section enregistrée pour votre filière)";
+      document.getElementById("recSectionName").textContent = sectionLabel;
+      const profileSec = document.getElementById("profileRecSection");
+      if (profileSec) profileSec.textContent = "Section : " + sectionLabel;
+
+      const catHtml = SAC_SECTIONS.categoriesOptionsHtml("— Choisir une catégorie —");
+      const catPairs = [
+        { sel: "recCategorie", wrap: "wrapRecAutre", detail: "recAutreDetail" },
+        { sel: "recCategorieProfile", wrap: "wrapRecAutreProfile", detail: "recAutreDetailProfile" },
+      ];
+      catPairs.forEach(({ sel, wrap, detail }) => {
+        const selectEl = document.getElementById(sel);
+        if (selectEl && !selectEl.options.length) selectEl.innerHTML = catHtml;
+        if (!selectEl) return;
+        const toggle = () => {
+          const isAutre = SAC_SECTIONS.isAutreCategory(selectEl.value);
+          const wrapEl = document.getElementById(wrap);
+          const detailEl = document.getElementById(detail);
+          if (wrapEl) wrapEl.style.display = isAutre ? "block" : "none";
+          if (detailEl) detailEl.required = isAutre;
+        };
+        selectEl.addEventListener("change", toggle);
+        toggle();
+      });
+
+      const recs = SAC_SECTIONS.getReclamationsForStudent(session.identifiant);
+      const el = document.getElementById("studentRecList");
+      const empty = document.getElementById("studentRecEmpty");
+      if (!recs.length) {
+        el.innerHTML = "";
+        empty.style.display = "block";
+      } else {
+        empty.style.display = "none";
+        el.innerHTML = recs.map(renderRecCard).join("");
+      }
+
+      const profileList = document.getElementById("profileRecList");
+      const profileEmpty = document.getElementById("profileRecEmpty");
+      if (profileList) {
+        const recentRecs = recs.slice(0, 3);
+        if (!recentRecs.length) {
+          profileList.innerHTML = "";
+          if (profileEmpty) profileEmpty.style.display = "block";
+        } else {
+          if (profileEmpty) profileEmpty.style.display = "none";
+          profileList.innerHTML = recentRecs.map(renderRecCard).join("");
+        }
+      }
+    }
+
+    (async function initDashboard() {
+      let session = SAC_SESSION.guard("etudiant");
+      if (!session) return;
+      try {
+        if (typeof SAC_API !== "undefined" && (await SAC_API.ensureOnline())) {
+          await SAC_API.me();
+        }
+      } catch {
+        /* mode local si l'API est indisponible */
+      }
+      session = SAC_SESSION.syncSessionWithAccount("etudiant") || session;
+      if (typeof SAC_TARIFFS !== "undefined") {
+        await SAC_TARIFFS.refreshStudentFeesFromCampus(session);
+        session = SAC_SESSION.syncSessionWithAccount("etudiant") || session;
+      }
+      await SAC_DATA.ensureReady();
+      studentId = session.userId || session.identifiant || "etudiant-demo";
+      loadStudentGrades(session);
+      renderProfile(session);
+      renderProfilePublications(session);
+      bindFilePreview("recFiles", "recFilesPreview");
+      bindFilePreview("recFilesProfile", "recFilesPreviewProfile");
+      const p = getStudentProfile(session);
+      if (p.universite) {
+        document.getElementById("welcomeDesc").textContent +=
+          " · " + (UNI_NAMES[p.universite] || p.universite);
+      }
+      renderAdmin(session);
+      renderGrades();
+      renderDocuments();
+      renderReclamations(session);
+      renderFees(p);
+
+      document.getElementById("formReclamation").addEventListener("submit", (e) =>
+        handleReclamationSubmit(e, {
+          categorieId: "recCategorie",
+          sujetId: "recSujet",
+          messageId: "recMessage",
+          filesId: "recFiles",
+          previewId: "recFilesPreview",
+        })
+      );
+      document.getElementById("formReclamationProfile").addEventListener("submit", (e) =>
+        handleReclamationSubmit(e, {
+          categorieId: "recCategorieProfile",
+          sujetId: "recSujetProfile",
+          messageId: "recMessageProfile",
+          filesId: "recFilesProfile",
+          previewId: "recFilesPreviewProfile",
+        })
+      );
+    })();
+
+    document.querySelectorAll(".nav-tab").forEach((tab) => {
+      tab.addEventListener("click", () => showSection(tab.dataset.section));
+    });
+
+    document.querySelectorAll("[data-goto]").forEach((btn) => {
+      btn.addEventListener("click", () => showSection(btn.dataset.goto));
+    });
+
+    document.getElementById("semesterFilter").addEventListener("change", renderGrades);
+
+    document.querySelectorAll(".doc-filter").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".doc-filter").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentDocFilter = btn.dataset.filter;
+        renderDocuments();
+      });
+    });
+
+    document.getElementById("btnLogout").addEventListener("click", async () => {
+      if (typeof SAC_API !== "undefined") await SAC_API.logout();
+      else localStorage.removeItem("sac_session");
+      window.location.href = "connexion.html";
+    });
+  </script>
+</body>
+</html>

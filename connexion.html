@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Connexion — Smart Academy of Congo. Étudiant, professeur ou université." />
+  <title>Connexion — Smart Academy of Congo</title>
+  <link rel="icon" href="logos.png" type="image/png" />
+  <link rel="apple-touch-icon" href="logos.png" />
+  <link rel="stylesheet" href="css/logo.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0c3d6e;
+      --primary-light: #145a9e;
+      --accent: #c9a227;
+      --accent-hover: #e0b83a;
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --text: #1a2b3c;
+      --text-muted: #5a6d7e;
+      --border: #e2e8f0;
+      --success: #0d7a4a;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(12, 61, 110, 0.08);
+      --shadow-lg: 0 12px 48px rgba(12, 61, 110, 0.12);
+      --student: #0c3d6e;
+      --prof: #7c5c12;
+      --uni: #0d7a4a;
+      --assistant: #6b4c9a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    h1, h2 { font-family: "Playfair Display", Georgia, serif; line-height: 1.25; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Header */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 1.5rem;
+    }
+
+    .header__inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--primary);
+    }
+
+    .header__link {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .header__link:hover { color: var(--primary); }
+
+    /* Layout */
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .intro h1 {
+      font-size: clamp(1.75rem, 3vw, 2.35rem);
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .intro p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+    }
+
+    .intro__steps {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .intro__steps li {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .step-num.active { background: var(--accent); color: var(--primary); }
+
+    .intro__steps strong {
+      display: block;
+      color: var(--primary);
+      margin-bottom: 0.15rem;
+    }
+
+    .intro__steps span { color: var(--text-muted); font-size: 0.88rem; }
+
+    /* Card connexion */
+    .login-card {
+      background: var(--surface);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      padding: 2rem;
+    }
+
+    .login-card__title {
+      font-size: 1.35rem;
+      color: var(--primary);
+      margin-bottom: 0.35rem;
+    }
+
+    .login-card__subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1.75rem;
+    }
+
+    /* Sélecteur de rôle */
+    .role-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .role-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1.75rem;
+    }
+
+    @media (max-width: 640px) {
+      .role-tabs { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .role-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 1rem 0.5rem;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.15s;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .role-tab:hover {
+      border-color: rgba(12, 61, 110, 0.25);
+      background: var(--surface);
+    }
+
+    .role-tab__icon { font-size: 1.6rem; line-height: 1; }
+
+    .role-tab.active {
+      border-color: var(--role-color, var(--primary));
+      background: var(--surface);
+      color: var(--role-color, var(--primary));
+      box-shadow: 0 4px 16px rgba(12, 61, 110, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .role-tab[data-role="etudiant"].active { --role-color: var(--student); }
+    .role-tab[data-role="professeur"].active { --role-color: var(--prof); }
+    .role-tab[data-role="assistant"].active { --role-color: var(--assistant); }
+    .role-tab[data-role="universite"].active { --role-color: var(--uni); }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      background: rgba(12, 61, 110, 0.08);
+      color: var(--primary);
+      border: 1px solid rgba(12, 61, 110, 0.12);
+    }
+
+    .role-badge[data-role="professeur"] {
+      background: rgba(201, 162, 39, 0.15);
+      color: var(--prof);
+      border-color: rgba(201, 162, 39, 0.3);
+    }
+
+    .role-badge[data-role="assistant"] {
+      background: rgba(107, 76, 154, 0.12);
+      color: var(--assistant);
+      border-color: rgba(107, 76, 154, 0.25);
+    }
+
+    .role-badge[data-role="universite"] {
+      background: rgba(13, 122, 74, 0.1);
+      color: var(--uni);
+      border-color: rgba(13, 122, 74, 0.2);
+    }
+
+    /* Formulaire */
+    .form-group {
+      margin-bottom: 1.15rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group label .hint {
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(12, 61, 110, 0.12);
+      background: var(--surface);
+    }
+
+    .form-input::placeholder { color: #94a3b8; }
+
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .checkbox-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .checkbox-wrap input { width: 16px; height: 16px; accent-color: var(--primary); }
+
+    .forgot-link {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--primary-light);
+    }
+
+    .forgot-link:hover { text-decoration: underline; }
+
+    .btn-submit {
+      width: 100%;
+      padding: 0.9rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: #fff;
+      background: var(--primary);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 14px rgba(12, 61, 110, 0.25);
+    }
+
+    .btn-submit:hover {
+      background: var(--primary-light);
+      box-shadow: 0 6px 20px rgba(12, 61, 110, 0.3);
+    }
+
+    .btn-submit:active { transform: scale(0.99); }
+
+    .btn-submit[data-role="professeur"] { background: #9a7b1a; box-shadow: 0 4px 14px rgba(124, 92, 18, 0.3); }
+    .btn-submit[data-role="professeur"]:hover { background: #b8921f; }
+
+    .btn-submit[data-role="assistant"] { background: var(--assistant); box-shadow: 0 4px 14px rgba(107, 76, 154, 0.3); }
+    .btn-submit[data-role="assistant"]:hover { background: #8260b5; }
+
+    .btn-submit[data-role="universite"] { background: var(--uni); box-shadow: 0 4px 14px rgba(13, 122, 74, 0.3); }
+    .btn-submit[data-role="universite"]:hover { background: #0f9660; }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .form-footer a {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .form-footer a:hover { text-decoration: underline; }
+
+    /* Champs conditionnels */
+    .field-extra { display: none; }
+    .field-extra.visible { display: block; }
+
+    .alert-demo {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: rgba(201, 162, 39, 0.12);
+      border: 1px solid rgba(201, 162, 39, 0.35);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: var(--prof);
+    }
+
+    @media (max-width: 900px) {
+      .page { grid-template-columns: 1fr; gap: 2rem; }
+      .intro { text-align: center; }
+      .intro__steps { max-width: 400px; margin: 0 auto; }
+    }
+
+    @media (max-width: 480px) {
+      .role-tabs { grid-template-columns: 1fr; }
+      .role-tab { flex-direction: row; justify-content: center; padding: 0.85rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header__inner">
+      <a href="index.html" class="logo">
+        <img src="logos.png" alt="Smart Academy of Congo" class="logo__img" width="48" height="48" />
+        <span class="logo__text">Smart Academy</span>
+      </a>
+      <a href="index.html" class="header__link">← Retour à l'accueil</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <aside class="intro">
+      <div class="logo-brand">
+        <img src="logos.png" alt="Smart Academy of Congo" class="logo__img" width="100" height="100" />
+        <p class="logo__caption">Smart Academy of Congo</p>
+      </div>
+      <h1>Connectez-vous à votre espace</h1>
+      <p>
+        Choisissez d'abord votre profil — étudiant, professeur, assistant ou université — puis saisissez vos identifiants pour accéder à vos informations officielles.
+      </p>
+      <ol class="intro__steps">
+        <li>
+          <span class="step-num active" id="step1">1</span>
+          <div>
+            <strong>Sélectionnez votre profil</strong>
+            <span>Étudiant, professeur, assistant ou université</span>
+          </div>
+        </li>
+        <li>
+          <span class="step-num" id="step2">2</span>
+          <div>
+            <strong>Renseignez vos identifiants</strong>
+            <span>Matricule, e-mail institutionnel ou code université</span>
+          </div>
+        </li>
+        <li>
+          <span class="step-num" id="step3">3</span>
+          <div>
+            <strong>Accédez à votre tableau de bord</strong>
+            <span>Notes, frais, cours ou administration du campus</span>
+          </div>
+        </li>
+      </ol>
+    </aside>
+
+    <section class="login-card">
+      <img src="logos.png" alt="" class="login-card__logo" width="80" height="80" aria-hidden="true" />
+      <h2 class="login-card__title">Connexion</h2>
+      <p class="login-card__subtitle">Sélectionnez votre type de compte pour continuer</p>
+
+      <span class="role-label">Je me connecte en tant que</span>
+      <div class="role-tabs" role="tablist" aria-label="Type de compte">
+        <button type="button" class="role-tab active" data-role="etudiant" role="tab" aria-selected="true" id="tab-etudiant">
+          <span class="role-tab__icon" aria-hidden="true">🎓</span>
+          Étudiant
+        </button>
+        <button type="button" class="role-tab" data-role="professeur" role="tab" aria-selected="false" id="tab-professeur">
+          <span class="role-tab__icon" aria-hidden="true">📚</span>
+          Professeur
+        </button>
+        <button type="button" class="role-tab" data-role="assistant" role="tab" aria-selected="false" id="tab-assistant">
+          <span class="role-tab__icon" aria-hidden="true">📋</span>
+          Assistant
+        </button>
+        <button type="button" class="role-tab" data-role="universite" role="tab" aria-selected="false" id="tab-universite">
+          <span class="role-tab__icon" aria-hidden="true">🏛️</span>
+          Université
+        </button>
+      </div>
+
+      <div class="role-badge" id="roleBadge" data-role="etudiant">
+        <span id="roleBadgeIcon">🎓</span>
+        <span id="roleBadgeText">Espace étudiant</span>
+      </div>
+
+      <form id="loginForm" novalidate>
+        <!-- Champ université (étudiant, prof, assistant) -->
+        <div class="form-group field-extra visible" id="fieldUniversite">
+          <label for="universite">Université <span class="hint">(celle de votre inscription)</span></label>
+          <select class="form-input" id="universite" name="universite" data-sac-universities data-empty-label="— Choisir votre université —" data-include-autre="true"></select>
+          <p id="uniLockHint" style="display:none;font-size:0.8rem;color:var(--success);margin-top:0.35rem;">
+            ✓ Université verrouillée sur votre dossier d'inscription
+          </p>
+        </div>
+
+        <!-- Code université (admin uniquement) -->
+        <div class="form-group field-extra" id="fieldCodeUni">
+          <label for="codeUni">Code établissement <span class="hint">(fourni à l'inscription)</span></label>
+          <input type="text" class="form-input" id="codeUni" name="codeUni" placeholder="Ex. SAC-UNIKIN-2024" autocomplete="organization" />
+        </div>
+
+        <!-- Identifiant principal -->
+        <div class="form-group">
+          <label for="identifiant" id="labelIdentifiant">Matricule étudiant</label>
+          <input type="text" class="form-input" id="identifiant" name="identifiant" placeholder="Ex. ETU-2024-08452" required autocomplete="username" />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input type="password" class="form-input" id="password" name="password" placeholder="••••••••" required autocomplete="current-password" minlength="8" />
+        </div>
+
+        <div class="form-row">
+          <label class="checkbox-wrap">
+            <input type="checkbox" name="remember" id="remember" />
+            Se souvenir de moi
+          </label>
+          <a href="#" class="forgot-link" id="forgotLink">Mot de passe oublié ?</a>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btnSubmit" data-role="etudiant">
+          Se connecter — Espace étudiant
+        </button>
+
+        <p class="alert-demo" style="background:rgba(12,61,110,0.06);color:var(--text-muted);">
+          Utilisez l'<strong>e-mail</strong> et le <strong>mot de passe</strong> créés à l'inscription, ainsi que la <strong>même université</strong>. Connexion impossible avec un autre établissement ou un mot de passe différent.
+        </p>
+      </form>
+
+      <p class="form-footer">
+        Pas encore de compte ?
+        <a href="inscription.html" id="inscriptionLink">Créer un compte étudiant</a>
+      </p>
+    </section>
+  </main>
+
+  <script src="js/sac-universities.js"></script>
+  <script src="js/sac-identity.js"></script>
+  <script src="js/sac-session.js"></script>
+  <script src="js/sac-api.js"></script>
+  <script src="js/sac-sections.js"></script>
+  <script>
+    const ROLES = {
+      etudiant: {
+        badge: "Espace étudiant",
+        icon: "🎓",
+        labelIdentifiant: "Matricule étudiant",
+        placeholderIdentifiant: "Ex. ETU-2024-08452",
+        typeIdentifiant: "text",
+        btnText: "Se connecter — Espace étudiant",
+        inscriptionText: "Créer un compte étudiant",
+        dashboard: "dashboard-etudiant.html",
+        showUniversite: true,
+        showCodeUni: false,
+      },
+      professeur: {
+        badge: "Espace professeur",
+        icon: "📚",
+        labelIdentifiant: "E-mail institutionnel",
+        placeholderIdentifiant: "Ex. prof.nom@unikin.cd",
+        typeIdentifiant: "email",
+        btnText: "Se connecter — Espace professeur",
+        inscriptionText: "Demander un accès professeur",
+        dashboard: "dashboard-professeur.html",
+        showUniversite: true,
+        showCodeUni: false,
+      },
+      assistant: {
+        badge: "Espace assistant",
+        icon: "📋",
+        labelIdentifiant: "E-mail ou matricule assistant",
+        placeholderIdentifiant: "Ex. assist.mukendi@unikin.cd",
+        typeIdentifiant: "text",
+        btnText: "Se connecter — Espace assistant",
+        inscriptionText: "Créer un compte assistant",
+        dashboard: "dashboard-assistant.html",
+        showUniversite: true,
+        showCodeUni: false,
+      },
+      universite: {
+        badge: "Espace administration université",
+        icon: "🏛️",
+        labelIdentifiant: "E-mail administrateur",
+        placeholderIdentifiant: "Ex. admin@universite.cd",
+        typeIdentifiant: "email",
+        btnText: "Se connecter — Portail université",
+        inscriptionText: "Inscrire mon université",
+        dashboard: "dashboard-universite.html",
+        showUniversite: false,
+        showCodeUni: true,
+      },
+    };
+
+    let currentRole = "etudiant";
+
+    const tabs = document.querySelectorAll(".role-tab");
+    const roleBadge = document.getElementById("roleBadge");
+    const roleBadgeIcon = document.getElementById("roleBadgeIcon");
+    const roleBadgeText = document.getElementById("roleBadgeText");
+    const labelIdentifiant = document.getElementById("labelIdentifiant");
+    const identifiant = document.getElementById("identifiant");
+    const fieldUniversite = document.getElementById("fieldUniversite");
+    const fieldCodeUni = document.getElementById("fieldCodeUni");
+    const universiteSelect = document.getElementById("universite");
+    const codeUniInput = document.getElementById("codeUni");
+    const btnSubmit = document.getElementById("btnSubmit");
+    const inscriptionLink = document.getElementById("inscriptionLink");
+    const loginForm = document.getElementById("loginForm");
+
+    function setRole(role) {
+      currentRole = role;
+      const config = ROLES[role];
+
+      tabs.forEach((tab) => {
+        const isActive = tab.dataset.role === role;
+        tab.classList.toggle("active", isActive);
+        tab.setAttribute("aria-selected", isActive);
+      });
+
+      roleBadge.dataset.role = role;
+      roleBadgeIcon.textContent = config.icon;
+      roleBadgeText.textContent = config.badge;
+
+      labelIdentifiant.textContent = config.labelIdentifiant;
+      identifiant.type = config.typeIdentifiant;
+      identifiant.placeholder = config.placeholderIdentifiant;
+      identifiant.value = "";
+
+      fieldUniversite.classList.toggle("visible", config.showUniversite);
+      universiteSelect.required = config.showUniversite;
+      universiteSelect.disabled = false;
+      const uniHint = document.getElementById("uniLockHint");
+      if (uniHint) uniHint.style.display = "none";
+
+      fieldCodeUni.classList.toggle("visible", config.showCodeUni);
+      codeUniInput.required = config.showCodeUni;
+
+      btnSubmit.textContent = config.btnText;
+      btnSubmit.dataset.role = role;
+      inscriptionLink.onclick = null;
+      inscriptionLink.href = `inscription.html?role=${role === "universite" ? "universite" : role}`;
+      inscriptionLink.textContent = config.inscriptionText;
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => setRole(tab.dataset.role));
+    });
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const idVal = identifiant.value.trim();
+      const pwdVal = document.getElementById("password").value;
+
+      if (idVal.length < 3) {
+        identifiant.focus();
+        identifiant.setCustomValidity("Veuillez saisir votre identifiant.");
+        identifiant.reportValidity();
+        return;
+      }
+      identifiant.setCustomValidity("");
+
+      const pwdCheck = SAC_IDENTITY.validatePassword(pwdVal);
+      if (!pwdCheck.ok) {
+        alert(pwdCheck.message);
+        document.getElementById("password").focus();
+        return;
+      }
+
+      if (ROLES[currentRole].showUniversite && !universiteSelect.value) {
+        universiteSelect.focus();
+        return;
+      }
+
+      if (ROLES[currentRole].showCodeUni && !codeUniInput.value.trim()) {
+        codeUniInput.focus();
+        return;
+      }
+
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = "Connexion…";
+
+      try {
+        if (typeof SAC_API !== "undefined" && (await SAC_API.ensureOnline())) {
+          const session = await SAC_API.login(idVal, pwdVal, currentRole, {
+            universite: ROLES[currentRole].showUniversite ? universiteSelect.value : null,
+            codeUni: ROLES[currentRole].showCodeUni ? codeUniInput.value.trim() : null,
+          });
+          window.location.href = ROLES[session.role || currentRole].dashboard;
+          return;
+        }
+      } catch (err) {
+        alert(err.message || "Identifiant ou mot de passe incorrect.");
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = ROLES[currentRole].btnText;
+        return;
+      }
+
+      const users = SAC_IDENTITY.getLocalUsers();
+      const found = SAC_IDENTITY.findUserByLoginId(users, idVal);
+
+      if (found && found.role === "section") {
+        alert("Les sections se gèrent depuis le portail université. Connectez-vous en tant qu'université.");
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = ROLES[currentRole].btnText;
+        return;
+      }
+      if (found && found.role !== currentRole) {
+        alert("Ce compte correspond à un autre profil. Choisissez le bon onglet.");
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = ROLES[currentRole].btnText;
+        return;
+      }
+
+      const cred = await SAC_IDENTITY.verifyLoginCredentials(found, pwdVal);
+      if (!cred.ok) {
+        alert(cred.message);
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = ROLES[currentRole].btnText;
+        return;
+      }
+
+      const uniCheck = SAC_IDENTITY.assertUniversiteOnLogin(
+        found,
+        ROLES[currentRole].showUniversite ? universiteSelect.value : null
+      );
+      if (!uniCheck.ok) {
+        alert(uniCheck.message);
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = ROLES[currentRole].btnText;
+        return;
+      }
+
+      const codeCheck = SAC_IDENTITY.assertCodeUniOnLogin(
+        found,
+        ROLES[currentRole].showCodeUni ? codeUniInput.value : null
+      );
+      if (!codeCheck.ok) {
+        alert(codeCheck.message);
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = ROLES[currentRole].btnText;
+        return;
+      }
+
+      const session = SAC_IDENTITY.buildSessionFromUser(found);
+      SAC_SESSION.saveSession(session);
+      window.location.href = ROLES[found.role].dashboard;
+    });
+
+    identifiant.addEventListener("input", () => identifiant.setCustomValidity(""));
+    identifiant.addEventListener("blur", syncUniversiteFromAccount);
+
+    function syncUniversiteFromAccount() {
+      const hint = document.getElementById("uniLockHint");
+      if (!ROLES[currentRole].showUniversite || !universiteSelect) return;
+      const users = SAC_IDENTITY.getLocalUsers();
+      const found = SAC_IDENTITY.findUserByLoginId(users, identifiant.value.trim());
+      if (found && found.role === currentRole) {
+        const reg = SAC_IDENTITY.getRegisteredUniversite(found);
+        if (reg) {
+          universiteSelect.value = reg;
+          universiteSelect.disabled = true;
+          if (hint) hint.style.display = "block";
+          return;
+        }
+      }
+      universiteSelect.disabled = false;
+      if (hint) hint.style.display = "none";
+    }
+
+    SAC_UNIVERSITIES.populateAll("[data-sac-universities]");
+
+    const params = new URLSearchParams(window.location.search);
+    const roleParam = params.get("role");
+    if (roleParam === "section") {
+      location.href = "connexion.html?role=universite";
+    } else {
+      setRole(roleParam && ROLES[roleParam] ? roleParam : "etudiant");
+    }
+  </script>
+</body>
+</html>
